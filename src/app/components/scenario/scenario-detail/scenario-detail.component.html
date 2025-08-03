@@ -1,0 +1,149 @@
+<div class="p-6">
+  <!-- Botón de regreso -->
+  <button 
+    (click)="router.navigate(['/dashboard/escenarios'])"
+    class="mb-6 flex items-center text-vino-600 hover:text-vino-800"
+  >
+    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+    </svg>
+    Volver a la lista de escenarios
+  </button>
+
+  <!-- Cargando -->
+  <div *ngIf="isLoading" class="flex justify-center items-center h-64">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-vino-600"></div>
+  </div>
+
+  <!-- Detalle del escenario -->
+  <div *ngIf="!isLoading && scenario" class="bg-white rounded-lg shadow-sm overflow-hidden">
+    <!-- Encabezado con acciones -->
+    <div class="px-6 py-4 border-b border-gris-200 flex justify-between items-center">
+      <div>
+        <h1 class="text-2xl font-bold text-gris-900">{{ scenario.nombre }}</h1>
+        <div class="flex items-center mt-1">
+          <span 
+            [ngClass]="{
+              'px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full': true,
+              'bg-green-100 text-green-800': scenario.disponible,
+              'bg-red-100 text-red-800': !scenario.disponible
+            }"
+          >
+            {{ scenario.disponible ? 'Disponible' : 'No disponible' }}
+          </span>
+          <span class="ml-2 text-sm text-gris-500">
+            {{ scenario.tipo }} • {{ scenario.ubicacion }}
+          </span>
+        </div>
+      </div>
+      <div class="flex space-x-2" *ngIf="isAdmin">
+        <button 
+          (click)="onToggleStatus()"
+          [ngClass]="{
+            'px-3 py-1 rounded-md text-sm font-medium': true,
+            'bg-green-100 text-green-800 hover:bg-green-200': !scenario.disponible,
+            'bg-red-100 text-red-800 hover:bg-red-200': scenario.disponible
+          }"
+        >
+          {{ scenario.disponible ? 'Marcar como no disponible' : 'Marcar como disponible' }}
+        </button>
+        <button 
+          [routerLink]="['/dashboard/escenarios/editar', scenario.id]"
+          class="px-3 py-1 bg-ocra-100 text-ocra-800 hover:bg-ocra-200 rounded-md text-sm font-medium"
+        >
+          Editar
+        </button>
+        <button 
+          (click)="onDelete()"
+          class="px-3 py-1 bg-red-100 text-red-800 hover:bg-red-200 rounded-md text-sm font-medium"
+        >
+          Eliminar
+        </button>
+      </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="p-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Columna izquierda: Imagen y características -->
+        <div class="md:col-span-2">
+          <!-- Imagen del escenario -->
+          <div class="bg-gris-100 rounded-lg overflow-hidden mb-6" style="height: 300px;">
+            <div *ngIf="scenario.imagenUrl" class="h-full w-full bg-cover bg-center" [style.backgroundImage]="'url(' + getFullImageUrl(scenario.imagenUrl) + ')'"></div>
+            <div *ngIf="!scenario.imagenUrl" class="h-full w-full flex items-center justify-center bg-gris-200">
+              <span class="text-gris-400">Sin imagen</span>
+            </div>
+          </div>
+          
+          <!-- Descripción -->
+          <div class="mb-6">
+            <h3 class="text-lg font-medium text-gris-900 mb-2">Descripción</h3>
+            <p class="text-gris-700">{{ scenario.descripcion || 'No hay descripción disponible.' }}</p>
+          </div>
+          
+          <!-- Características -->
+          <div *ngIf="scenario.caracteristicas && scenario.caracteristicas.length > 0">
+            <h3 class="text-lg font-medium text-gris-900 mb-3">Características</h3>
+            <div class="flex flex-wrap gap-2">
+              <span 
+                *ngFor="let caracteristica of scenario.caracteristicas"
+                class="px-3 py-1 bg-gris-100 text-gris-800 text-sm rounded-full"
+              >
+                {{ caracteristica }}
+              </span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Columna derecha: Información detallada -->
+        <div class="md:col-span-1">
+          <div class="bg-gris-50 rounded-lg p-4">
+            <h3 class="text-lg font-medium text-gris-900 mb-4">Detalles</h3>
+            
+            <div class="space-y-4">
+              <div>
+                <p class="text-sm text-gris-500">Capacidad</p>
+                <p class="font-medium">{{ scenario.capacidad }} personas</p>
+              </div>
+              
+              <div *ngIf="scenario.horarioApertura || scenario.horarioCierre">
+                <p class="text-sm text-gris-500">Horario</p>
+                <p class="font-medium">
+                  {{ scenario.horarioApertura || '--:--' }} - {{ scenario.horarioCierre || '--:--' }}
+                </p>
+              </div>
+              
+              <div *ngIf="scenario.costoPorHora !== undefined">
+                <p class="text-sm text-gris-500">Costo por hora</p>
+                <p class="font-medium">{{ scenario.costoPorHora | currency:'COP':'symbol-narrow':'1.0-0' }}</p>
+              </div>
+              
+              <div>
+                <p class="text-sm text-gris-500">Ubicación</p>
+                <p class="font-medium">{{ scenario.ubicacion || 'No especificada' }}</p>
+              </div>
+              
+              <div>
+                <p class="text-sm text-gris-500">Tipo</p>
+                <p class="font-medium">{{ scenario.tipo || 'No especificado' }}</p>
+              </div>
+            </div>
+            
+            <div class="mt-6 pt-4 border-t border-gris-200">
+              <button 
+                class="w-full bg-vino-600 hover:bg-vino-700 text-white py-2 px-4 rounded-md font-medium transition-colors"
+                [disabled]="!scenario.disponible"
+                [class.opacity-50]="!scenario.disponible"
+                [class.cursor-not-allowed]="!scenario.disponible"
+                [routerLink]="['/dashboard/reservas/nueva']" 
+                [queryParams]="{ escenarioId: scenario.id }"
+              >
+                {{ scenario.disponible ? 'Reservar ahora' : 'No disponible' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

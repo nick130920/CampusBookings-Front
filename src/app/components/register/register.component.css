@@ -1,0 +1,64 @@
+/* 
+ * Register Component - Usando Tailwind CSS con colores USCO
+ * Los colores están definidos en styles.css global
+ */
+
+/* Reutilizar estilos del login */
+.login-container {
+  font-family: 'Open Sans', Arial, sans-serif;
+}
+
+/* Animación de entrada */
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-card {
+  animation: slideInFromTop 0.6s ease-out;
+}
+
+/* Mejora del logo */
+.usco-logo {
+  transition: transform 0.3s ease;
+}
+
+.usco-logo:hover {
+  transform: scale(1.05);
+}
+
+/* Estados de accesibilidad mejorados */
+.input-field:focus-visible {
+  outline: 2px solid #8F141B;
+  outline-offset: 2px;
+}
+
+.submit-button:focus-visible {
+  outline: 2px solid #8F141B;
+  outline-offset: 2px;
+}
+
+/* Responsive específico */
+@media (max-width: 640px) {
+  .usco-logo {
+    height: 4rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  .login-container {
+    background: white !important;
+  }
+  
+  .login-card {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+  }
+}

@@ -1,0 +1,560 @@
+<!-- Contenedor principal de reservas -->
+<div class="min-h-screen bg-usco-gris-100 py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Encabezado -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-usco-gris-900 font-usco-condensed">{{ getPageTitle() }}</h1>
+          <p class="mt-2 text-usco-gris-600">
+            {{ getPageDescription() }}
+            <span *ngIf="totalCount > 0" class="ml-2">
+              ({{ filteredCount }} de {{ totalCount }})
+            </span>
+          </p>
+        </div>
+        
+        <div class="flex space-x-3">
+          <p-button
+            icon="pi pi-refresh"
+            [loading]="isRefreshing"
+            styleClass="p-button-outlined p-button-secondary"
+            pTooltip="Actualizar lista"
+            tooltipPosition="bottom"
+            (onClick)="refreshReservations()">
+          </p-button>
+          
+          <p-button
+            label="Nueva Reserva"
+            icon="pi pi-plus"
+            (onClick)="onCreateNewReservation()">
+          </p-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pestañas de administrador -->
+    <div *ngIf="isAdmin" class="mb-6">
+      <p-tabView (onChange)="onTabChange($event)">
+        <p-tabPanel header="Mis Reservas" leftIcon="pi pi-user">
+          <ng-template pTemplate="content">
+            <!-- Contenido se mostrará dinámicamente -->
+          </ng-template>
+        </p-tabPanel>
+        <p-tabPanel header="Todas las Reservas" leftIcon="pi pi-users">
+          <ng-template pTemplate="content">
+            <!-- Contenido se mostrará dinámicamente -->
+          </ng-template>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+
+    <!-- Filtros -->
+    <p-card class="mb-6 shadow-usco border-0">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- Filtro por estado -->
+        <div>
+          <label for="filterStatus" class="block text-sm font-medium text-usco-gris-900 mb-2">
+            <i class="pi pi-flag mr-2 text-usco-vino-600"></i>
+            Estado
+          </label>
+          <p-select
+            id="filterStatus"
+            [(ngModel)]="filters.estado"
+            [options]="statusOptions"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Todos los estados"
+            styleClass="w-full"
+            (onChange)="onFilterChange()">
+          </p-select>
+        </div>
+
+        <!-- Filtro por fecha desde -->
+        <div>
+          <label for="filterDateFrom" class="block text-sm font-medium text-usco-gris-900 mb-2">
+            <i class="pi pi-calendar mr-2 text-usco-vino-600"></i>
+            Desde
+          </label>
+          <p-datePicker
+            id="filterDateFrom"
+            [(ngModel)]="filters.fechaDesde"
+            dateFormat="dd/mm/yy"
+            placeholder="Fecha desde"
+            styleClass="w-full"
+            (onSelect)="onFilterChange()">
+          </p-datePicker>
+        </div>
+
+        <!-- Filtro por fecha hasta -->
+        <div>
+          <label for="filterDateTo" class="block text-sm font-medium text-usco-gris-900 mb-2">
+            <i class="pi pi-calendar mr-2 text-usco-vino-600"></i>
+            Hasta
+          </label>
+          <p-datePicker
+            id="filterDateTo"
+            [(ngModel)]="filters.fechaHasta"
+            dateFormat="dd/mm/yy"
+            placeholder="Fecha hasta"
+            styleClass="w-full"
+            (onSelect)="onFilterChange()">
+          </p-datePicker>
+        </div>
+
+        <!-- Filtro por escenario -->
+        <div>
+          <label for="filterScenario" class="block text-sm font-medium text-usco-gris-900 mb-2">
+            <i class="pi pi-building mr-2 text-usco-vino-600"></i>
+            Escenario
+          </label>
+          <input
+            id="filterScenario"
+            type="text"
+            pInputText
+            [(ngModel)]="filters.escenario"
+            placeholder="Buscar escenario..."
+            class="w-full"
+            (input)="onFilterChange()">
+        </div>
+      </div>
+
+      <!-- Botón limpiar filtros -->
+      <div *ngIf="hasFilters" class="mt-4 flex justify-end">
+        <p-button
+          label="Limpiar Filtros"
+          icon="pi pi-times"
+          styleClass="p-button-text p-button-secondary"
+          (onClick)="clearFilters()">
+        </p-button>
+      </div>
+    </p-card>
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="text-center py-12">
+      <p-progressSpinner strokeWidth="3"></p-progressSpinner>
+      <p class="mt-4 text-usco-gris-600">Cargando reservas...</p>
+    </div>
+
+    <!-- Lista de reservas -->
+    <div *ngIf="!isLoading">
+      
+      <!-- Estado vacío -->
+      <div *ngIf="reservations.length === 0" class="text-center py-12">
+        <div class="mx-auto w-24 h-24 bg-usco-gris-200 rounded-full flex items-center justify-center mb-6">
+          <i class="pi pi-calendar text-3xl text-usco-gris-400"></i>
+        </div>
+        <h3 class="text-xl font-medium text-usco-gris-900 mb-2">No tienes reservas</h3>
+        <p class="text-usco-gris-600 mb-6">Comienza creando tu primera reserva de espacio</p>
+        <p-button
+          label="Crear Primera Reserva"
+          icon="pi pi-plus"
+          (onClick)="onCreateNewReservation()">
+        </p-button>
+      </div>
+
+      <!-- Sin resultados de filtros -->
+      <div *ngIf="reservations.length > 0 && filteredReservations.length === 0" class="text-center py-12">
+        <div class="mx-auto w-24 h-24 bg-usco-ocre-200 rounded-full flex items-center justify-center mb-6">
+          <i class="pi pi-filter text-3xl text-usco-ocre-600"></i>
+        </div>
+        <h3 class="text-xl font-medium text-usco-gris-900 mb-2">Sin resultados</h3>
+        <p class="text-usco-gris-600 mb-6">No se encontraron reservas que coincidan con los filtros aplicados</p>
+        <p-button
+          label="Limpiar Filtros"
+          icon="pi pi-times"
+          styleClass="p-button-outlined"
+          (onClick)="clearFilters()">
+        </p-button>
+      </div>
+
+      <!-- Tabla de reservas para pantallas grandes -->
+      <div *ngIf="filteredReservations.length > 0" class="hidden lg:block">
+        <p-card class="shadow-usco border-0">
+          <p-table 
+            [value]="filteredReservations"
+            [paginator]="true"
+            [rows]="10"
+            [rowsPerPageOptions]="[5, 10, 20]"
+            [sortMode]="'single'"
+            [defaultSortOrder]="1"
+            sortField="fechaInicio"
+            styleClass="p-datatable-sm"
+            responsiveLayout="scroll">
+            
+            <ng-template pTemplate="header">
+              <tr>
+                <!-- Columna de usuario solo para admins en vista "Todas las Reservas" -->
+                <th *ngIf="isAdmin && activeTab === 'all'" pSortableColumn="usuarioNombre">
+                  Usuario
+                  <p-sortIcon field="usuarioNombre"></p-sortIcon>
+                </th>
+                <th pSortableColumn="escenarioNombre">
+                  Escenario
+                  <p-sortIcon field="escenarioNombre"></p-sortIcon>
+                </th>
+                <th pSortableColumn="fechaInicio">
+                  Fecha y Hora
+                  <p-sortIcon field="fechaInicio"></p-sortIcon>
+                </th>
+                <th>Duración</th>
+                <th pSortableColumn="estadoNombre">
+                  Estado
+                  <p-sortIcon field="estadoNombre"></p-sortIcon>
+                </th>
+                <th pSortableColumn="fechaCreacion">
+                  Creada
+                  <p-sortIcon field="fechaCreacion"></p-sortIcon>
+                </th>
+                <th>Acciones</th>
+              </tr>
+            </ng-template>
+            
+            <ng-template pTemplate="body" let-reservation>
+              <tr>
+                <!-- Usuario (solo para admins en vista "Todas las Reservas") -->
+                <td *ngIf="isAdmin && activeTab === 'all'">
+                  <div class="flex items-center space-x-2">
+                    <i class="pi pi-user text-usco-gris-500"></i>
+                    <div>
+                      <div class="font-medium text-usco-gris-900">{{ getUserDisplayName(reservation) }}</div>
+                      <div class="text-xs text-usco-gris-500">{{ reservation.usuarioEmail }}</div>
+                    </div>
+                  </div>
+                </td>
+                
+                <!-- Escenario -->
+                <td>
+                  <div class="font-medium text-usco-gris-900">{{ reservation.escenarioNombre }}</div>
+                </td>
+                
+                <!-- Fecha y Hora -->
+                <td>
+                  <div class="font-medium text-usco-gris-900">{{ formatDate(reservation.fechaInicio) }}</div>
+                  <div class="text-sm text-usco-gris-600">{{ formatTimeRange(reservation.fechaInicio, reservation.fechaFin) }}</div>
+                </td>
+                
+                <!-- Duración -->
+                <td>
+                  <p-chip 
+                    [label]="formatDuration(getDurationInMinutes(reservation.fechaInicio, reservation.fechaFin))"
+                    styleClass="text-xs bg-usco-gris-100 text-usco-gris-800">
+                  </p-chip>
+                </td>
+                
+                <!-- Estado -->
+                <td>
+                  <p-tag
+                    [value]="reservation.estadoNombre"
+                    [severity]="getStatusSeverity(reservation.estadoNombre)"
+                    [icon]="getStatusIcon(reservation.estadoNombre)">
+                  </p-tag>
+                </td>
+                
+                <!-- Fecha de creación -->
+                <td>
+                  <span class="text-sm text-usco-gris-600">{{ formatCreatedDate(reservation.fechaCreacion!) }}</span>
+                </td>
+                
+                <!-- Acciones -->
+                <td>
+                  <div class="flex space-x-2">
+                    <!-- Botón Ver Detalle -->
+                    <p-button
+                      icon="pi pi-eye"
+                      styleClass="p-button-outlined p-button-info p-button-sm"
+                      pTooltip="Ver detalle"
+                      tooltipPosition="top"
+                      (onClick)="showReservationDetail(reservation)">
+                    </p-button>
+                    
+                    <!-- Botones de administración -->
+                    <p-button
+                      *ngIf="canApprove(reservation)"
+                      icon="pi pi-check"
+                      styleClass="p-button-outlined p-button-success p-button-sm"
+                      pTooltip="Aprobar reserva"
+                      tooltipPosition="top"
+                      (onClick)="approveReservation(reservation)">
+                    </p-button>
+                    
+                    <p-button
+                      *ngIf="canReject(reservation)"
+                      icon="pi pi-times"
+                      styleClass="p-button-outlined p-button-danger p-button-sm"
+                      pTooltip="Rechazar reserva"
+                      tooltipPosition="top"
+                      (onClick)="rejectReservation(reservation)">
+                    </p-button>
+                    
+                    <!-- Botón de cancelación para usuarios -->
+                    <p-button
+                      *ngIf="canCancelReservation(reservation)"
+                      icon="pi pi-ban"
+                      styleClass="p-button-outlined p-button-warning p-button-sm"
+                      pTooltip="Cancelar reserva"
+                      tooltipPosition="top"
+                      (onClick)="onCancelReservation(reservation)">
+                    </p-button>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-card>
+      </div>
+
+      <!-- Cards para pantallas pequeñas -->
+      <div *ngIf="filteredReservations.length > 0" class="lg:hidden space-y-4">
+        <p-card
+          *ngFor="let reservation of filteredReservations"
+          class="shadow-usco border-0">
+          
+          <div class="flex flex-col space-y-4">
+            <!-- Header con escenario y estado -->
+            <div class="flex items-start justify-between">
+              <div class="flex-1">
+                <h3 class="font-semibold text-usco-gris-900 text-lg">{{ reservation.escenarioNombre }}</h3>
+                <p class="text-sm text-usco-gris-600 mt-1">Reserva #{{ reservation.id }}</p>
+              </div>
+              <p-tag
+                [value]="reservation.estadoNombre || 'Sin estado'"
+                [severity]="getStatusSeverity(reservation.estadoNombre || '')"
+                [icon]="getStatusIcon(reservation.estadoNombre || '')">
+              </p-tag>
+            </div>
+
+            <!-- Información de fecha y hora -->
+            <div class="bg-usco-gris-50 rounded-lg p-4">
+              <div class="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span class="text-usco-gris-500 block">Fecha:</span>
+                  <span class="font-medium text-usco-gris-900">{{ formatDate(reservation.fechaInicio) }}</span>
+                </div>
+                <div>
+                  <span class="text-usco-gris-500 block">Hora:</span>
+                  <span class="font-medium text-usco-gris-900">{{ formatTimeRange(reservation.fechaInicio, reservation.fechaFin) }}</span>
+                </div>
+                <div>
+                  <span class="text-usco-gris-500 block">Duración:</span>
+                  <span class="font-medium text-usco-gris-900">{{ formatDuration(getDurationInMinutes(reservation.fechaInicio, reservation.fechaFin)) }}</span>
+                </div>
+                <div>
+                  <span class="text-usco-gris-500 block">Creada:</span>
+                  <span class="font-medium text-usco-gris-900">{{ formatCreatedDate(reservation.fechaCreacion!) }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Observaciones si existen -->
+            <div *ngIf="reservation.observaciones" class="bg-usco-ocre-50 rounded-lg p-3 border border-usco-ocre-200">
+              <span class="text-usco-gris-500 text-sm block mb-1">Observaciones:</span>
+              <p class="text-usco-gris-900 text-sm">{{ reservation.observaciones }}</p>
+            </div>
+
+            <!-- Motivo de rechazo si existe -->
+            <div *ngIf="reservation.motivoRechazo" class="bg-red-50 rounded-lg p-3 border border-red-200">
+              <span class="text-red-500 text-sm block mb-1">Motivo de rechazo:</span>
+              <p class="text-red-900 text-sm">{{ reservation.motivoRechazo }}</p>
+            </div>
+
+            <!-- Acciones -->
+            <div *ngIf="canCancelReservation(reservation)" class="flex justify-end">
+              <p-button
+                label="Cancelar Reserva"
+                icon="pi pi-times"
+                styleClass="p-button-outlined p-button-danger p-button-sm"
+                (onClick)="onCancelReservation(reservation)">
+              </p-button>
+            </div>
+          </div>
+        </p-card>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Diálogo de detalle de reserva -->
+<p-dialog 
+  [(visible)]="showDetailDialog" 
+  [modal]="true" 
+  header="Detalle de Reserva" 
+  [style]="{width: '50vw'}" 
+  [dismissableMask]="true"
+  [resizable]="false">
+  
+  <div *ngIf="selectedReservation" class="space-y-6">
+    <!-- Información del escenario -->
+    <div class="border-b border-gray-200 pb-4">
+      <h3 class="text-lg font-semibold text-usco-gris-900 mb-2">{{ selectedReservation.escenarioNombre }}</h3>
+      <p class="text-sm text-usco-gris-600">Reserva #{{ selectedReservation.id }}</p>
+    </div>
+    
+    <!-- Información del usuario (solo visible para admins) -->
+    <div *ngIf="isAdmin" class="bg-usco-gris-50 rounded-lg p-4">
+      <h4 class="text-sm font-medium text-usco-gris-900 mb-3">
+        <i class="pi pi-user mr-2"></i>Información del Usuario
+      </h4>
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <span class="text-usco-gris-500 block">Nombre:</span>
+          <span class="font-medium text-usco-gris-900">{{ getUserDisplayName(selectedReservation) }}</span>
+        </div>
+        <div>
+          <span class="text-usco-gris-500 block">Email:</span>
+          <span class="font-medium text-usco-gris-900">{{ selectedReservation.usuarioEmail }}</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Información de la reserva -->
+    <div class="bg-usco-ocre-50 rounded-lg p-4">
+      <h4 class="text-sm font-medium text-usco-gris-900 mb-3">
+        <i class="pi pi-calendar mr-2"></i>Detalles de la Reserva
+      </h4>
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <span class="text-usco-gris-500 block">Fecha:</span>
+          <span class="font-medium text-usco-gris-900">{{ formatDate(selectedReservation.fechaInicio) }}</span>
+        </div>
+        <div>
+          <span class="text-usco-gris-500 block">Horario:</span>
+          <span class="font-medium text-usco-gris-900">{{ formatTimeRange(selectedReservation.fechaInicio, selectedReservation.fechaFin) }}</span>
+        </div>
+        <div>
+          <span class="text-usco-gris-500 block">Duración:</span>
+          <span class="font-medium text-usco-gris-900">{{ formatDuration(getDurationInMinutes(selectedReservation.fechaInicio, selectedReservation.fechaFin)) }}</span>
+        </div>
+        <div>
+          <span class="text-usco-gris-500 block">Estado:</span>
+          <p-tag
+            [value]="selectedReservation.estadoNombre || 'Sin estado'"
+            [severity]="getStatusSeverity(selectedReservation.estadoNombre || '')"
+            [icon]="getStatusIcon(selectedReservation.estadoNombre || '')">
+          </p-tag>
+        </div>
+        <div class="col-span-2">
+          <span class="text-usco-gris-500 block">Fecha de creación:</span>
+          <span class="font-medium text-usco-gris-900">{{ formatCreatedDate(selectedReservation.fechaCreacion!) }}</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Observaciones -->
+    <div *ngIf="selectedReservation.observaciones" class="bg-blue-50 rounded-lg p-4 border border-blue-200">
+      <h4 class="text-sm font-medium text-blue-900 mb-2">
+        <i class="pi pi-comment mr-2"></i>Observaciones
+      </h4>
+      <p class="text-blue-800 text-sm">{{ selectedReservation.observaciones }}</p>
+    </div>
+    
+    <!-- Motivo de rechazo -->
+    <div *ngIf="selectedReservation.motivoRechazo" class="bg-red-50 rounded-lg p-4 border border-red-200">
+      <h4 class="text-sm font-medium text-red-900 mb-2">
+        <i class="pi pi-exclamation-triangle mr-2"></i>Motivo de Rechazo
+      </h4>
+      <p class="text-red-800 text-sm">{{ selectedReservation.motivoRechazo }}</p>
+    </div>
+    
+    <!-- Acciones para administrador -->
+    <div *ngIf="isAdmin && selectedReservation.estadoNombre === 'PENDIENTE'" class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+      <p-button 
+        label="Rechazar" 
+        icon="pi pi-times" 
+        styleClass="p-button-outlined p-button-danger"
+        (onClick)="rejectReservation(selectedReservation); closeDetailDialog()">
+      </p-button>
+      <p-button 
+        label="Aprobar" 
+        icon="pi pi-check" 
+        styleClass="p-button-success"
+        (onClick)="approveReservation(selectedReservation); closeDetailDialog()">
+      </p-button>
+    </div>
+  </div>
+  
+  <ng-template pTemplate="footer">
+    <p-button 
+      label="Cerrar" 
+      icon="pi pi-times" 
+      styleClass="p-button-text" 
+      (onClick)="closeDetailDialog()">
+    </p-button>
+  </ng-template>
+</p-dialog>
+
+<!-- Diálogo de rechazo con motivo -->
+<p-dialog 
+  [(visible)]="showRejectDialog" 
+  [modal]="true" 
+  header="Rechazar Reserva" 
+  [style]="{width: '40vw'}" 
+  [dismissableMask]="false"
+  [resizable]="false">
+  
+  <div *ngIf="selectedReservation" class="space-y-4">
+    <!-- Información de la reserva a rechazar -->
+    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+      <h4 class="text-sm font-medium text-red-900 mb-2">
+        <i class="pi pi-exclamation-triangle mr-2"></i>Reserva a Rechazar
+      </h4>
+      <div class="text-sm text-red-800">
+        <p><strong>Usuario:</strong> {{ getUserDisplayName(selectedReservation) }}</p>
+        <p><strong>Escenario:</strong> {{ selectedReservation.escenarioNombre }}</p>
+        <p><strong>Fecha:</strong> {{ formatDate(selectedReservation.fechaInicio) }}</p>
+        <p><strong>Horario:</strong> {{ formatTimeRange(selectedReservation.fechaInicio, selectedReservation.fechaFin) }}</p>
+      </div>
+    </div>
+    
+    <!-- Campo para el motivo del rechazo -->
+    <div class="space-y-2">
+      <label for="rejectionReason" class="block text-sm font-medium text-usco-gris-900">
+        <i class="pi pi-comment mr-2 text-usco-vino-600"></i>
+        Motivo del Rechazo <span class="text-red-500">*</span>
+      </label>
+      <textarea
+        id="rejectionReason"
+        pInputTextarea
+        [(ngModel)]="rejectionReason"
+        placeholder="Especifica el motivo por el cual se rechaza esta reserva..."
+        rows="4"
+        class="w-full"
+        [class.p-invalid]="rejectionReason.length === 0">
+      </textarea>
+      <small class="text-usco-gris-500">
+        Este motivo será enviado por email al usuario que solicitó la reserva.
+      </small>
+    </div>
+    
+    <!-- Información adicional -->
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+      <p class="text-blue-800 text-sm">
+        <i class="pi pi-info-circle mr-2"></i>
+        El usuario recibirá una notificación por email con el motivo del rechazo.
+      </p>
+    </div>
+  </div>
+  
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end space-x-3">
+      <p-button 
+        label="Cancelar" 
+        icon="pi pi-times" 
+        styleClass="p-button-text p-button-secondary" 
+        (onClick)="closeRejectDialog()">
+      </p-button>
+      <p-button 
+        label="Rechazar Reserva" 
+        icon="pi pi-ban" 
+        styleClass="p-button-danger"
+        [disabled]="!rejectionReason.trim()"
+        (onClick)="confirmRejectReservation()">
+      </p-button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- Confirmación de diálogo -->
+<p-confirmDialog></p-confirmDialog>

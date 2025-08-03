@@ -1,0 +1,221 @@
+<div class="min-h-screen bg-usco-gris-100 flex">
+  <!-- Sidebar -->
+  <div class="hidden md:flex md:flex-shrink-0">
+    <div class="flex flex-col w-64 bg-white border-r border-usco-gris-200 shadow-usco">
+      
+      
+      <!-- App Title -->
+      <div class="flex items-center h-16 px-4 border-b border-usco-gris-300 bg-gradient-to-r from-usco-vino-500 to-usco-vino-700">
+        <img 
+          src="assets/images/usco-logo.png" 
+          alt="USCO"
+          class="h-8 w-auto mr-3 filter brightness-0 invert"
+          onerror="this.style.display='none'"
+        >
+        <h2 class="text-xl font-bold text-white font-usco-condensed">CampusBookings</h2>
+      </div>
+      <!-- User Info and Logout at the top -->
+      <div class="p-4 border-b border-usco-gris-200 bg-white">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <div class="h-10 w-10 rounded-full bg-usco-ocre-400 flex items-center justify-center">
+              <span class="text-usco-vino-700 font-medium text-sm">{{ getInitials() | uppercase }}</span>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm font-medium text-usco-gris-800">
+                {{ currentUser?.nombre || 'Usuario' }}
+              </p>
+              <p class="text-xs font-medium text-usco-gris-500">
+                {{ currentUser?.email || '' }}
+              </p>
+            </div>
+          </div>
+          <button 
+            (click)="logout()"
+            class="p-2 rounded-full text-usco-gris-500 hover:bg-usco-gris-100 hover:text-usco-vino-500 focus:outline-none transition-colors"
+            title="Cerrar sesión"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <!-- Navigation Menu -->
+      <nav class="flex-1 px-2 py-4 space-y-1 bg-white overflow-y-auto">
+        <a 
+          routerLink="/dashboard" 
+          routerLinkActive="bg-usco-ocre-200 text-usco-vino-700 border-r-2 border-usco-vino-500"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="flex items-center px-4 py-3 text-sm font-medium text-usco-gris-700 rounded-l-md hover:bg-usco-ocre-100 hover:text-usco-vino-600 group transition-all duration-200"
+        >
+          <svg class="w-5 h-5 mr-3 text-usco-gris-500 group-hover:text-usco-vino-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+          </svg>
+          Inicio
+        </a>
+        <a 
+          routerLink="/dashboard/reservations" 
+          routerLinkActive="bg-usco-ocre-200 text-usco-vino-700 border-r-2 border-usco-vino-500" 
+          class="flex items-center px-4 py-3 text-sm font-medium text-usco-gris-700 rounded-l-md hover:bg-usco-ocre-100 hover:text-usco-vino-600 group transition-all duration-200"
+        >
+          <svg class="w-5 h-5 mr-3 text-usco-gris-500 group-hover:text-usco-vino-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+          Mis Reservas
+        </a>
+        <a 
+          routerLink="/dashboard/availability" 
+          routerLinkActive="bg-usco-ocre-200 text-usco-vino-700 border-r-2 border-usco-vino-500" 
+          class="flex items-center px-4 py-3 text-sm font-medium text-usco-gris-700 rounded-l-md hover:bg-usco-ocre-100 hover:text-usco-vino-600 group transition-all duration-200"
+        >
+          <svg class="w-5 h-5 mr-3 text-usco-gris-500 group-hover:text-usco-vino-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+          Disponibilidad
+        </a>
+        
+        <a 
+          routerLink="/dashboard/escenarios" 
+          routerLinkActive="bg-usco-ocre-200 text-usco-vino-700 border-r-2 border-usco-vino-500" 
+          class="flex items-center px-4 py-3 text-sm font-medium text-usco-gris-700 rounded-l-md hover:bg-usco-ocre-100 hover:text-usco-vino-600 group transition-all duration-200"
+        >
+          <svg class="w-5 h-5 mr-3 text-usco-gris-500 group-hover:text-usco-vino-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+          Escenarios
+        </a>
+        
+        <a 
+          *ngIf="authService.getUserRole() === 'admin'"
+          routerLink="/dashboard/admin" 
+          routerLinkActive="bg-usco-ocre-light text-usco-vino-tinto" 
+          class="flex items-center px-4 py-2 text-sm font-medium text-usco-gris-dark rounded-md hover:bg-usco-ocre-pale hover:text-usco-vino-tinto group"
+        >
+          <svg class="w-5 h-5 mr-3 text-usco-gris group-hover:text-usco-vino-tinto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+          Administración
+        </a>
+        
+        <!-- Empty div to push content up - replaced by user info at top -->
+        <div class="h-20"></div>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="flex flex-col flex-1 overflow-hidden">
+    <!-- Top navigation -->
+    <div class="relative z-10 flex items-center justify-between h-16 bg-usco-vino-tinto border-b border-usco-vino-tinto-dark md:hidden">
+      <button 
+        (click)="toggleMobileMenu()"
+        class="inline-flex items-center justify-center p-2 text-white rounded-md hover:bg-usco-vino-tinto-dark focus:outline-none"
+      >
+        <span class="sr-only">Abrir menú principal</span>
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+      <div class="flex-1 text-center">
+        <h1 class="text-lg font-medium text-white">CampusBookings</h1>
+      </div>
+      <div class="w-10"></div> <!-- Spacer to balance the flex layout -->
+    </div>
+
+    <!-- Mobile menu -->
+    <div *ngIf="isMobileMenuOpen" class="md:hidden bg-white shadow-lg">
+      <div class="pt-2 pb-3 space-y-1">
+        <a 
+          [routerLink]="['/dashboard']"
+          routerLinkActive="bg-ocra-100 text-vino-700" 
+          class="block px-4 py-3 text-base font-medium text-gris-700 hover:bg-ocra-50 hover:text-vino-800"
+        >
+          Inicio
+        </a>
+        <a 
+          [routerLink]="['/dashboard/reservations']"
+          routerLinkActive="bg-ocra-100 text-vino-700"
+          class="block px-4 py-3 text-base font-medium text-gris-700 hover:bg-ocra-50 hover:text-vino-800"
+        >
+          Mis Reservas
+        </a>
+        <a 
+          [routerLink]="['/dashboard/availability']"
+          routerLinkActive="bg-blue-50 text-blue-700" 
+          class="flex items-center px-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+          (click)="isMobileMenuOpen = false"
+        >
+          <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+          Disponibilidad
+        </a>
+        <a 
+          *ngIf="authService.getUserRole() === 'admin'"
+          routerLink="/dashboard/admin" 
+          routerLinkActive="bg-blue-50 text-blue-700" 
+          class="flex items-center px-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+        >
+          <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+          Administración
+        </a>
+      </div>
+    </div>
+
+    <!-- Page content -->
+    <main class="flex-1 overflow-y-auto focus:outline-none">
+      <div>
+        <router-outlet></router-outlet>
+        <div *ngIf="currentRoute === '/dashboard'" class="text-center py-16">
+          <div class="mx-auto w-24 h-24 bg-gradient-to-br from-usco-vino-100 to-usco-vino-200 rounded-full flex items-center justify-center mb-6 shadow-usco">
+            <img 
+              src="assets/images/usco-logo.png" 
+              alt="USCO"
+              class="h-12 w-auto filter brightness-0"
+              onerror="this.style.display='none'"
+            >
+          </div>
+          <h1 class="text-4xl font-bold text-usco-gris-800 mb-4 font-usco-condensed">Bienvenido a CampusBookings</h1>
+          <p class="text-lg text-usco-gris-600 mb-8 max-w-2xl mx-auto">Sistema de Reservas de la Universidad Surcolombiana. Gestiona y reserva espacios académicos y deportivos de manera eficiente.</p>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-12">
+            <div class="bg-white p-6 rounded-xl shadow-usco border border-usco-gris-200 hover:shadow-usco-lg transition-all duration-300">
+              <div class="w-12 h-12 bg-usco-vino-100 rounded-lg flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-usco-vino-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-semibold text-usco-gris-800 mb-2">Mis Reservas</h3>
+              <p class="text-usco-gris-600">Consulta y gestiona tus reservas activas</p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-usco border border-usco-gris-200 hover:shadow-usco-lg transition-all duration-300">
+              <div class="w-12 h-12 bg-usco-ocre-200 rounded-lg flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-usco-ocre-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-semibold text-usco-gris-800 mb-2">Disponibilidad</h3>
+              <p class="text-usco-gris-600">Consulta espacios disponibles</p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-usco border border-usco-gris-200 hover:shadow-usco-lg transition-all duration-300">
+              <div class="w-12 h-12 bg-usco-gris-200 rounded-lg flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-usco-gris-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-semibold text-usco-gris-800 mb-2">Escenarios</h3>
+              <p class="text-usco-gris-600">Explora todos los espacios disponibles</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

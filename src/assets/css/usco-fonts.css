@@ -1,0 +1,53 @@
+/**
+ * Fuentes tipográficas oficiales USCO
+ * Basado en: https://www.usco.edu.co/imagen-institucional/
+ */
+
+/* Open Sans - Fuente principal USCO */
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i');
+
+/* Open Sans Condensed - Fuente alternativa USCO */
+@import url('https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,300i,700');
+
+/* Variables de fuentes USCO */
+:root {
+  --usco-font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+  --usco-font-family-condensed: 'Open Sans Condensed', Arial, Helvetica, sans-serif;
+}
+
+/* Aplicar fuente principal a todo el documento */
+body,
+html {
+  font-family: var(--usco-font-family);
+  font-weight: 400;
+}
+
+/* Clases utilitarias para fuentes USCO */
+.font-usco {
+  font-family: var(--usco-font-family) !important;
+}
+
+.font-usco-condensed {
+  font-family: var(--usco-font-family-condensed) !important;
+}
+
+/* Mejoras tipográficas específicas para USCO */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--usco-font-family-condensed);
+  font-weight: 700;
+}
+
+.btn,
+.button,
+button {
+  font-family: var(--usco-font-family);
+  font-weight: 600;
+}
+
+/* Optimización de renderizado de fuentes */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+

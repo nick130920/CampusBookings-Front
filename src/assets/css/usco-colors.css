@@ -1,0 +1,317 @@
+/**
+ * Colores Institucionales Universidad Surcolombiana (USCO)
+ * Basado en: https://www.usco.edu.co/imagen-institucional/
+ */
+
+:root {
+  /* === COLORES PRINCIPALES USCO === */
+  
+  /* Vino Tinto - Color principal */
+  --usco-vino-tinto: #8F141B;
+  --usco-vino-tinto-light: #B15B60;
+  --usco-vino-tinto-lighter: #E3C5C6;
+  --usco-vino-tinto-lightest: #DDB8BA;
+  --usco-vino-tinto-pale: #F4E7E8;
+  --usco-vino-tinto-dark: #5C0E12;
+  
+  /* Gris */
+  --usco-gris: #4D626C;
+  --usco-gris-light: #839198;
+  --usco-gris-lighter: #A6B1B6;
+  --usco-gris-lightest: #DBE0E2;
+  --usco-gris-pale: #EDEFF0;
+  --usco-gris-dark: #1E262B;
+  
+  /* Ocre */
+  --usco-ocre: #DFD4A6;
+  --usco-ocre-light: #E5DDB8;
+  --usco-ocre-lighter: #EFEAD3;
+  --usco-ocre-lightest: #F5F2E4;
+  --usco-ocre-pale: #F9F6ED;
+  --usco-ocre-dark: #C7B363;
+  
+  /* === COLORES POR FACULTADES === */
+  --usco-juridicas: #7C0B69;
+  --usco-exactas: #9DC107;
+  --usco-sociales: #CE932C;
+  --usco-economia: #003561;
+  --usco-educacion: #AD142E;
+  --usco-ingenieria: #7D9C10;
+  --usco-salud: #00A4B7;
+  
+  /* === ALIASES PARA USO COMÚN === */
+  --primary-color: var(--usco-vino-tinto);
+  --primary-light: var(--usco-vino-tinto-light);
+  --primary-dark: var(--usco-vino-tinto-dark);
+  
+  --secondary-color: var(--usco-gris);
+  --secondary-light: var(--usco-gris-light);
+  --secondary-dark: var(--usco-gris-dark);
+  
+  --accent-color: var(--usco-ocre);
+  --accent-light: var(--usco-ocre-light);
+  --accent-dark: var(--usco-ocre-dark);
+  
+  /* === COLORES FUNCIONALES === */
+  --success-color: var(--usco-exactas);
+  --warning-color: var(--usco-ocre);
+  --danger-color: var(--usco-vino-tinto);
+  --info-color: var(--usco-salud);
+  
+  --background-color: var(--usco-gris-pale);
+  --text-color: var(--usco-gris-dark);
+  --text-muted: var(--usco-gris);
+  --border-color: var(--usco-gris-lighter);
+}
+
+/* === CLASES UTILITARIAS === */
+
+/* Backgrounds */
+.bg-usco-vino-tinto { background-color: var(--usco-vino-tinto) !important; }
+.bg-usco-vino-tinto-light { background-color: var(--usco-vino-tinto-light) !important; }
+.bg-usco-vino-tinto-dark { background-color: var(--usco-vino-tinto-dark) !important; }
+.bg-usco-vino-tinto-pale { background-color: var(--usco-vino-tinto-pale) !important; }
+
+.bg-usco-gris { background-color: var(--usco-gris) !important; }
+.bg-usco-gris-light { background-color: var(--usco-gris-light) !important; }
+.bg-usco-gris-lighter { background-color: var(--usco-gris-lighter) !important; }
+.bg-usco-gris-pale { background-color: var(--usco-gris-pale) !important; }
+.bg-usco-gris-dark { background-color: var(--usco-gris-dark) !important; }
+
+.bg-usco-ocre { background-color: var(--usco-ocre) !important; }
+.bg-usco-ocre-light { background-color: var(--usco-ocre-light) !important; }
+.bg-usco-ocre-pale { background-color: var(--usco-ocre-pale) !important; }
+.bg-usco-ocre-dark { background-color: var(--usco-ocre-dark) !important; }
+
+/* Text Colors */
+.text-usco-vino-tinto { color: var(--usco-vino-tinto) !important; }
+.text-usco-vino-tinto-light { color: var(--usco-vino-tinto-light) !important; }
+.text-usco-vino-tinto-dark { color: var(--usco-vino-tinto-dark) !important; }
+
+.text-usco-gris { color: var(--usco-gris) !important; }
+.text-usco-gris-light { color: var(--usco-gris-light) !important; }
+.text-usco-gris-dark { color: var(--usco-gris-dark) !important; }
+
+.text-usco-ocre { color: var(--usco-ocre) !important; }
+.text-usco-ocre-light { color: var(--usco-ocre-light) !important; }
+.text-usco-ocre-dark { color: var(--usco-ocre-dark) !important; }
+
+/* Borders */
+.border-usco-vino-tinto { border-color: var(--usco-vino-tinto) !important; }
+.border-usco-gris { border-color: var(--usco-gris) !important; }
+.border-usco-gris-lighter { border-color: var(--usco-gris-lighter) !important; }
+.border-usco-ocre { border-color: var(--usco-ocre) !important; }
+
+/* === GRADIENTES === */
+.bg-gradient-to-r { background-image: linear-gradient(to right, var(--tw-gradient-stops)) !important; }
+.bg-gradient-to-br { background-image: linear-gradient(to bottom right, var(--tw-gradient-stops)) !important; }
+
+.from-usco-vino-tinto { --tw-gradient-from: var(--usco-vino-tinto); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, transparent); }
+.to-usco-vino-tinto-dark { --tw-gradient-to: var(--usco-vino-tinto-dark); }
+.from-usco-gris-pale { --tw-gradient-from: var(--usco-gris-pale); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, transparent); }
+.to-usco-ocre-pale { --tw-gradient-to: var(--usco-ocre-pale); }
+
+/* === ESTADOS HOVER === */
+.hover\:text-usco-vino-tinto:hover { color: var(--usco-vino-tinto) !important; }
+.hover\:text-usco-vino-tinto-dark:hover { color: var(--usco-vino-tinto-dark) !important; }
+.hover\:bg-usco-vino-tinto:hover { background-color: var(--usco-vino-tinto) !important; }
+.hover\:bg-usco-vino-tinto-dark:hover { background-color: var(--usco-vino-tinto-dark) !important; }
+
+.hover\:from-usco-vino-tinto-dark:hover { --tw-gradient-from: var(--usco-vino-tinto-dark); }
+.hover\:to-usco-vino-tinto:hover { --tw-gradient-to: var(--usco-vino-tinto); }
+
+/* === ESTADOS FOCUS === */
+.focus\:ring-usco-vino-tinto:focus {
+  --tw-ring-color: var(--usco-vino-tinto);
+  box-shadow: 0 0 0 2px rgba(143, 20, 27, 0.2);
+}
+
+.focus\:border-usco-vino-tinto:focus {
+  border-color: var(--usco-vino-tinto);
+}
+
+/* === COMPONENTES ESPECÍFICOS === */
+
+/* Botones USCO */
+.btn-usco-primary {
+  background-color: var(--usco-vino-tinto);
+  border-color: var(--usco-vino-tinto);
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-usco-primary:hover {
+  background-color: var(--usco-vino-tinto-dark);
+  border-color: var(--usco-vino-tinto-dark);
+  transform: translateY(-2px);
+}
+
+.btn-usco-secondary {
+  background-color: var(--usco-gris);
+  border-color: var(--usco-gris);
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-usco-secondary:hover {
+  background-color: var(--usco-gris-dark);
+  border-color: var(--usco-gris-dark);
+}
+
+.btn-usco-outline-primary {
+  color: var(--usco-vino-tinto);
+  border-color: var(--usco-vino-tinto);
+  background-color: transparent;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-usco-outline-primary:hover {
+  background-color: var(--usco-vino-tinto);
+  border-color: var(--usco-vino-tinto);
+  color: white;
+}
+
+/* Cards USCO */
+.card-usco {
+  border: 1px solid var(--border-color);
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(143, 20, 27, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.card-usco:hover {
+  box-shadow: 0 8px 15px rgba(143, 20, 27, 0.15);
+}
+
+.card-usco .card-header {
+  background-color: var(--usco-vino-tinto);
+  color: white;
+  border-bottom: 1px solid var(--usco-vino-tinto-dark);
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+/* Navbar USCO */
+.navbar-usco {
+  background-color: var(--usco-vino-tinto);
+  border-bottom: 2px solid var(--usco-vino-tinto-dark);
+}
+
+.navbar-usco .navbar-brand,
+.navbar-usco .nav-link {
+  color: white !important;
+  font-weight: 600;
+}
+
+.navbar-usco .nav-link:hover {
+  color: var(--usco-ocre-light) !important;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 0.25rem;
+}
+
+/* Forms USCO */
+.form-control-usco {
+  border: 2px solid var(--usco-gris-lighter);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-control-usco:focus {
+  border-color: var(--usco-vino-tinto);
+  box-shadow: 0 0 0 3px rgba(143, 20, 27, 0.1);
+  outline: none;
+}
+
+.form-control-usco.is-invalid {
+  border-color: #dc2626;
+  background-color: #fef2f2;
+}
+
+.form-check-input-usco:checked {
+  background-color: var(--usco-vino-tinto);
+  border-color: var(--usco-vino-tinto);
+}
+
+/* Alerts USCO */
+.alert-usco-primary {
+  color: var(--usco-vino-tinto-dark);
+  background-color: var(--usco-vino-tinto-pale);
+  border-color: var(--usco-vino-tinto-light);
+}
+
+.alert-usco-secondary {
+  color: var(--usco-gris-dark);
+  background-color: var(--usco-gris-pale);
+  border-color: var(--usco-gris-light);
+}
+
+.alert-usco-success {
+  color: #166534;
+  background-color: #f0fdf4;
+  border-color: var(--usco-exactas);
+}
+
+/* Progress bars USCO */
+.progress-bar-usco {
+  background-color: var(--usco-vino-tinto);
+}
+
+/* Tables USCO */
+.table-usco {
+  --bs-table-bg: transparent;
+  --bs-table-striped-bg: var(--usco-gris-pale);
+  --bs-table-hover-bg: var(--usco-vino-tinto-pale);
+}
+
+.table-usco thead th {
+  background-color: var(--usco-vino-tinto);
+  color: white;
+  border-color: var(--usco-vino-tinto-dark);
+  font-weight: 600;
+}
+
+/* === FONDOS POR FACULTAD === */
+.bg-facultad-juridicas { background-color: var(--usco-juridicas) !important; }
+.bg-facultad-exactas { background-color: var(--usco-exactas) !important; }
+.bg-facultad-sociales { background-color: var(--usco-sociales) !important; }
+.bg-facultad-economia { background-color: var(--usco-economia) !important; }
+.bg-facultad-educacion { background-color: var(--usco-educacion) !important; }
+.bg-facultad-ingenieria { background-color: var(--usco-ingenieria) !important; }
+.bg-facultad-salud { background-color: var(--usco-salud) !important; }
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .navbar-usco {
+    background-color: var(--usco-vino-tinto-dark);
+  }
+}
+
+/* === ANIMACIONES === */
+.btn-usco-primary,
+.btn-usco-secondary,
+.btn-usco-outline-primary {
+  transition: all 0.3s ease;
+}
+
+.card-usco {
+  transition: box-shadow 0.3s ease;
+}
+
+/* === PRINT STYLES === */
+@media print {
+  :root {
+    --usco-vino-tinto: #000000;
+    --usco-gris: #333333;
+    --usco-ocre: #666666;
+  }
+  
+  .card-usco {
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+}

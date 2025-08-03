@@ -1,0 +1,104 @@
+/* Estilos personalizados para PrimeNG + USCO */
+
+/* Animación personalizada para la entrada */
+@keyframes slideInFromTop {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.login-card {
+  animation: slideInFromTop 0.6s ease-out;
+}
+
+/* Hover effect para el logo USCO */
+.usco-logo {
+  transition: transform 0.3s ease;
+}
+
+.usco-logo:hover {
+  transform: scale(1.05);
+}
+
+/* Customización de componentes PrimeNG con colores USCO */
+:host ::ng-deep {
+  /* FloatLabel personalizado */
+  .p-floatlabel label {
+    color: var(--usco-gris) !important;
+    font-weight: 500;
+  }
+  
+  .p-floatlabel .p-focus label {
+    color: var(--usco-vino) !important;
+  }
+  
+  /* InputText personalizado */
+  .p-inputtext {
+    border-color: var(--usco-gris-light);
+    border-radius: 0.5rem;
+  }
+  
+  .p-inputtext:focus {
+    border-color: var(--usco-vino);
+    box-shadow: 0 0 0 0.2rem rgba(143, 20, 27, 0.2);
+  }
+  
+  /* Password personalizado */
+  .p-password .p-inputtext:focus {
+    border-color: var(--usco-vino);
+    box-shadow: 0 0 0 0.2rem rgba(143, 20, 27, 0.2);
+  }
+  
+  /* Button personalizado */
+  .p-button {
+    background: linear-gradient(135deg, var(--usco-vino) 0%, var(--usco-vino-dark) 100%);
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  
+  .p-button:hover {
+    background: linear-gradient(135deg, var(--usco-vino-dark) 0%, var(--usco-vino) 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(143, 20, 27, 0.3);
+  }
+  
+  .p-button:focus {
+    box-shadow: 0 0 0 0.2rem rgba(143, 20, 27, 0.5);
+  }
+  
+  /* Checkbox personalizado */
+  .p-checkbox .p-checkbox-box {
+    border-color: var(--usco-gris-light);
+    border-radius: 0.25rem;
+  }
+  
+  .p-checkbox .p-checkbox-box.p-highlight {
+    background-color: var(--usco-vino);
+    border-color: var(--usco-vino);
+  }
+  
+  .p-checkbox:not(.p-disabled) .p-checkbox-box:hover {
+    border-color: var(--usco-vino);
+  }
+  
+  /* Message personalizado */
+  .p-message.p-message-success {
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    color: rgb(22, 163, 74);
+  }
+  
+  .p-message.p-message-error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: rgb(220, 38, 38);
+  }
+}

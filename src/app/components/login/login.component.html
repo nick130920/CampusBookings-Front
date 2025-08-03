@@ -1,0 +1,140 @@
+<div class="min-h-screen bg-gradient-to-br from-gray-100 to-amber-50 flex items-center justify-center p-4 login-container">
+  <div class="w-full max-w-lg bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 login-card">
+    <!-- Header con logo y colores USCO -->
+    <div class="bg-primary p-8 text-center relative">
+      <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+      <div class="relative z-10">
+        <div class="mb-4">
+          <img 
+            src="assets/images/usco-logo.png" 
+            alt="Universidad Surcolombiana"
+            class="mx-auto h-20 w-auto filter brightness-0 invert drop-shadow-lg usco-logo"
+            onerror="this.style.display='none'"
+          >
+        </div>
+        <h1 class="text-xl font-bold text-white mb-2 font-usco-condensed">SISTEMA DE RESERVAS</h1>
+        <p class="text-sm text-amber-200">Universidad Surcolombiana</p>
+      </div>
+    </div>
+    
+    <div class="p-8">
+      <div class="text-center mb-8">
+        <h2 class="text-xl font-bold text-gray-800">Iniciar Sesión</h2>
+        <p class="text-sm mt-2 text-gray-600">Ingresa tus credenciales para continuar</p>
+      </div>
+
+      <!-- Success Message -->
+      <p-message 
+        *ngIf="showSuccessMessage" 
+        severity="success" 
+        text="¡Registro exitoso! Por favor inicia sesión con tus credenciales."
+        class="mb-6">
+      </p-message>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Email Input -->
+        <div class="field">
+          <p-floatlabel>
+            <input 
+              id="email"
+              type="email"
+              pInputText
+              formControlName="email"
+              class="w-full"
+              [class.ng-invalid]="email?.invalid && email?.touched"
+            />
+            <label for="email">
+              <i class="pi pi-envelope mr-2 text-primary"></i>
+              Correo electrónico
+            </label>
+          </p-floatlabel>
+          <small 
+            *ngIf="email?.invalid && email?.touched" 
+            class="p-error block mt-2">
+            <span *ngIf="email?.hasError('required')">El correo electrónico es requerido</span>
+            <span *ngIf="email?.hasError('email')">Por favor ingresa un correo electrónico válido</span>
+          </small>
+        </div>
+
+        <!-- Password Input -->
+        <div class="field">
+          <p-floatlabel>
+            <p-password 
+              id="password"
+              formControlName="password"
+              styleClass="w-full"
+              inputStyleClass="w-full"
+              [toggleMask]="true"
+              [feedback]="false"
+              [class.ng-invalid]="password?.invalid && password?.touched">
+            </p-password>
+            <label for="password">
+              <i class="pi pi-lock mr-2 text-primary"></i>
+              Contraseña
+            </label>
+          </p-floatlabel>
+          <small 
+            *ngIf="password?.invalid && password?.touched" 
+            class="p-error block mt-2">
+            <span *ngIf="password?.hasError('required')">La contraseña es requerida</span>
+          </small>
+        </div>
+
+        <!-- Remember Me & Forgot Password -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <p-checkbox 
+              id="rememberMe"
+              formControlName="rememberMe"
+              binary="true"
+              class="mr-2">
+            </p-checkbox>
+            <label for="rememberMe" class="text-sm text-gray-700">
+              Recordarme
+            </label>
+          </div>
+          <a routerLink="/forgot-password" class="text-sm text-primary hover:text-primary-600 transition-colors font-medium">
+            ¿Olvidaste tu contraseña?
+          </a>
+        </div>
+
+        <!-- Error Message -->
+        <p-message 
+          *ngIf="errorMessage" 
+          severity="error" 
+          [text]="errorMessage"
+          class="mb-4">
+        </p-message>
+
+        <!-- Submit Button -->
+        <p-button
+          type="submit"
+          [disabled]="loginForm.invalid || isLoading"
+          [loading]="isLoading"
+          label="Iniciar Sesión"
+          icon="pi pi-sign-in"
+          styleClass="w-full justify-center"
+          class="w-full"
+          [text]="false"
+          [raised]="true">
+        </p-button>
+      </form>
+
+      <div class="mt-8 text-center">
+        <p class="text-sm text-gray-600">
+          ¿No tienes una cuenta?
+          <a routerLink="/register" class="font-semibold text-primary hover:text-primary-600 transition-colors">
+            Regístrate aquí
+          </a>
+        </p>
+      </div>
+      
+      <!-- Footer institucional -->
+      <div class="mt-6 pt-6 border-t border-gray-200 text-center">
+        <p class="text-xs text-gray-500">
+          Sistema de Reservas • Universidad Surcolombiana
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

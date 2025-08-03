@@ -1,0 +1,184 @@
+<div class="min-h-screen bg-gradient-to-br from-usco-gris-100 to-usco-ocre-100 flex items-center justify-center p-4 login-container">
+  <div class="w-full max-w-lg bg-white rounded-xl shadow-usco overflow-hidden border border-usco-gris-200 login-card">
+    <!-- Header con logo y colores USCO -->
+    <div class="bg-gradient-to-r from-usco-vino-500 to-usco-vino-700 p-8 text-center relative">
+      <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+      <div class="relative z-10">
+        <div class="mb-4">
+          <img 
+            src="assets/images/usco-logo.png" 
+            alt="Universidad Surcolombiana"
+            class="mx-auto h-20 w-auto filter brightness-0 invert drop-shadow-lg usco-logo"
+            onerror="this.style.display='none'"
+          >
+        </div>
+        <h1 class="text-xl font-bold text-white mb-2 font-usco-condensed">SISTEMA DE RESERVAS</h1>
+        <p class="text-sm text-amber-200">Universidad Surcolombiana</p>
+      </div>
+    </div>
+    
+    <div class="p-8">
+      <div class="text-center mb-8">
+        <h2 class="text-xl font-bold text-usco-gris-800">Crear Cuenta</h2>
+        <p class="text-sm mt-2 text-usco-gris-500">Regístrate para acceder al sistema</p>
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Nombre -->
+        <div>
+          <label for="nombre" class="block text-sm font-medium text-usco-gris-800 mb-2">
+            <svg class="inline w-4 h-4 mr-2 text-usco-vino-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+            Nombre
+          </label>
+          <input
+            id="nombre"
+            type="text"
+            formControlName="nombre"
+            placeholder="Tu nombre"
+            class="w-full px-4 py-3 border-2 border-usco-gris-200 rounded-lg focus:ring-2 focus:ring-usco-vino-500 focus:border-usco-vino-500 transition-all duration-200 bg-gray-50 focus:bg-white input-field"
+            [class.border-red-500]="nombre?.invalid && nombre?.touched"
+          >
+          <div *ngIf="nombre?.invalid && nombre?.touched" class="mt-2 text-sm text-red-600">
+            <span *ngIf="nombre?.hasError('required')">El nombre es requerido</span>
+          </div>
+        </div>
+
+        <!-- Apellido -->
+        <div>
+          <label for="apellido" class="block text-sm font-medium text-usco-gris-dark mb-2">
+            <svg class="inline w-4 h-4 mr-2 text-usco-vino-tinto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+            Apellido
+          </label>
+          <input
+            id="apellido"
+            type="text"
+            formControlName="apellido"
+            placeholder="Tu apellido"
+            class="w-full px-4 py-3 border-2 border-usco-gris-lighter rounded-lg focus:ring-2 focus:ring-usco-vino-tinto focus:border-usco-vino-tinto transition-colors"
+            [class.border-red-500]="apellido?.invalid && apellido?.touched"
+            [class.focus:border-red-500]="apellido?.invalid && apellido?.touched"
+          >
+          <div *ngIf="apellido?.invalid && apellido?.touched" class="mt-2 text-sm text-red-600">
+            <span *ngIf="apellido?.hasError('required')">El apellido es requerido</span>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label for="email" class="block text-sm font-medium text-usco-gris-dark mb-2">
+            <svg class="inline w-4 h-4 mr-2 text-usco-vino-tinto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+            </svg>
+            Correo electrónico
+          </label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            placeholder="usuario@usco.edu.co"
+            class="w-full px-4 py-3 border-2 border-usco-gris-lighter rounded-lg focus:ring-2 focus:ring-usco-vino-tinto focus:border-usco-vino-tinto transition-colors"
+            [class.border-red-500]="email?.invalid && email?.touched"
+            [class.focus:border-red-500]="email?.invalid && email?.touched"
+          >
+          <div *ngIf="email?.invalid && email?.touched" class="mt-2 text-sm text-red-600">
+            <span *ngIf="email?.hasError('required')">El correo electrónico es requerido</span>
+            <span *ngIf="email?.hasError('email')">Por favor ingresa un correo electrónico válido</span>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label for="password" class="block text-sm font-medium text-usco-gris-dark mb-2">
+            <svg class="inline w-4 h-4 mr-2 text-usco-vino-tinto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+            </svg>
+            Contraseña
+          </label>
+          <div class="relative">
+            <input
+              id="password"
+              [type]="hidePassword ? 'password' : 'text'"
+              formControlName="password"
+              placeholder="••••••••"
+              class="w-full px-4 py-3 pr-12 border-2 border-usco-gris-lighter rounded-lg focus:ring-2 focus:ring-usco-vino-tinto focus:border-usco-vino-tinto transition-colors"
+              [class.border-red-500]="password?.invalid && password?.touched"
+              [class.focus:border-red-500]="password?.invalid && password?.touched"
+            >
+            <button
+              type="button"
+              (click)="hidePassword = !hidePassword"
+              class="absolute inset-y-0 right-0 pr-4 flex items-center text-usco-gris hover:text-usco-vino-tinto transition-colors"
+              [attr.aria-label]="hidePassword ? 'Mostrar contraseña' : 'Ocultar contraseña'"
+            >
+              <svg *ngIf="hidePassword" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              <svg *ngIf="!hidePassword" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+              </svg>
+            </button>
+          </div>
+          <div *ngIf="password?.invalid && password?.touched" class="mt-2 text-sm text-red-600">
+            <span *ngIf="password?.hasError('required')">La contraseña es requerida</span>
+            <span *ngIf="password?.hasError('minlength')">La contraseña debe tener al menos 8 caracteres</span>
+          </div>
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+          <div class="flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            {{ errorMessage }}
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          [disabled]="registerForm.invalid || isLoading"
+          class="w-full flex justify-center py-3 px-6 border border-transparent rounded-lg shadow-lg text-sm font-semibold text-white bg-gradient-to-r from-usco-vino-500 to-usco-vino-700 hover:from-usco-vino-600 hover:to-usco-vino-800 hover:shadow-usco-button-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-usco-vino-500 disabled:opacity-50 disabled:cursor-not-allowed transform transition-all duration-150 hover:scale-105 disabled:hover:scale-100"
+        >
+          <span *ngIf="!isLoading" class="flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+            </svg>
+            Crear Cuenta
+          </span>
+          <span *ngIf="isLoading" class="flex items-center">
+            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Creando cuenta...
+          </span>
+        </button>
+      </form>
+
+      <div class="mt-8 text-center">
+        <p class="text-sm text-usco-gris">
+          ¿Ya tienes una cuenta?
+          <a routerLink="/login" class="font-semibold text-usco-vino-tinto hover:text-usco-vino-tinto-dark transition-colors">
+            Inicia sesión aquí
+          </a>
+        </p>
+      </div>
+      
+      <!-- Footer institucional -->
+      <div class="mt-6 pt-6 border-t border-usco-gris-lighter text-center">
+        <p class="text-xs text-usco-gris">
+          Sistema de Reservas • Universidad Surcolombiana
+        </p>
+        <p class="text-xs text-usco-gris mt-1">
+          Versión {{ getAppVersion() }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

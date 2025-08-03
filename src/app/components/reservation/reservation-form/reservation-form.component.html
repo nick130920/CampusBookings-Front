@@ -1,0 +1,330 @@
+<!-- Contenedor principal del formulario de reserva -->
+<div class="min-h-screen bg-usco-gris-100 py-8">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Encabezado -->
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-usco-gris-900 font-usco-condensed">Nueva Reserva</h1>
+      <p class="mt-2 text-usco-gris-600">Reserve su espacio de manera rápida y sencilla</p>
+    </div>
+
+    <!-- Progreso del wizard -->
+    <div class="mb-8">
+      <p-steps 
+        [model]="steps" 
+        [activeIndex]="currentStep"
+        [readonly]="true"
+        styleClass="usco-steps">
+      </p-steps>
+    </div>
+
+    <!-- Formulario principal -->
+    <form [formGroup]="reservationForm" (ngSubmit)="onSubmit()">
+      <p-card class="shadow-usco border-0">
+        
+        <!-- PASO 1: Selección de Escenario -->
+        <div *ngIf="currentStep === 0" class="step-content">
+          <div class="text-center mb-6">
+            <h2 class="text-xl font-semibold text-usco-gris-900 mb-2">Seleccionar Escenario</h2>
+            <p class="text-usco-gris-600">Elija el espacio que desea reservar</p>
+          </div>
+
+          <div *ngIf="isLoading" class="text-center py-8">
+            <p-progressSpinner strokeWidth="3"></p-progressSpinner>
+            <p class="mt-4 text-usco-gris-600">Cargando escenarios...</p>
+          </div>
+
+          <div *ngIf="!isLoading" class="space-y-4">
+            <!-- Dropdown de escenarios -->
+            <div class="field">
+              <label for="escenario" class="block text-sm font-medium text-usco-gris-900 mb-2">
+                <i class="pi pi-building mr-2 text-usco-vino-600"></i>
+                Escenario
+              </label>
+              <p-select
+                id="escenario"
+                formControlName="escenarioId"
+                [options]="scenarios"
+                optionLabel="nombre"
+                optionValue="id"
+                placeholder="Seleccione un escenario"
+                styleClass="w-full"
+                (onChange)="onScenarioChange()"
+                [class.ng-invalid]="reservationForm.get('escenarioId')?.invalid && reservationForm.get('escenarioId')?.touched">
+                <ng-template pTemplate="selectedItem">
+                  <div *ngIf="selectedScenario" class="flex items-center">
+                    <i class="pi pi-building mr-2 text-usco-vino-600"></i>
+                    <span>{{ selectedScenario.nombre }}</span>
+                  </div>
+                </ng-template>
+                <ng-template let-scenario pTemplate="item">
+                  <div class="flex items-center justify-between p-2">
+                    <div>
+                      <div class="font-medium">{{ scenario.nombre }}</div>
+                      <div class="text-sm text-gray-500">{{ scenario.ubicacion }} • {{ scenario.tipo }}</div>
+                    </div>
+                    <p-chip 
+                      [label]="scenario.capacidad + ' personas'" 
+                      styleClass="text-xs bg-usco-ocre-100 text-usco-ocre-800">
+                    </p-chip>
+                  </div>
+                </ng-template>
+              </p-select>
+            </div>
+
+            <!-- Información del escenario seleccionado -->
+            <div *ngIf="selectedScenario" class="mt-6 p-4 bg-usco-gris-50 rounded-lg border border-usco-gris-200">
+              <h3 class="font-medium text-usco-gris-900 mb-2">{{ selectedScenario.nombre }}</h3>
+              <p class="text-sm text-usco-gris-700 mb-3">{{ selectedScenario.descripcion }}</p>
+              
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                <div>
+                  <span class="text-usco-gris-500">Tipo:</span>
+                  <div class="font-medium">{{ selectedScenario.tipo }}</div>
+                </div>
+                <div>
+                  <span class="text-usco-gris-500">Ubicación:</span>
+                  <div class="font-medium">{{ selectedScenario.ubicacion }}</div>
+                </div>
+                <div>
+                  <span class="text-usco-gris-500">Capacidad:</span>
+                  <div class="font-medium">{{ selectedScenario.capacidad }} personas</div>
+                </div>
+                <div *ngIf="selectedScenario.costoPorHora">
+                  <span class="text-usco-gris-500">Costo/hora:</span>
+                  <div class="font-medium">{{ selectedScenario.costoPorHora | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PASO 2: Fecha y Hora -->
+        <div *ngIf="currentStep === 1" class="step-content">
+          <div class="text-center mb-6">
+            <h2 class="text-xl font-semibold text-usco-gris-900 mb-2">Fecha y Hora</h2>
+            <p class="text-usco-gris-600">Seleccione cuándo desea usar el espacio</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Selección de fecha -->
+            <div>
+              <label for="fecha" class="block text-sm font-medium text-usco-gris-900 mb-2">
+                <i class="pi pi-calendar mr-2 text-usco-vino-600"></i>
+                Fecha
+              </label>
+              <p-datePicker
+                id="fecha"
+                formControlName="fechaSeleccionada"
+                [minDate]="minDate"
+                [maxDate]="maxDate"
+                dateFormat="dd/mm/yy"
+                placeholder="Seleccione una fecha"
+                styleClass="w-full"
+                (onSelect)="onDateChange()"
+                [class.ng-invalid]="reservationForm.get('fechaSeleccionada')?.invalid && reservationForm.get('fechaSeleccionada')?.touched">
+              </p-datePicker>
+            </div>
+
+            <!-- Duración -->
+            <div>
+              <label for="duracion" class="block text-sm font-medium text-usco-gris-900 mb-2">
+                <i class="pi pi-clock mr-2 text-usco-vino-600"></i>
+                Duración
+              </label>
+              <p-select
+                id="duracion"
+                formControlName="duracion"
+                [options]="getDurationOptions()"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Seleccione duración"
+                styleClass="w-full"
+                (onChange)="onDurationChange()">
+              </p-select>
+            </div>
+          </div>
+
+          <!-- Horarios disponibles -->
+          <div *ngIf="availableTimeSlots.length > 0" class="mt-6">
+            <label class="block text-sm font-medium text-usco-gris-900 mb-3">
+              <i class="pi pi-clock mr-2 text-usco-vino-600"></i>
+              Horarios Disponibles
+            </label>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+              <button
+                *ngFor="let slot of availableTimeSlots"
+                type="button"
+                (click)="onTimeSlotSelect(slot)"
+                [disabled]="slot.available === false"
+                [ngClass]="{
+                  'p-3 rounded-lg text-sm font-medium transition-all duration-200 border': true,
+                  'bg-usco-vino-600 text-white border-usco-vino-600 shadow-md': selectedTimeSlot === slot,
+                  'bg-white text-usco-gris-900 border-usco-gris-300 hover:border-usco-vino-600 hover:bg-usco-vino-50': selectedTimeSlot !== slot && slot.available !== false,
+                  'bg-usco-gris-100 text-usco-gris-400 border-usco-gris-200 cursor-not-allowed': slot.available === false
+                }"
+              >
+                {{ slot.label }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Estado de disponibilidad -->
+          <div *ngIf="isCheckingAvailability" class="mt-6 text-center">
+            <p-progressSpinner strokeWidth="3" [style]="{'width': '30px', 'height': '30px'}"></p-progressSpinner>
+            <p class="mt-2 text-sm text-usco-gris-600">Verificando disponibilidad...</p>
+          </div>
+
+          <!-- Mensaje de disponibilidad -->
+          <div *ngIf="availabilityMessage && !isCheckingAvailability" class="mt-6">
+            <p-message 
+              [severity]="availabilityResponse?.disponible ? 'success' : 'warn'"
+              [text]="availabilityMessage"
+              styleClass="w-full">
+            </p-message>
+          </div>
+
+          <!-- Horarios alternativos -->
+          <div *ngIf="suggestedSlots.length > 0" class="mt-6">
+            <h4 class="text-sm font-medium text-usco-gris-900 mb-3">Horarios Alternativos Sugeridos</h4>
+            <div class="space-y-2">
+              <button
+                *ngFor="let alternative of suggestedSlots"
+                type="button"
+                (click)="onAlternativeSlotSelect(alternative)"
+                class="w-full p-3 text-left bg-usco-ocre-50 border border-usco-ocre-200 rounded-lg hover:bg-usco-ocre-100 transition-colors"
+              >
+                <div class="font-medium text-usco-gris-900">{{ alternative.descripcion }}</div>
+                <div class="text-sm text-usco-gris-600">
+                  {{ formatAlternativeTimeRange(alternative.fechaInicio, alternative.fechaFin) }}
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PASO 3: Detalles -->
+        <div *ngIf="currentStep === 2" class="step-content">
+          <div class="text-center mb-6">
+            <h2 class="text-xl font-semibold text-usco-gris-900 mb-2">Detalles de la Reserva</h2>
+            <p class="text-usco-gris-600">Información adicional (opcional)</p>
+          </div>
+
+          <div>
+            <label for="observaciones" class="block text-sm font-medium text-usco-gris-900 mb-2">
+              <i class="pi pi-file-edit mr-2 text-usco-vino-600"></i>
+              Observaciones
+            </label>
+            <textarea
+              id="observaciones"
+              pInputTextarea
+              formControlName="observaciones"
+              rows="4"
+              placeholder="Agregue cualquier información adicional o requerimientos especiales..."
+              class="w-full p-3 border border-usco-gris-300 rounded-lg focus:ring-2 focus:ring-usco-vino-600 focus:border-usco-vino-600"
+              [class.ng-invalid]="reservationForm.get('observaciones')?.invalid && reservationForm.get('observaciones')?.touched">
+            </textarea>
+            <small class="text-usco-gris-500 mt-1 block">
+              Máximo 500 caracteres ({{ reservationForm.get('observaciones')?.value?.length || 0 }}/500)
+            </small>
+          </div>
+        </div>
+
+        <!-- PASO 4: Confirmación -->
+        <div *ngIf="currentStep === 3" class="step-content">
+          <div class="text-center mb-6">
+            <h2 class="text-xl font-semibold text-usco-gris-900 mb-2">Confirmar Reserva</h2>
+            <p class="text-usco-gris-600">Revise los detalles antes de confirmar</p>
+          </div>
+
+          <div class="bg-usco-gris-50 rounded-lg p-6 border border-usco-gris-200">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Detalles del escenario -->
+              <div>
+                <h3 class="font-medium text-usco-gris-900 mb-3">Escenario</h3>
+                <div class="space-y-2">
+                  <p><span class="text-usco-gris-600">Nombre:</span> {{ selectedScenario?.nombre }}</p>
+                  <p><span class="text-usco-gris-600">Tipo:</span> {{ selectedScenario?.tipo }}</p>
+                  <p><span class="text-usco-gris-600">Ubicación:</span> {{ selectedScenario?.ubicacion }}</p>
+                  <p><span class="text-usco-gris-600">Capacidad:</span> {{ selectedScenario?.capacidad }} personas</p>
+                </div>
+              </div>
+
+              <!-- Detalles de fecha y hora -->
+              <div>
+                <h3 class="font-medium text-usco-gris-900 mb-3">Fecha y Hora</h3>
+                <div class="space-y-2">
+                  <p><span class="text-usco-gris-600">Fecha:</span> {{ formatDate(reservationForm.get('fechaSeleccionada')?.value) }}</p>
+                  <p><span class="text-usco-gris-600">Hora:</span> {{ formatTimeRange(reservationForm.get('horaInicio')?.value, reservationForm.get('horaFin')?.value) }}</p>
+                  <p><span class="text-usco-gris-600">Duración:</span> {{ reservationForm.get('duracion')?.value }} minutos</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Observaciones -->
+            <div *ngIf="reservationForm.get('observaciones')?.value" class="mt-6 pt-6 border-t border-usco-gris-200">
+              <h3 class="font-medium text-usco-gris-900 mb-2">Observaciones</h3>
+              <p class="text-usco-gris-700">{{ reservationForm.get('observaciones')?.value }}</p>
+            </div>
+
+            <!-- Estado de disponibilidad final -->
+            <div *ngIf="availabilityResponse" class="mt-6 pt-6 border-t border-usco-gris-200">
+              <p-message 
+                [severity]="availabilityResponse.disponible ? 'success' : 'error'"
+                [text]="availabilityResponse.mensaje"
+                styleClass="w-full">
+              </p-message>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botones de navegación -->
+        <p-divider></p-divider>
+        
+        <div class="flex justify-between items-center pt-4">
+          <!-- Botón anterior -->
+          <p-button
+            *ngIf="currentStep > 0"
+            label="Anterior"
+            icon="pi pi-chevron-left"
+            styleClass="p-button-outlined p-button-secondary"
+            (onClick)="previousStep()">
+          </p-button>
+          <div *ngIf="currentStep === 0"></div> <!-- Spacer -->
+
+          <div class="flex space-x-3">
+            <!-- Botón cancelar -->
+            <p-button
+              label="Cancelar"
+              icon="pi pi-times"
+              styleClass="p-button-outlined p-button-secondary"
+              (onClick)="onCancel()">
+            </p-button>
+
+            <!-- Botón siguiente/confirmar -->
+            <p-button
+              *ngIf="currentStep < steps.length - 1"
+              label="Siguiente"
+              icon="pi pi-chevron-right"
+              [disabled]="!isStepValid(currentStep)"
+              (onClick)="nextStep()">
+            </p-button>
+
+            <p-button
+              *ngIf="currentStep === steps.length - 1"
+              label="Confirmar Reserva"
+              icon="pi pi-check"
+              [disabled]="!isFormValid"
+              [loading]="isSubmitting"
+              (onClick)="onSubmit()">
+            </p-button>
+          </div>
+        </div>
+      </p-card>
+    </form>
+  </div>
+</div>
+
+<!-- Confirmación de diálogo -->
+<p-confirmDialog></p-confirmDialog>
