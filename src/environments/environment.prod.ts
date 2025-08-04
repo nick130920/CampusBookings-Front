@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.campusbookings.com/api', // Replace with your production API URL
+  apiUrl: 'https://campusbookings-backend-production.up.railway.app/api', // Railway backend URL
   authEndpoint: '/auth',
   defaultLanguage: 'es',
   version: '0.0.1',
