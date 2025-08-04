@@ -1,29 +1,6 @@
-/* Estilos personalizados para PrimeNG + USCO */
+/* Estilos personalizados para PrimeNG + USCO - Optimizado */
 
-/* Animación personalizada para la entrada */
-@keyframes slideInFromTop {
-  0% {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-.login-card {
-  animation: slideInFromTop 0.6s ease-out;
-}
-
-/* Hover effect para el logo USCO */
-.usco-logo {
-  transition: transform 0.3s ease;
-}
-
-.usco-logo:hover {
-  transform: scale(1.05);
-}
+/* Solo estilos específicos de PrimeNG que no se pueden lograr con Tailwind */
 
 /* Customización de componentes PrimeNG con colores USCO */
 :host ::ng-deep {
