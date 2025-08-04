@@ -16,7 +16,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
-import { TabViewModule } from 'primeng/tabview';
+import { TabsModule } from 'primeng/tabs';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmationService } from 'primeng/api';
 
@@ -51,7 +51,7 @@ interface ReservationFilter {
     SelectModule,
     DatePickerModule,
     InputTextModule,
-    TabViewModule,
+    TabsModule,
     DialogModule
   ],
   templateUrl: './reservation-list.component.html',

@@ -10,7 +10,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { CheckboxModule } from 'primeng/checkbox';
 import { MessageModule } from 'primeng/message';
-import { MessagesModule } from 'primeng/messages';
 import { FloatLabelModule } from 'primeng/floatlabel';
 
 @Component({
@@ -26,7 +25,6 @@ import { FloatLabelModule } from 'primeng/floatlabel';
     PasswordModule,
     CheckboxModule,
     MessageModule,
-    MessagesModule,
     FloatLabelModule
   ],
   templateUrl: './login.component.html',

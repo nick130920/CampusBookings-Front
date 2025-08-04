@@ -14,7 +14,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { SelectModule } from 'primeng/select';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { DatePickerModule } from 'primeng/datepicker';
-import { InputSwitchModule } from 'primeng/inputswitch';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { ToastService } from '../../../services/toast.service';
 import { Scenario, ScenarioService, ImageUploadConfig, ImageUploadResponse } from '../../../services/scenario.service';
@@ -40,7 +40,7 @@ import { environment } from '../../../../environments/environment';
     SelectModule,
     AutoCompleteModule,
     DatePickerModule,
-    InputSwitchModule,
+    ToggleSwitchModule,
     FloatLabelModule
   ]
 })

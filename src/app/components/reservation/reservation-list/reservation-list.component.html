@@ -36,18 +36,14 @@
 
     <!-- Pestañas de administrador -->
     <div *ngIf="isAdmin" class="mb-6">
-      <p-tabView (onChange)="onTabChange($event)">
-        <p-tabPanel header="Mis Reservas" leftIcon="pi pi-user">
-          <ng-template pTemplate="content">
-            <!-- Contenido se mostrará dinámicamente -->
-          </ng-template>
-        </p-tabPanel>
-        <p-tabPanel header="Todas las Reservas" leftIcon="pi pi-users">
-          <ng-template pTemplate="content">
-            <!-- Contenido se mostrará dinámicamente -->
-          </ng-template>
-        </p-tabPanel>
-      </p-tabView>
+      <p-tabs (onChange)="onTabChange($event)">
+        <p-tab header="Mis Reservas">
+          <!-- Contenido se mostrará dinámicamente -->
+        </p-tab>
+        <p-tab header="Todas las Reservas">
+          <!-- Contenido se mostrará dinámicamente -->
+        </p-tab>
+      </p-tabs>
     </div>
 
     <!-- Filtros -->

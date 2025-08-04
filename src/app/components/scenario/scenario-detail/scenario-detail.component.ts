@@ -5,7 +5,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { TabViewModule } from 'primeng/tabview';
+import { TabsModule } from 'primeng/tabs';
 import { ChipModule } from 'primeng/chip';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -27,7 +27,7 @@ import { environment } from '../../../../environments/environment';
     CardModule,
     ButtonModule,
     ProgressSpinnerModule,
-    TabViewModule,
+    TabsModule,
     ChipModule,
     ToastModule,
     ConfirmDialogModule
