@@ -13,8 +13,6 @@ import { MessageModule } from 'primeng/message';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CardModule } from 'primeng/card';
 import { ChipModule } from 'primeng/chip';
-import { CalendarModule } from 'primeng/calendar';
-import { DropdownModule } from 'primeng/dropdown';
 
 // Services
 import { ScenarioService, Scenario } from '../../../services/scenario.service';
@@ -57,9 +55,7 @@ interface AvailabilityRequest {
     MessageModule,
     ProgressSpinnerModule,
     CardModule,
-    ChipModule,
-    CalendarModule,
-    DropdownModule
+    ChipModule
   ],
   templateUrl: './availability-calendar.component.html',
   styleUrls: ['./availability-calendar.component.css']

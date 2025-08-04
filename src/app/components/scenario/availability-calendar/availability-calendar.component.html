@@ -20,16 +20,16 @@
           <i class="pi pi-building mr-2 text-usco-vino-600"></i>
           Escenario
         </label>
-        <p-dropdown
+        <p-select
           id="scenarioId"
           formControlName="scenarioId"
           [options]="scenarios"
           optionLabel="nombre"
           optionValue="id"
           placeholder="Seleccione un escenario"
-          styleClass="w-full"
+          class="w-full"
           (onChange)="onScenarioChange($event.value)">
-        </p-dropdown>
+        </p-select>
       </div>
 
       <!-- Filtro por tipo -->
@@ -38,13 +38,13 @@
           <i class="pi pi-tag mr-2 text-usco-vino-600"></i>
           Tipo
         </label>
-        <p-dropdown
+        <p-select
           id="scenarioType"
           formControlName="scenarioType"
           [options]="scenarioTypes"
           placeholder="Todos los tipos"
-          styleClass="w-full">
-        </p-dropdown>
+          class="w-full">
+        </p-select>
       </div>
 
       <!-- Filtro por ubicación -->
@@ -53,13 +53,13 @@
           <i class="pi pi-map-marker mr-2 text-usco-vino-600"></i>
           Ubicación
         </label>
-        <p-dropdown
+        <p-select
           id="location"
           formControlName="location"
           [options]="locations"
           placeholder="Todas las ubicaciones"
-          styleClass="w-full">
-        </p-dropdown>
+          class="w-full">
+        </p-select>
       </div>
 
       <!-- Rango de fechas -->
@@ -68,7 +68,7 @@
           <i class="pi pi-calendar-plus mr-2 text-usco-vino-600"></i>
           Rango de Fechas
         </label>
-        <p-calendar
+        <p-datePicker
           id="dateRange"
           formControlName="dateRange"
           selectionMode="range"
@@ -76,8 +76,8 @@
           [maxDate]="maxDate"
           dateFormat="dd/mm/yy"
           placeholder="Seleccione fechas"
-          styleClass="w-full">
-        </p-calendar>
+          class="w-full">
+        </p-datePicker>
       </div>
     </div>
 
