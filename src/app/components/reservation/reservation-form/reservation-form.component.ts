@@ -373,7 +373,7 @@ export class ReservationFormComponent implements OnInit {
     ).subscribe({
       next: (reservation) => {
         this.toastService.showSuccess('Reserva creada exitosamente');
-        this.router.navigate(['/dashboard/reservations'], {
+        this.router.navigate(['/dashboard/reservas'], {
           queryParams: { created: reservation.id }
         });
       },

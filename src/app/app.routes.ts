@@ -43,13 +43,6 @@ export const routes: Routes = [
         ]
       },
       {
-        path: 'reservations',
-        children: [
-          { path: '', component: ReservationListComponent },
-          { path: 'new', component: ReservationFormComponent }
-        ]
-      },
-      {
         path: 'reservas',
         children: [
           { path: '', component: ReservationListComponent },
@@ -60,9 +53,14 @@ export const routes: Routes = [
         path: 'admin',
         children: [
           { path: '', component: AdminDashboardComponent },
-          { path: 'reservas', component: ReservationListComponent },
           { path: 'reportes', component: ReportsComponent }
         ]
+      },
+      // Redirecciones para compatibilidad
+      {
+        path: 'reservations',
+        redirectTo: 'reservas',
+        pathMatch: 'full'
       }
     ]
   },

@@ -126,6 +126,12 @@ export class ReservationListComponent implements OnInit {
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
     this.isAdmin = this.authService.isAdmin();
+    
+    // Si es admin, iniciar en "Todas las Reservas"
+    if (this.isAdmin) {
+      this.activeTab = 'all';
+    }
+    
     this.loadReservations();
     this.checkForSuccessMessage();
   }
@@ -314,7 +320,7 @@ export class ReservationListComponent implements OnInit {
   }
 
   onCreateNewReservation(): void {
-    this.router.navigate(['/dashboard/reservations/new']);
+    this.router.navigate(['/dashboard/reservas/nueva']);
   }
 
   getStatusSeverity(status: string): 'success' | 'info' | 'warning' | 'danger' {
@@ -385,10 +391,13 @@ export class ReservationListComponent implements OnInit {
   }
 
   formatCreatedDate(dateString: string): string {
+    console.log(dateString);
+
     const date = new Date(dateString);
     const now = new Date();
     const diffInDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
     
+    console.log(diffInDays);
     if (diffInDays === 0) {
       return 'Hoy';
     } else if (diffInDays === 1) {
