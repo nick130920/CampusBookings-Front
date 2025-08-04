@@ -10,7 +10,7 @@
 
 | Variable | Valor | Environment |
 |----------|-------|-------------|
-| `API_URL` | `https://campusbookings-backend-production.up.railway.app/api` | Production |
+| `API_URL` | `https://campusbookings-production.up.railway.app/api` | Production |
 | `AUTH_ENDPOINT` | `/auth` | Production |
 | `ENABLE_DEBUG` | `false` | Production |
 
@@ -85,7 +85,7 @@ git push
 1. Abre las herramientas de desarrollador (F12)
 2. Ve a la pestaña **Network**
 3. Intenta hacer login
-4. Verifica que las requests vayan a: `https://campusbookings-backend-production.up.railway.app/api`
+4. Verifica que las requests vayan a: `https://campusbookings-production.up.railway.app/api`
 
 ## 🔍 Solución de Problemas
 
@@ -111,5 +111,5 @@ git push
 ## 🔗 URLs Importantes
 
 - **Frontend (Vercel)**: `https://campus-bookings-front-3zp2nqik9-nick130920s-projects.vercel.app`
-- **Backend (Railway)**: `https://campusbookings-backend-production.up.railway.app`
-- **API Endpoint**: `https://campusbookings-backend-production.up.railway.app/api` 
+- **Backend (Railway)**: `https://campusbookings-production.up.railway.app`
+- **API Endpoint**: `https://campusbookings-production.up.railway.app/api` 
