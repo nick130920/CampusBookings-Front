@@ -1,0 +1,99 @@
+/* Estilos específicos para el componente de reportes */
+
+.table-container {
+  @apply overflow-x-auto shadow-usco rounded-lg;
+}
+
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mejorar la visualización en móviles */
+@media (max-width: 768px) {
+  .table-container {
+    @apply -mx-4;
+  }
+  
+  .table-container table {
+    @apply text-xs;
+  }
+  
+  .table-container th,
+  .table-container td {
+    @apply px-3 py-2;
+  }
+}
+
+/* Efectos de hover en las filas */
+.table-row:hover {
+  @apply bg-usco-gris-50 transform scale-[1.002] transition-all duration-200;
+}
+
+/* Estilos para badges de estado */
+.status-badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.status-approved {
+  @apply bg-green-100 text-green-800;
+}
+
+.status-pending {
+  @apply bg-yellow-100 text-yellow-800;
+}
+
+.status-rejected {
+  @apply bg-red-100 text-red-800;
+}
+
+.status-cancelled {
+  @apply bg-gray-100 text-gray-800;
+}
+
+/* Animación de carga */
+.loading-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+/* Estilo para campos requeridos */
+.required-field label::after {
+  content: " *";
+  @apply text-red-500;
+}
+
+/* Mejoras en accesibilidad */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-usco-vino-500;
+}
+
+/* Responsive grid improvements */
+.report-grid {
+  @apply grid gap-6;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+/* Custom scrollbar */
+.table-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  @apply bg-usco-gris-100 rounded;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  @apply bg-usco-gris-400 rounded;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  @apply bg-usco-gris-600;
+}

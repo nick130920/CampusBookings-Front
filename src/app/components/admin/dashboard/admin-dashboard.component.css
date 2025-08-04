@@ -1,0 +1,133 @@
+/* Estilos específicos para el dashboard de administración */
+
+.admin-card {
+  @apply bg-white rounded-xl shadow-usco hover:shadow-usco-lg border border-usco-gris-200 transition-all duration-300 cursor-pointer transform hover:scale-105;
+}
+
+.admin-card:hover {
+  @apply border-usco-vino-300;
+}
+
+.admin-icon {
+  @apply flex items-center justify-center w-16 h-16 rounded-lg transition-colors;
+}
+
+.admin-icon-vino {
+  @apply bg-usco-vino-100 group-hover:bg-usco-vino-200;
+}
+
+.admin-icon-ocre {
+  @apply bg-usco-ocre-100 group-hover:bg-usco-ocre-200;
+}
+
+.admin-title {
+  @apply text-xl font-semibold text-usco-gris-900 mb-3 transition-colors;
+}
+
+.admin-title:hover {
+  @apply text-usco-vino-700;
+}
+
+.admin-description {
+  @apply text-usco-gris-600 leading-relaxed;
+}
+
+.admin-action {
+  @apply mt-6 flex items-center font-medium transition-colors;
+}
+
+.admin-action-vino {
+  @apply text-usco-vino-600 group-hover:text-usco-vino-700;
+}
+
+.admin-action-ocre {
+  @apply text-usco-ocre-600 group-hover:text-usco-ocre-700;
+}
+
+.admin-arrow {
+  @apply ml-2 w-4 h-4 transition-transform group-hover:translate-x-1;
+}
+
+/* Animaciones */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.floating {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .admin-grid {
+    @apply grid-cols-1;
+  }
+  
+  .admin-card {
+    @apply p-6;
+  }
+  
+  .admin-icon {
+    @apply w-12 h-12;
+  }
+  
+  .admin-title {
+    @apply text-lg;
+  }
+}
+
+/* Efectos de foco para accesibilidad */
+.admin-card:focus {
+  @apply outline-none ring-2 ring-offset-2 ring-usco-vino-500;
+}
+
+/* Mejoras de contraste */
+.high-contrast .admin-card {
+  @apply border-2 border-usco-gris-400;
+}
+
+.high-contrast .admin-title {
+  @apply text-black font-bold;
+}
+
+.high-contrast .admin-description {
+  @apply text-usco-gris-800;
+}
+
+/* Estados de loading */
+.loading-card {
+  @apply animate-pulse;
+}
+
+.loading-card .admin-icon {
+  @apply bg-usco-gris-200;
+}
+
+.loading-card .admin-title,
+.loading-card .admin-description {
+  @apply bg-usco-gris-200 text-transparent rounded;
+}
+
+/* Custom gradient background */
+.gradient-bg {
+  background: linear-gradient(135deg, var(--usco-vino-50) 0%, var(--usco-ocre-50) 100%);
+}
+
+/* Card hover effects */
+.card-3d {
+  perspective: 1000px;
+}
+
+.card-3d:hover .card-inner {
+  transform: rotateY(5deg) rotateX(5deg);
+}
+
+.card-inner {
+  transition: transform 0.3s ease;
+  transform-style: preserve-3d;
+}

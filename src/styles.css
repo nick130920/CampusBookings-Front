@@ -46,6 +46,7 @@ html, body {
   .text-usco-gris-600 { color: var(--usco-gris); }
   .text-usco-gris-700 { color: var(--usco-gris-dark); }
   .text-usco-gris-800 { color: var(--usco-gris-dark); }
+  .text-usco-gris-900 { color: var(--usco-gris-dark); }
   .text-usco-gris-400 { color: var(--usco-gris-light); }
   
   .border-usco-gris { border-color: var(--usco-gris-lighter); }
@@ -58,9 +59,11 @@ html, body {
   .bg-usco-ocre-100 { background-color: var(--usco-ocre-pale); }
   .bg-usco-ocre-200 { background-color: var(--usco-ocre-lightest); }
   .bg-usco-ocre-400 { background-color: var(--usco-ocre-light); }
+  .bg-usco-ocre-600 { background-color: var(--usco-ocre-dark); }
   
   .text-usco-ocre { color: var(--usco-ocre-dark); }
   .text-usco-ocre-700 { color: var(--usco-ocre-dark); }
+  .text-usco-ocre-600 { color: var(--usco-ocre-dark); }
   
   /* SOMBRAS USCO */
   .shadow-usco { 
@@ -143,5 +146,36 @@ html, body {
   .hover\:shadow-usco-lg:hover { 
     box-shadow: 0 10px 15px -3px rgba(143, 20, 27, 0.1), 0 4px 6px -2px rgba(143, 20, 27, 0.05); 
   }
+  .hover\:bg-usco-ocre-700:hover { background-color: var(--usco-ocre-dark); }
+  .hover\:border-usco-vino-300:hover { border-color: var(--usco-vino-tinto); }
+  
+  /* Clases adicionales necesarias */
+  .bg-white { background-color: #ffffff; }
+  .text-white { color: #ffffff; }
+  .border-transparent { border-color: transparent; }
+  .divide-y > * + * { border-top-width: 1px; }
+  .divide-usco-gris-200 > * + * { border-color: var(--usco-gris-lightest); }
+  
+  /* Clases de estado básicas */
+  .bg-green-100 { background-color: #dcfce7; }
+  .text-green-800 { color: #166534; }
+  .bg-yellow-100 { background-color: #fef3c7; }
+  .text-yellow-800 { color: #92400e; }
+  .bg-red-100 { background-color: #fee2e2; }
+  .text-red-800 { color: #991b1b; }
+  .bg-gray-100 { background-color: #f3f4f6; }
+  .text-gray-800 { color: #1f2937; }
+  
+  /* Hover states para colores específicos */
+  .hover\:border-usco-ocre-600:hover { border-color: var(--usco-ocre-dark); }
+  .group-hover\:bg-usco-vino-200 .group:hover & { background-color: var(--usco-vino-tinto-lighter); }
+  .group-hover\:bg-usco-ocre-200 .group:hover & { background-color: var(--usco-ocre-lightest); }
+  
+  /* Colores básicos adicionales */
+  .border-gray-300 { border-color: #d1d5db; }
+  .text-gray-600 { color: #4b5563; }
+  .text-gray-800 { color: #1f2937; }
+  .text-blue-600 { color: #2563eb; }
+  .hover\:underline:hover { text-decoration: underline; }
 }
 

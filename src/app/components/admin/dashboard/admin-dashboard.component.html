@@ -1,0 +1,130 @@
+<div class="min-h-screen bg-usco-gris-100 p-6">
+  <div class="max-w-6xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-4xl font-bold text-usco-gris-900 font-usco-condensed">Panel de Administración</h1>
+      <p class="mt-2 text-lg text-usco-gris-600">Gestiona y supervisa el sistema CampusBookings</p>
+    </div>
+
+    <!-- Módulos de administración -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Gestión de Reservas -->
+      <div 
+        class="group bg-white rounded-xl shadow-usco hover:shadow-usco-lg border border-usco-gris-200 hover:border-usco-vino-500 transition-all duration-300 cursor-pointer transform hover:scale-105"
+        routerLink="/dashboard/admin/reservas"
+      >
+        <div class="p-8">
+          <!-- Icono -->
+          <div class="flex items-center justify-center w-16 h-16 bg-usco-vino-100 rounded-lg mb-6 group-hover:bg-usco-vino-200 transition-colors">
+            <svg 
+              class="w-8 h-8 text-usco-vino-600" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="2" 
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+              ></path>
+            </svg>
+          </div>
+          
+          <!-- Contenido -->
+          <div>
+            <h3 class="text-xl font-semibold text-usco-gris-900 mb-3 group-hover:text-usco-vino-700 transition-colors">
+              Gestión de Reservas
+            </h3>
+            <p class="text-usco-gris-600 leading-relaxed">
+              Administra y supervisa todas las reservas del sistema
+            </p>
+          </div>
+
+          <!-- Indicador de acción -->
+          <div class="mt-6 flex items-center text-usco-vino-600 font-medium group-hover:text-usco-vino-700 transition-colors">
+            <span class="text-sm">Acceder</span>
+            <svg class="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reportes y Análisis -->
+      <div 
+        class="group bg-white rounded-xl shadow-usco hover:shadow-usco-lg border border-usco-gris-200 hover:border-usco-ocre-600 transition-all duration-300 cursor-pointer transform hover:scale-105"
+        routerLink="/dashboard/admin/reportes"
+      >
+        <div class="p-8">
+          <!-- Icono -->
+          <div class="flex items-center justify-center w-16 h-16 bg-usco-ocre-100 rounded-lg mb-6 group-hover:bg-usco-ocre-200 transition-colors">
+            <svg 
+              class="w-8 h-8 text-usco-ocre-600" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="2" 
+                d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              ></path>
+            </svg>
+          </div>
+          
+          <!-- Contenido -->
+          <div>
+            <h3 class="text-xl font-semibold text-usco-gris-900 mb-3 group-hover:text-usco-ocre-700 transition-colors">
+              Reportes y Análisis
+            </h3>
+            <p class="text-usco-gris-600 leading-relaxed">
+              Genera reportes detallados de uso y estadísticas
+            </p>
+          </div>
+
+          <!-- Indicador de acción -->
+          <div class="mt-6 flex items-center text-usco-ocre-600 font-medium group-hover:text-usco-ocre-700 transition-colors">
+            <span class="text-sm">Acceder</span>
+            <svg class="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Información adicional -->
+    <div class="mt-12 bg-white rounded-xl shadow-usco p-8 border border-usco-gris-200">
+      <div class="text-center">
+        <div class="flex items-center justify-center w-16 h-16 bg-usco-vino-100 rounded-full mx-auto mb-6">
+          <svg class="w-8 h-8 text-usco-vino-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        
+        <h3 class="text-xl font-semibold text-usco-gris-900 mb-3">Información para Administradores</h3>
+        <p class="text-usco-gris-600 max-w-2xl mx-auto">
+          Como administrador tienes acceso completo al sistema CampusBookings. Puedes gestionar reservas, 
+          generar reportes detallados y supervisar el uso de los espacios de la Universidad Surcolombiana.
+        </p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+          <div class="text-center">
+            <div class="text-2xl font-bold text-usco-vino-600 mb-2">24/7</div>
+            <div class="text-sm text-usco-gris-600">Monitoreo continuo</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-usco-ocre-600 mb-2">100%</div>
+            <div class="text-sm text-usco-gris-600">Control total</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-usco-gris-600 mb-2">∞</div>
+            <div class="text-sm text-usco-gris-600">Reportes ilimitados</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

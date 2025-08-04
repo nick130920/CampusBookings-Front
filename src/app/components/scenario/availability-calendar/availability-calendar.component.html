@@ -12,7 +12,8 @@
 
   <!-- Formulario de búsqueda -->
   <p-card class="mb-6 shadow-usco border-0">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <form [formGroup]="searchForm">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       
       <!-- Selección de escenario -->
       <div>
@@ -79,10 +80,10 @@
           class="w-full">
         </p-datePicker>
       </div>
-    </div>
+      </div>
 
-    <!-- Botones de acción -->
-    <div class="flex justify-between items-center mt-6">
+      <!-- Botones de acción -->
+      <div class="flex justify-between items-center mt-6">
       <div class="flex gap-3">
         <p-button
           type="button"
@@ -107,7 +108,8 @@
         <p-progressSpinner strokeWidth="3" [style]="{'width': '20px', 'height': '20px'}"></p-progressSpinner>
         <span class="text-sm text-usco-gris-600">Verificando disponibilidad...</span>
       </div>
-    </div>
+      </div>
+    </form>
   </p-card>
 
   <!-- Información del escenario seleccionado -->

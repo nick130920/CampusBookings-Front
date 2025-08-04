@@ -9,6 +9,8 @@ import { ScenarioFormComponent } from './components/scenario/scenario-form/scena
 import { ReservationFormComponent } from './components/reservation/reservation-form/reservation-form.component';
 import { ReservationListComponent } from './components/reservation/reservation-list/reservation-list.component';
 import { AvailabilityCalendarComponent } from './components/scenario/availability-calendar/availability-calendar.component';
+import { ReportsComponent } from './components/admin/reports/reports.component';
+import { AdminDashboardComponent } from './components/admin/dashboard/admin-dashboard.component';
 
 export const routes: Routes = [
   { 
@@ -34,10 +36,10 @@ export const routes: Routes = [
         children: [
           { path: '', component: ScenarioListComponent },
           { path: 'nuevo', component: ScenarioFormComponent },
-          { path: 'editar/:id', component: ScenarioFormComponent },
-          { path: ':id', component: ScenarioDetailComponent },
           { path: 'disponibilidad', component: AvailabilityCalendarComponent },
-          { path: 'disponibilidad/:scenarioId', component: AvailabilityCalendarComponent }
+          { path: 'disponibilidad/:scenarioId', component: AvailabilityCalendarComponent },
+          { path: 'editar/:id', component: ScenarioFormComponent },
+          { path: ':id', component: ScenarioDetailComponent }
         ]
       },
       {
@@ -57,8 +59,9 @@ export const routes: Routes = [
       {
         path: 'admin',
         children: [
+          { path: '', component: AdminDashboardComponent },
           { path: 'reservas', component: ReservationListComponent },
-          { path: '', redirectTo: 'reservas', pathMatch: 'full' }
+          { path: 'reportes', component: ReportsComponent }
         ]
       }
     ]

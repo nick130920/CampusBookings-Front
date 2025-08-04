@@ -36,13 +36,19 @@
 
     <!-- Pestañas de administrador -->
     <div *ngIf="isAdmin" class="mb-6">
-      <p-tabs (onChange)="onTabChange($event)">
-        <p-tab header="Mis Reservas">
-          <!-- Contenido se mostrará dinámicamente -->
-        </p-tab>
-        <p-tab header="Todas las Reservas">
-          <!-- Contenido se mostrará dinámicamente -->
-        </p-tab>
+      <p-tabs [value]="activeTab === 'my' ? '0' : '1'" (onChange)="onTabChange($event)">
+        <p-tablist>
+          <p-tab value="0">Mis Reservas</p-tab>
+          <p-tab value="1">Todas las Reservas</p-tab>
+        </p-tablist>
+        <p-tabpanels>
+          <p-tabpanel value="0">
+            <!-- Contenido se mostrará dinámicamente -->
+          </p-tabpanel>
+          <p-tabpanel value="1">
+            <!-- Contenido se mostrará dinámicamente -->
+          </p-tabpanel>
+        </p-tabpanels>
       </p-tabs>
     </div>
 

@@ -54,6 +54,7 @@ interface ReservationFilter {
     TabsModule,
     DialogModule
   ],
+  providers: [ConfirmationService],
   templateUrl: './reservation-list.component.html',
   styleUrls: ['./reservation-list.component.css']
 })
@@ -553,7 +554,7 @@ export class ReservationListComponent implements OnInit {
    * Cambiar entre pestañas de admin
    */
   onTabChange(event: any): void {
-    this.activeTab = event.index === 0 ? 'my' : 'all';
+    this.activeTab = event.value === '0' ? 'my' : 'all';
     this.updateActiveReservations();
   }
 
