@@ -8,6 +8,7 @@ import { ScenarioDetailComponent } from './components/scenario/scenario-detail/s
 import { ScenarioFormComponent } from './components/scenario/scenario-form/scenario-form.component';
 import { ReservationFormComponent } from './components/reservation/reservation-form/reservation-form.component';
 import { ReservationListComponent } from './components/reservation/reservation-list/reservation-list.component';
+import { AvailabilityCalendarComponent } from './components/scenario/availability-calendar/availability-calendar.component';
 
 export const routes: Routes = [
   { 
@@ -34,7 +35,9 @@ export const routes: Routes = [
           { path: '', component: ScenarioListComponent },
           { path: 'nuevo', component: ScenarioFormComponent },
           { path: 'editar/:id', component: ScenarioFormComponent },
-          { path: ':id', component: ScenarioDetailComponent }
+          { path: ':id', component: ScenarioDetailComponent },
+          { path: 'disponibilidad', component: AvailabilityCalendarComponent },
+          { path: 'disponibilidad/:scenarioId', component: AvailabilityCalendarComponent }
         ]
       },
       {

@@ -164,4 +164,9 @@ export class ScenarioService {
       reader.readAsDataURL(file);
     });
   }
+
+  // Consultar disponibilidad de escenarios
+  checkAvailability(request: any): Observable<any[]> {
+    return this.http.post<any[]>(`${environment.apiUrl}/disponibilidad`, request);
+  }
 }

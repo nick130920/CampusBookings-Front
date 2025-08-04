@@ -1,0 +1,277 @@
+.availability-calendar-container {
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Customización de PrimeNG Calendar */
+:host ::ng-deep .p-calendar {
+  .p-inputtext {
+    border: 2px solid var(--usco-gris-200);
+    border-radius: 8px;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    
+    &:not(.p-disabled):hover {
+      border-color: var(--usco-vino-400);
+    }
+    
+    &.p-focus {
+      border-color: var(--usco-vino-600);
+      box-shadow: 0 0 0 3px rgba(143, 20, 27, 0.1);
+    }
+  }
+}
+
+/* Customización de PrimeNG Dropdown */
+:host ::ng-deep .p-dropdown {
+  border: 2px solid var(--usco-gris-200);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  
+  &:not(.p-disabled):hover {
+    border-color: var(--usco-vino-400);
+  }
+  
+  &.p-focus {
+    border-color: var(--usco-vino-600);
+    box-shadow: 0 0 0 3px rgba(143, 20, 27, 0.1);
+  }
+  
+  .p-dropdown-label {
+    padding: 0.75rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* Customización de PrimeNG Button */
+:host ::ng-deep .p-button {
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.3s ease;
+  
+  &.p-button-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  &.p-button-outlined {
+    &.p-button-secondary {
+      border: 2px solid var(--usco-gris-300);
+      color: var(--usco-gris-700);
+      
+      &:hover:not(:disabled) {
+        background: var(--usco-gris-100);
+        border-color: var(--usco-gris-400);
+        color: var(--usco-gris-800);
+        transform: translateY(-1px);
+      }
+    }
+  }
+  
+  &:not(.p-button-outlined) {
+    background: linear-gradient(135deg, var(--usco-vino-600) 0%, var(--usco-vino-700) 100%);
+    border: none;
+    
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, var(--usco-vino-700) 0%, var(--usco-vino-800) 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 12px rgba(143, 20, 27, 0.3);
+    }
+    
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(143, 20, 27, 0.2);
+    }
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+}
+
+/* Customización de PrimeNG Card */
+:host ::ng-deep .p-card {
+  border-radius: 12px;
+  border: 1px solid var(--usco-gris-200);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  
+  .p-card-body {
+    padding: 1.5rem;
+  }
+  
+  .p-card-content {
+    padding: 0;
+  }
+}
+
+/* Customización de PrimeNG ProgressSpinner */
+:host ::ng-deep .p-progress-spinner-circle {
+  stroke: var(--usco-vino-600);
+}
+
+/* Customización de PrimeNG Chip */
+:host ::ng-deep .p-chip {
+  border-radius: 20px;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+}
+
+/* Estilos del calendario */
+.calendar-day {
+  position: relative;
+  min-height: 80px;
+  border: 1px solid var(--usco-gris-200);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+  }
+  
+  &.current-month {
+    background: white;
+  }
+  
+  &.other-month {
+    background: var(--usco-gris-50);
+    color: var(--usco-gris-400);
+  }
+  
+  &.past-day {
+    background: var(--usco-gris-100);
+    color: var(--usco-gris-500);
+    cursor: not-allowed;
+    
+    &:hover {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+  
+  &.today {
+    border-color: var(--usco-vino-600);
+    border-width: 2px;
+  }
+}
+
+.day-number {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  
+  &.current-month {
+    color: var(--usco-gris-900);
+  }
+  
+  &.other-month {
+    color: var(--usco-gris-400);
+  }
+  
+  &.past-day {
+    color: var(--usco-gris-500);
+  }
+  
+  &.today {
+    color: var(--usco-vino-600);
+    font-weight: 700;
+  }
+}
+
+.availability-status {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  text-align: center;
+  margin-top: 0.25rem;
+  
+  &.available {
+    background: rgba(34, 197, 94, 0.1);
+    color: rgb(22, 163, 74);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+  }
+  
+  &.reserved {
+    background: rgba(239, 68, 68, 0.1);
+    color: rgb(220, 38, 38);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+  }
+  
+  &.not-available {
+    background: rgba(107, 114, 128, 0.1);
+    color: rgb(107, 114, 128);
+    border: 1px solid rgba(107, 114, 128, 0.2);
+  }
+}
+
+.today-indicator {
+  width: 8px;
+  height: 8px;
+  background: var(--usco-vino-600);
+  border-radius: 50%;
+  margin: 0.25rem auto 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .availability-calendar-container {
+    padding: 1rem;
+  }
+  
+  .calendar-day {
+    min-height: 60px;
+    padding: 0.5rem;
+  }
+  
+  .availability-status {
+    font-size: 0.625rem;
+    padding: 0.125rem 0.375rem;
+  }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.availability-calendar-container {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Estados de carga */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  z-index: 10;
+}
+
+/* Mejoras de accesibilidad */
+.calendar-day:focus {
+  outline: 2px solid var(--usco-vino-600);
+  outline-offset: 2px;
+}
+
+/* Sombras personalizadas */
+.shadow-usco {
+  box-shadow: 0 4px 6px rgba(143, 20, 27, 0.1);
+} 

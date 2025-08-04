@@ -1,0 +1,228 @@
+<div class="availability-calendar-container">
+  <!-- Header con título -->
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-usco-gris-900 mb-2">
+      <i class="pi pi-calendar mr-3 text-usco-vino-600"></i>
+      Calendario de Disponibilidad
+    </h1>
+    <p class="text-usco-gris-600">
+      Consulta la disponibilidad de escenarios para realizar reservas
+    </p>
+  </div>
+
+  <!-- Formulario de búsqueda -->
+  <p-card class="mb-6 shadow-usco border-0">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      
+      <!-- Selección de escenario -->
+      <div>
+        <label for="scenarioId" class="block text-sm font-medium text-usco-gris-900 mb-2">
+          <i class="pi pi-building mr-2 text-usco-vino-600"></i>
+          Escenario
+        </label>
+        <p-dropdown
+          id="scenarioId"
+          formControlName="scenarioId"
+          [options]="scenarios"
+          optionLabel="nombre"
+          optionValue="id"
+          placeholder="Seleccione un escenario"
+          styleClass="w-full"
+          (onChange)="onScenarioChange($event.value)">
+        </p-dropdown>
+      </div>
+
+      <!-- Filtro por tipo -->
+      <div>
+        <label for="scenarioType" class="block text-sm font-medium text-usco-gris-900 mb-2">
+          <i class="pi pi-tag mr-2 text-usco-vino-600"></i>
+          Tipo
+        </label>
+        <p-dropdown
+          id="scenarioType"
+          formControlName="scenarioType"
+          [options]="scenarioTypes"
+          placeholder="Todos los tipos"
+          styleClass="w-full">
+        </p-dropdown>
+      </div>
+
+      <!-- Filtro por ubicación -->
+      <div>
+        <label for="location" class="block text-sm font-medium text-usco-gris-900 mb-2">
+          <i class="pi pi-map-marker mr-2 text-usco-vino-600"></i>
+          Ubicación
+        </label>
+        <p-dropdown
+          id="location"
+          formControlName="location"
+          [options]="locations"
+          placeholder="Todas las ubicaciones"
+          styleClass="w-full">
+        </p-dropdown>
+      </div>
+
+      <!-- Rango de fechas -->
+      <div>
+        <label for="dateRange" class="block text-sm font-medium text-usco-gris-900 mb-2">
+          <i class="pi pi-calendar-plus mr-2 text-usco-vino-600"></i>
+          Rango de Fechas
+        </label>
+        <p-calendar
+          id="dateRange"
+          formControlName="dateRange"
+          selectionMode="range"
+          [minDate]="minDate"
+          [maxDate]="maxDate"
+          dateFormat="dd/mm/yy"
+          placeholder="Seleccione fechas"
+          styleClass="w-full">
+        </p-calendar>
+      </div>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="flex justify-between items-center mt-6">
+      <div class="flex gap-3">
+        <p-button
+          type="button"
+          label="Buscar Disponibilidad"
+          icon="pi pi-search"
+          (onClick)="onSearch()"
+          [loading]="isCheckingAvailability"
+          styleClass="p-button-primary">
+        </p-button>
+        
+        <p-button
+          type="button"
+          label="Limpiar Filtros"
+          icon="pi pi-refresh"
+          (onClick)="clearFilters()"
+          styleClass="p-button-outlined p-button-secondary">
+        </p-button>
+      </div>
+
+      <!-- Estado de carga -->
+      <div *ngIf="isCheckingAvailability" class="flex items-center gap-2">
+        <p-progressSpinner strokeWidth="3" [style]="{'width': '20px', 'height': '20px'}"></p-progressSpinner>
+        <span class="text-sm text-usco-gris-600">Verificando disponibilidad...</span>
+      </div>
+    </div>
+  </p-card>
+
+  <!-- Información del escenario seleccionado -->
+  <div *ngIf="selectedScenario" class="mb-6">
+    <p-card styleClass="border-l-4 border-l-usco-vino-600">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-lg font-semibold text-usco-gris-900 mb-1">
+            {{ selectedScenario.nombre }}
+          </h3>
+          <div class="flex gap-4 text-sm text-usco-gris-600">
+            <span><i class="pi pi-tag mr-1"></i>{{ selectedScenario.tipo }}</span>
+            <span><i class="pi pi-map-marker mr-1"></i>{{ selectedScenario.ubicacion }}</span>
+            <span><i class="pi pi-users mr-1"></i>Capacidad: {{ selectedScenario.capacidad }}</span>
+          </div>
+        </div>
+        <p-chip
+          [label]="selectedScenario.disponible ? 'Disponible' : 'No Disponible'"
+          [class]="selectedScenario.disponible ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+        </p-chip>
+      </div>
+    </p-card>
+  </div>
+
+  <!-- Calendario -->
+  <p-card class="shadow-usco border-0">
+    <!-- Header del calendario -->
+    <div class="flex justify-between items-center mb-6">
+      <div class="flex items-center gap-4">
+        <h2 class="text-xl font-semibold text-usco-gris-900">
+          {{ getMonthName() }} {{ currentYear }}
+        </h2>
+        <div class="flex gap-2">
+          <p-button
+            type="button"
+            icon="pi pi-chevron-left"
+            (onClick)="previousMonth()"
+            styleClass="p-button-outlined p-button-sm">
+          </p-button>
+          <p-button
+            type="button"
+            icon="pi pi-chevron-right"
+            (onClick)="nextMonth()"
+            styleClass="p-button-outlined p-button-sm">
+          </p-button>
+        </div>
+      </div>
+      
+      <p-button
+        type="button"
+        label="Hoy"
+        icon="pi pi-calendar"
+        (onClick)="goToToday()"
+        styleClass="p-button-outlined p-button-secondary">
+      </p-button>
+    </div>
+
+    <!-- Días de la semana -->
+    <div class="grid grid-cols-7 gap-1 mb-2">
+      <div *ngFor="let dayName of ['DOM', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB']; let i = index"
+           class="p-3 text-center font-semibold text-usco-gris-700 bg-usco-gris-50 rounded-lg">
+        {{ dayName }}
+      </div>
+    </div>
+
+    <!-- Días del calendario -->
+    <div class="grid grid-cols-7 gap-1">
+      <div *ngFor="let day of calendarDays; let i = index"
+           (click)="onDayClick(day)"
+           [class]="getDayClasses(day)"
+           class="p-3 min-h-[80px] border border-usco-gris-200 rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md">
+        
+        <!-- Número del día -->
+        <div class="text-sm font-medium mb-1"
+             [class]="getDayNumberClasses(day)">
+          {{ day.day }}
+        </div>
+
+        <!-- Estado de disponibilidad -->
+        <div *ngIf="day.availability !== 'UNKNOWN' && day.isCurrentMonth && !day.isPast"
+             class="text-xs font-medium px-2 py-1 rounded-full text-center"
+             [class]="getAvailabilityClass(day.availability)">
+          {{ getAvailabilityText(day.availability) }}
+        </div>
+
+        <!-- Indicador de hoy -->
+        <div *ngIf="day.isToday"
+             class="w-2 h-2 bg-usco-vino-600 rounded-full mx-auto mt-1">
+        </div>
+      </div>
+    </div>
+  </p-card>
+
+  <!-- Leyenda -->
+  <div class="mt-6">
+    <p-card styleClass="bg-usco-gris-50">
+      <h4 class="text-sm font-semibold text-usco-gris-900 mb-3">Leyenda</h4>
+      <div class="flex flex-wrap gap-4">
+        <div class="flex items-center gap-2">
+          <div class="w-4 h-4 bg-green-100 border border-green-300 rounded"></div>
+          <span class="text-sm text-usco-gris-700">Disponible</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="w-4 h-4 bg-red-100 border border-red-300 rounded"></div>
+          <span class="text-sm text-usco-gris-700">Reservado</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="w-4 h-4 bg-gray-100 border border-gray-300 rounded"></div>
+          <span class="text-sm text-usco-gris-700">No Disponible</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="w-4 h-4 bg-white border border-gray-200 rounded"></div>
+          <span class="text-sm text-usco-gris-700">Sin información</span>
+        </div>
+      </div>
+    </p-card>
+  </div>
+</div> 

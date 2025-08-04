@@ -4,15 +4,26 @@
       <h2 class="text-3xl font-bold text-usco-gris-800 font-usco-condensed">Gestión de Escenarios</h2>
       <p class="text-usco-gris-600 mt-1">Administra y consulta los espacios disponibles en el campus</p>
     </div>
-    <button 
-      [routerLink]="['/dashboard/escenarios/nuevo']"
-      class="bg-gradient-to-r from-usco-vino-500 to-usco-vino-600 hover:from-usco-vino-600 hover:to-usco-vino-700 text-white px-6 py-3 rounded-lg flex items-center shadow-usco-button hover:shadow-usco-button-hover transform transition-all duration-200 hover:scale-105"
-    >
-      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-      </svg>
-      Nuevo Escenario
-    </button>
+    <div class="flex gap-3">
+      <button 
+        [routerLink]="['/dashboard/escenarios/disponibilidad']"
+        class="bg-gradient-to-r from-usco-ocre-500 to-usco-ocre-600 hover:from-usco-ocre-600 hover:to-usco-ocre-700 text-white px-6 py-3 rounded-lg flex items-center shadow-usco-button hover:shadow-usco-button-hover transform transition-all duration-200 hover:scale-105"
+      >
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+        </svg>
+        Calendario de Disponibilidad
+      </button>
+      <button 
+        [routerLink]="['/dashboard/escenarios/nuevo']"
+        class="bg-gradient-to-r from-usco-vino-500 to-usco-vino-600 hover:from-usco-vino-600 hover:to-usco-vino-700 text-white px-6 py-3 rounded-lg flex items-center shadow-usco-button hover:shadow-usco-button-hover transform transition-all duration-200 hover:scale-105"
+      >
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        Nuevo Escenario
+      </button>
+    </div>
   </div>
 
   <!-- Filtros -->

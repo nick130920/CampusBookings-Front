@@ -36,29 +36,37 @@
           </span>
         </div>
       </div>
-      <div class="flex space-x-2" *ngIf="isAdmin">
+      <div class="flex space-x-2">
         <button 
-          (click)="onToggleStatus()"
-          [ngClass]="{
-            'px-3 py-1 rounded-md text-sm font-medium': true,
-            'bg-green-100 text-green-800 hover:bg-green-200': !scenario.disponible,
-            'bg-red-100 text-red-800 hover:bg-red-200': scenario.disponible
-          }"
+          [routerLink]="['/dashboard/escenarios/disponibilidad', scenario.id]"
+          class="px-3 py-1 bg-blue-100 text-blue-800 hover:bg-blue-200 rounded-md text-sm font-medium"
         >
-          {{ scenario.disponible ? 'Marcar como no disponible' : 'Marcar como disponible' }}
+          Ver Disponibilidad
         </button>
-        <button 
-          [routerLink]="['/dashboard/escenarios/editar', scenario.id]"
-          class="px-3 py-1 bg-ocra-100 text-ocra-800 hover:bg-ocra-200 rounded-md text-sm font-medium"
-        >
-          Editar
-        </button>
-        <button 
-          (click)="onDelete()"
-          class="px-3 py-1 bg-red-100 text-red-800 hover:bg-red-200 rounded-md text-sm font-medium"
-        >
-          Eliminar
-        </button>
+        <div *ngIf="isAdmin" class="flex space-x-2">
+          <button 
+            (click)="onToggleStatus()"
+            [ngClass]="{
+              'px-3 py-1 rounded-md text-sm font-medium': true,
+              'bg-green-100 text-green-800 hover:bg-green-200': !scenario.disponible,
+              'bg-red-100 text-red-800 hover:bg-red-200': scenario.disponible
+            }"
+          >
+            {{ scenario.disponible ? 'Marcar como no disponible' : 'Marcar como disponible' }}
+          </button>
+          <button 
+            [routerLink]="['/dashboard/escenarios/editar', scenario.id]"
+            class="px-3 py-1 bg-ocra-100 text-ocra-800 hover:bg-ocra-200 rounded-md text-sm font-medium"
+          >
+            Editar
+          </button>
+          <button 
+            (click)="onDelete()"
+            class="px-3 py-1 bg-red-100 text-red-800 hover:bg-red-200 rounded-md text-sm font-medium"
+          >
+            Eliminar
+          </button>
+        </div>
       </div>
     </div>
 
