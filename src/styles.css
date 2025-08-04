@@ -1,11 +1,10 @@
 /* Tailwind CSS v4 + USCO Branding + PrimeNG v20 */
 
+/* Todos los @import deben estar al inicio del archivo */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Open+Sans+Condensed:ital,wght@0,300;0,700;1,300&display=swap');
 @import "tailwindcss";
 @import "tailwindcss-primeui";
 @import "primeicons/primeicons.css";
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Open+Sans+Condensed:ital,wght@0,300;0,700;1,300&display=swap');
-
-/* Importar colores institucionales USCO */
 @import "./assets/css/usco-colors.css";
 
 /* Variables de colores USCO según documentación oficial v4 */
@@ -122,6 +121,14 @@ html, body {
 
 @utility text-white {
   color: #ffffff;
+}
+
+@utility bg-opacity-50 {
+  background-color: rgb(0 0 0 / 0.5);
+}
+
+@utility border-usco-vino-300 {
+  border-color: var(--usco-vino-tinto-lighter);
 }
 
 @utility font-semibold {

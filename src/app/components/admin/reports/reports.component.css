@@ -1,3 +1,6 @@
+/* Importar utilidades personalizadas de styles.css */
+@reference "../../../../styles.css";
+
 /* Estilos específicos para el componente de reportes */
 
 .table-container {

@@ -183,19 +183,7 @@
           <h1 class="text-4xl font-bold text-usco-gris-800 mb-4 font-usco-condensed">Bienvenido a CampusBookings</h1>
           <p class="text-lg text-usco-gris-600 mb-8 max-w-2xl mx-auto">Sistema de Reservas de la Universidad Surcolombiana. Gestiona y reserva espacios académicos y deportivos de manera eficiente.</p>
           
-          <!-- Debug Info (solo visible para desarrollo) -->
-          <div class="bg-white border border-gray-300 rounded-lg p-4 mb-6 text-left max-w-md mx-auto">
-            <h3 class="font-semibold text-gray-800 mb-2">Debug Info:</h3>
-            <p class="text-sm text-gray-600">Usuario: {{ currentUser?.nombre || 'No encontrado' }}</p>
-            <p class="text-sm text-gray-600">Email: {{ currentUser?.email || 'No encontrado' }}</p>
-            <p class="text-sm text-gray-600">Rol: {{ authService.getUserRole() || 'No encontrado' }}</p>
-            <p class="text-sm text-gray-600">Es Admin: {{ authService.isAdmin() ? 'SÍ' : 'NO' }}</p>
-            <div class="mt-2">
-              <a routerLink="/dashboard/admin/reportes" class="text-blue-600 hover:underline text-sm">
-                → Ir directamente a reportes
-              </a>
-            </div>
-          </div>
+      
           
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-12">
             <div class="bg-white p-6 rounded-xl shadow-usco border border-usco-gris-200 hover:shadow-usco-lg transition-all duration-300">

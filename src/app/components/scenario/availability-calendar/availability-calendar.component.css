@@ -271,7 +271,4 @@
   outline-offset: 2px;
 }
 
-/* Sombras personalizadas */
-.shadow-usco {
-  box-shadow: 0 4px 6px rgba(143, 20, 27, 0.1);
-} 
+/* Sombras personalizadas ahora vienen de styles.css */ 
