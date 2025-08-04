@@ -7,7 +7,7 @@
     <div class="flex gap-3">
       <button 
         [routerLink]="['/dashboard/escenarios/disponibilidad']"
-        class="bg-gradient-to-r from-usco-ocre-500 to-usco-ocre-600 hover:from-usco-ocre-600 hover:to-usco-ocre-700 text-white px-6 py-3 rounded-lg flex items-center shadow-usco-button hover:shadow-usco-button-hover transform transition-all duration-200 hover:scale-105"
+        class="bg-linear-to-r from-usco-ocre-500 to-usco-ocre-600 hover:from-usco-ocre-600 hover:to-usco-ocre-700 text-white px-6 py-3 rounded-lg flex items-center shadow-usco-button hover:shadow-usco-button-hover transform transition-all duration-200 hover:scale-105"
       >
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
@@ -16,7 +16,7 @@
       </button>
       <button 
         [routerLink]="['/dashboard/escenarios/nuevo']"
-        class="bg-gradient-to-r from-usco-vino-500 to-usco-vino-600 hover:from-usco-vino-600 hover:to-usco-vino-700 text-white px-6 py-3 rounded-lg flex items-center shadow-usco-button hover:shadow-usco-button-hover transform transition-all duration-200 hover:scale-105"
+        class="bg-linear-to-r from-usco-vino-500 to-usco-vino-600 hover:from-usco-vino-600 hover:to-usco-vino-700 text-white px-6 py-3 rounded-lg flex items-center shadow-usco-button hover:shadow-usco-button-hover transform transition-all duration-200 hover:scale-105"
       >
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
@@ -74,7 +74,7 @@
   <!-- Lista de escenarios -->
   <div class="bg-white rounded-xl shadow-usco border border-usco-gris-200 overflow-hidden">
     <!-- Encabezado de la tabla -->
-    <div class="hidden md:grid grid-cols-12 bg-gradient-to-r from-usco-gris-100 to-usco-gris-50 text-usco-gris-700 text-sm font-semibold uppercase tracking-wider px-6 py-4 border-b border-usco-gris-200">
+    <div class="hidden md:grid grid-cols-12 bg-linear-to-r from-usco-gris-100 to-usco-gris-50 text-usco-gris-700 text-sm font-semibold uppercase tracking-wider px-6 py-4 border-b border-usco-gris-200">
       <div class="col-span-4 flex items-center">
         <svg class="w-4 h-4 mr-2 text-usco-vino-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
@@ -116,7 +116,7 @@
       <div *ngFor="let scenario of filteredScenarios" class="grid grid-cols-1 md:grid-cols-12 items-center p-6 hover:bg-usco-gris-50 transition-colors duration-200">
         <div class="col-span-4 mb-4 md:mb-0">
           <div class="flex items-center">
-            <div class="flex-shrink-0 h-12 w-12 rounded-xl bg-gradient-to-br from-usco-ocre-200 to-usco-ocre-300 flex items-center justify-center text-usco-vino-700 font-bold text-lg shadow-sm">
+            <div class="shrink-0 h-12 w-12 rounded-xl bg-linear-to-br from-usco-ocre-200 to-usco-ocre-300 flex items-center justify-center text-usco-vino-700 font-bold text-lg shadow-sm">
               {{ scenario.nombre.charAt(0) }}
             </div>
             <div class="ml-4">

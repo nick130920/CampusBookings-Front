@@ -1,11 +1,11 @@
 <div class="min-h-screen bg-usco-gris-100 flex">
   <!-- Sidebar -->
-  <div class="hidden md:flex md:flex-shrink-0">
+  <div class="hidden md:flex md:shrink-0">
     <div class="flex flex-col w-64 bg-white border-r border-usco-gris-200 shadow-usco">
       
       
       <!-- App Title -->
-      <div class="flex items-center h-16 px-4 border-b border-usco-gris-300 bg-gradient-to-r from-usco-vino-500 to-usco-vino-700">
+      <div class="flex items-center h-16 px-4 border-b border-usco-gris-300 bg-linear-to-r from-usco-vino-500 to-usco-vino-700">
         <img 
           src="assets/images/usco-logo.png" 
           alt="USCO"
@@ -172,7 +172,7 @@
       <div>
         <router-outlet></router-outlet>
         <div *ngIf="currentRoute === '/dashboard'" class="text-center py-16">
-          <div class="mx-auto w-24 h-24 bg-gradient-to-br from-usco-vino-100 to-usco-vino-200 rounded-full flex items-center justify-center mb-6 shadow-usco">
+          <div class="mx-auto w-24 h-24 bg-linear-to-br from-usco-vino-100 to-usco-vino-200 rounded-full flex items-center justify-center mb-6 shadow-usco">
             <img 
               src="assets/images/usco-logo.png" 
               alt="USCO"
