@@ -1,13 +1,43 @@
-/* You can add global styles to this file, and also import other style files */
+/* Tailwind CSS v4 + USCO Branding + PrimeNG v20 */
 
-/* Imports - PrimeNG v19 + Tailwind 4 + USCO Branding */
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Open+Sans+Condensed:ital,wght@0,300;0,700;1,300&display=swap');
 @import "tailwindcss";
 @import "tailwindcss-primeui";
 @import "primeicons/primeicons.css";
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Open+Sans+Condensed:ital,wght@0,300;0,700;1,300&display=swap');
 
 /* Importar colores institucionales USCO */
 @import "./assets/css/usco-colors.css";
+
+/* Variables de colores USCO según documentación oficial v4 */
+@theme {
+  /* Colores USCO personalizados - usando variables importadas */
+  --color-usco-vino-50: var(--usco-vino-tinto-pale);
+  --color-usco-vino-100: var(--usco-vino-tinto-pale);
+  --color-usco-vino-200: var(--usco-vino-tinto-lighter);
+  --color-usco-vino-500: var(--usco-vino-tinto);
+  --color-usco-vino-600: var(--usco-vino-tinto);
+  --color-usco-vino-700: var(--usco-vino-tinto-dark);
+  
+  --color-usco-gris-50: var(--usco-gris-pale);
+  --color-usco-gris-100: var(--usco-gris-pale);
+  --color-usco-gris-200: var(--usco-gris-lightest);
+  --color-usco-gris-300: var(--usco-gris-lighter);
+  --color-usco-gris-400: var(--usco-gris-light);
+  --color-usco-gris-500: var(--usco-gris);
+  --color-usco-gris-600: var(--usco-gris);
+  --color-usco-gris-700: var(--usco-gris-dark);
+  --color-usco-gris-800: var(--usco-gris-dark);
+  --color-usco-gris-900: var(--usco-gris-dark);
+  
+  --color-usco-ocre-100: var(--usco-ocre-pale);
+  --color-usco-ocre-200: var(--usco-ocre-lightest);
+  --color-usco-ocre-400: var(--usco-ocre-light);
+  --color-usco-ocre-600: var(--usco-ocre-dark);
+  --color-usco-ocre-700: var(--usco-ocre-dark);
+  
+  /* Alias para compatibilidad */
+  --color-primary: var(--usco-vino-tinto);
+}
 
 /* Fuente global */
 html, body { 
@@ -16,166 +46,107 @@ html, body {
   font-family: 'Open Sans', Arial, Helvetica, sans-serif;
 }
 
-/* Utilidades Tailwind personalizadas para USCO con PrimeNG */
-@layer utilities {
-  /* COLORES VINO TINTO USCO - usando variables de usco-colors.css */
-  .bg-usco-vino { background-color: var(--usco-vino-tinto); }
-  .bg-usco-vino-100 { background-color: var(--usco-vino-tinto-pale); }
-  .bg-usco-vino-200 { background-color: var(--usco-vino-tinto-lighter); }
-  .bg-usco-vino-500 { background-color: var(--usco-vino-tinto); }
-  .bg-usco-vino-600 { background-color: var(--usco-vino-tinto); }
-  .bg-usco-vino-700 { background-color: var(--usco-vino-tinto-dark); }
-  
-  .text-usco-vino { color: var(--usco-vino-tinto); }
-  .text-usco-vino-500 { color: var(--usco-vino-tinto); }
-  .text-usco-vino-600 { color: var(--usco-vino-tinto); }
-  .text-usco-vino-700 { color: var(--usco-vino-tinto-dark); }
-  
-  .border-usco-vino { border-color: var(--usco-vino-tinto); }
-  .border-usco-vino-500 { border-color: var(--usco-vino-tinto); }
-  
-  /* COLORES GRIS USCO - usando variables de usco-colors.css */
-  .bg-usco-gris { background-color: var(--usco-gris); }
-  .bg-usco-gris-100 { background-color: var(--usco-gris-pale); }
-  .bg-usco-gris-50 { background-color: var(--usco-gris-pale); }
-  .bg-usco-gris-200 { background-color: var(--usco-gris-lightest); }
-  .bg-usco-gris-500 { background-color: var(--usco-gris); }
-  
-  .text-usco-gris { color: var(--usco-gris); }
-  .text-usco-gris-500 { color: var(--usco-gris); }
-  .text-usco-gris-600 { color: var(--usco-gris); }
-  .text-usco-gris-700 { color: var(--usco-gris-dark); }
-  .text-usco-gris-800 { color: var(--usco-gris-dark); }
-  .text-usco-gris-900 { color: var(--usco-gris-dark); }
-  .text-usco-gris-400 { color: var(--usco-gris-light); }
-  
-  .border-usco-gris { border-color: var(--usco-gris-lighter); }
-  .border-usco-gris-200 { border-color: var(--usco-gris-lightest); }
-  .border-usco-gris-300 { border-color: var(--usco-gris-lighter); }
-  .border-usco-gris-400 { border-color: var(--usco-gris-light); }
-  
-  /* COLORES OCRE USCO - usando variables de usco-colors.css */
-  .bg-usco-ocre { background-color: var(--usco-ocre); }
-  .bg-usco-ocre-100 { background-color: var(--usco-ocre-pale); }
-  .bg-usco-ocre-200 { background-color: var(--usco-ocre-lightest); }
-  .bg-usco-ocre-400 { background-color: var(--usco-ocre-light); }
-  .bg-usco-ocre-600 { background-color: var(--usco-ocre-dark); }
-  
-  .text-usco-ocre { color: var(--usco-ocre-dark); }
-  .text-usco-ocre-700 { color: var(--usco-ocre-dark); }
-  .text-usco-ocre-600 { color: var(--usco-ocre-dark); }
-  
-  /* SOMBRAS USCO */
-  .shadow-usco { 
-    box-shadow: 0 4px 6px -1px rgba(143, 20, 27, 0.1), 0 2px 4px -1px rgba(143, 20, 27, 0.06); 
-  }
-  .shadow-usco-lg { 
-    box-shadow: 0 10px 15px -3px rgba(143, 20, 27, 0.1), 0 4px 6px -2px rgba(143, 20, 27, 0.05); 
-  }
-  .shadow-usco-button {
-    box-shadow: 0 1px 3px 0 rgba(143, 20, 27, 0.1), 0 1px 2px 0 rgba(143, 20, 27, 0.06);
-  }
-  .shadow-usco-button-hover {
-    box-shadow: 0 4px 6px -1px rgba(143, 20, 27, 0.15), 0 2px 4px -1px rgba(143, 20, 27, 0.1);
-  }
-  
-  /* FUENTES USCO */
-  .font-usco { font-family: 'Open Sans', ui-sans-serif, system-ui, sans-serif; }
-  .font-usco-condensed { font-family: 'Open Sans Condensed', ui-sans-serif, system-ui, sans-serif; }
-  
-  /* CLASES USCO ESPECÍFICAS FALTANTES - usando variables de usco-colors.css */
-  .bg-usco-vino-tinto { background-color: var(--usco-vino-tinto); }
-  .bg-usco-vino-tinto-dark { background-color: var(--usco-vino-tinto-dark); }
-  .text-usco-vino-tinto { color: var(--usco-vino-tinto); }
-  .text-usco-vino-tinto-dark { color: var(--usco-vino-tinto-dark); }
-  .border-usco-vino-tinto { border-color: var(--usco-vino-tinto); }
-  .border-usco-vino-tinto-dark { border-color: var(--usco-vino-tinto-dark); }
-  
-  .bg-usco-gris-dark { background-color: var(--usco-gris-dark); }
-  .text-usco-gris-dark { color: var(--usco-gris-dark); }
-  .border-usco-gris-lighter { border-color: var(--usco-gris-lighter); }
-  
-  .bg-usco-ocre-light { background-color: var(--usco-ocre-light); }
-  .bg-usco-ocre-pale { background-color: var(--usco-ocre-pale); }
-  
-  /* CLASES PRIMENG SEMANTIC COLORS */
-  .bg-primary { background-color: var(--usco-vino-tinto); }
-  .text-primary { color: var(--usco-vino-tinto); }
-  .text-primary-600 { color: var(--usco-vino-tinto-dark); }
-  .border-primary { border-color: var(--usco-vino-tinto); }
-  
-  /* HOVER STATES ADICIONALES */
-  .hover\:bg-usco-vino-tinto:hover { background-color: var(--usco-vino-tinto); }
-  .hover\:bg-usco-vino-tinto-dark:hover { background-color: var(--usco-vino-tinto-dark); }
-  .hover\:text-usco-vino-tinto:hover { color: var(--usco-vino-tinto); }
-  .hover\:text-usco-vino-tinto-dark:hover { color: var(--usco-vino-tinto-dark); }
-  .hover\:bg-usco-ocre-pale:hover { background-color: var(--usco-ocre-pale); }
-  
-  /* FOCUS STATES */
-  .focus\:ring-usco-vino-tinto:focus { --tw-ring-color: var(--usco-vino-tinto); }
-  .focus\:border-usco-vino-tinto:focus { border-color: var(--usco-vino-tinto); }
-  .focus\:ring-usco-vino-500:focus { --tw-ring-color: var(--usco-vino-tinto); }
-  .focus\:border-usco-vino-500:focus { border-color: var(--usco-vino-tinto); }
-  .focus\:ring-2:focus { --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color); --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color); box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000); }
-  
-  /* GROUP HOVER STATES */
-  .group:hover .group-hover\:text-usco-vino-tinto { color: var(--usco-vino-tinto); }
-  
-  /* CLASES DE GRADIENTES USCO */
-  .from-usco-vino-500 { --tw-gradient-from: var(--usco-vino-tinto); --tw-gradient-to: rgba(143, 20, 27, 0); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
-  .to-usco-vino-600 { --tw-gradient-to: var(--usco-vino-tinto); }
-  .to-usco-vino-700 { --tw-gradient-to: var(--usco-vino-tinto-dark); }
-  
-  .from-usco-gris-100 { --tw-gradient-from: var(--usco-gris-pale); --tw-gradient-to: rgba(237, 239, 240, 0); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
-  .to-usco-gris-50 { --tw-gradient-to: var(--usco-gris-pale); }
-  .to-usco-ocre-100 { --tw-gradient-to: var(--usco-ocre-pale); }
-  
-  /* HOVER GRADIENTES */
-  .hover\:from-usco-vino-600:hover { --tw-gradient-from: var(--usco-vino-tinto); --tw-gradient-to: rgba(143, 20, 27, 0); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
-  .hover\:to-usco-vino-700:hover { --tw-gradient-to: var(--usco-vino-tinto-dark); }
-  
-  /* HOVER STATES ORIGINALES */
-  .hover\:bg-usco-vino-600:hover { background-color: var(--usco-vino-tinto); }
-  .hover\:text-usco-vino-500:hover { color: var(--usco-vino-tinto); }
-  .hover\:text-usco-vino-600:hover { color: var(--usco-vino-tinto); }
-  .hover\:bg-usco-ocre-100:hover { background-color: var(--usco-ocre-pale); }
-  .hover\:bg-usco-gris-100:hover { background-color: var(--usco-gris-pale); }
-  .hover\:bg-usco-gris-50:hover { background-color: var(--usco-gris-pale); }
-  .hover\:border-usco-gris-400:hover { border-color: var(--usco-gris-light); }
-  .hover\:text-usco-vino-700:hover { color: var(--usco-vino-tinto-dark); }
-  .hover\:shadow-usco-lg:hover { 
-    box-shadow: 0 10px 15px -3px rgba(143, 20, 27, 0.1), 0 4px 6px -2px rgba(143, 20, 27, 0.05); 
-  }
-  .hover\:bg-usco-ocre-700:hover { background-color: var(--usco-ocre-dark); }
-  .hover\:border-usco-vino-300:hover { border-color: var(--usco-vino-tinto); }
-  
-  /* Clases adicionales necesarias */
-  .bg-white { background-color: #ffffff; }
-  .text-white { color: #ffffff; }
-  .border-transparent { border-color: transparent; }
-  .divide-y > * + * { border-top-width: 1px; }
-  .divide-usco-gris-200 > * + * { border-color: var(--usco-gris-lightest); }
-  
-  /* Clases de estado básicas */
-  .bg-green-100 { background-color: #dcfce7; }
-  .text-green-800 { color: #166534; }
-  .bg-yellow-100 { background-color: #fef3c7; }
-  .text-yellow-800 { color: #92400e; }
-  .bg-red-100 { background-color: #fee2e2; }
-  .text-red-800 { color: #991b1b; }
-  .bg-gray-100 { background-color: #f3f4f6; }
-  .text-gray-800 { color: #1f2937; }
-  
-  /* Hover states para colores específicos */
-  .hover\:border-usco-ocre-600:hover { border-color: var(--usco-ocre-dark); }
-  .group-hover\:bg-usco-vino-200 .group:hover & { background-color: var(--usco-vino-tinto-lighter); }
-  .group-hover\:bg-usco-ocre-200 .group:hover & { background-color: var(--usco-ocre-lightest); }
-  
-  /* Colores básicos adicionales */
-  .border-gray-300 { border-color: #d1d5db; }
-  .text-gray-600 { color: #4b5563; }
-  .text-gray-800 { color: #1f2937; }
-  .text-blue-600 { color: #2563eb; }
-  .hover\:underline:hover { text-decoration: underline; }
+/* Utilidades personalizadas USCO - Sintaxis v4 correcta */
+@utility shadow-usco {
+  box-shadow: 0 4px 6px -1px rgba(143, 20, 27, 0.1), 0 2px 4px -1px rgba(143, 20, 27, 0.06);
 }
 
+@utility shadow-usco-lg {
+  box-shadow: 0 10px 15px -3px rgba(143, 20, 27, 0.1), 0 4px 6px -2px rgba(143, 20, 27, 0.05);
+}
+
+@utility shadow-usco-button {
+  box-shadow: 0 1px 3px 0 rgba(143, 20, 27, 0.1), 0 1px 2px 0 rgba(143, 20, 27, 0.06);
+}
+
+@utility font-usco {
+  font-family: 'Open Sans', ui-sans-serif, system-ui, sans-serif;
+}
+
+@utility font-usco-condensed {
+  font-family: 'Open Sans Condensed', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Clases específicas de estado para compatibilidad */
+@utility bg-green-100 {
+  background-color: #dcfce7;
+}
+
+@utility text-green-800 {
+  color: #166534;
+}
+
+@utility bg-yellow-100 {
+  background-color: #fef3c7;
+}
+
+@utility text-yellow-800 {
+  color: #92400e;
+}
+
+@utility bg-red-100 {
+  background-color: #fee2e2;
+}
+
+@utility text-red-800 {
+  color: #991b1b;
+}
+
+@utility bg-gray-100 {
+  background-color: #f3f4f6;
+}
+
+@utility text-gray-800 {
+  color: #1f2937;
+}
+
+@utility border-gray-300 {
+  border-color: #d1d5db;
+}
+
+@utility text-gray-600 {
+  color: #4b5563;
+}
+
+@utility text-blue-600 {
+  color: #2563eb;
+}
+
+@utility border-transparent {
+  border-color: transparent;
+}
+
+@utility bg-white {
+  background-color: #ffffff;
+}
+
+@utility text-white {
+  color: #ffffff;
+}
+
+@utility font-semibold {
+  font-weight: 600;
+}
+
+/* Hover utilities - ahora Tailwind los maneja automáticamente */
+.hover\:underline:hover {
+  text-decoration: underline;
+}
+
+/* Divide utilities */
+.divide-y > * + * {
+  border-top-width: 1px;
+}
+
+.divide-usco-gris-200 > * + * {
+  border-color: var(--usco-gris-lightest);
+}
+
+/* Group hover states */
+.group:hover .group-hover\:bg-usco-vino-200 {
+  background-color: var(--usco-vino-tinto-lighter);
+}
+
+.group:hover .group-hover\:bg-usco-ocre-200 {
+  background-color: var(--usco-ocre-lightest);
+}
