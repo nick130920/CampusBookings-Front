@@ -391,13 +391,10 @@ export class ReservationListComponent implements OnInit {
   }
 
   formatCreatedDate(dateString: string): string {
-    console.log(dateString);
-
     const date = new Date(dateString);
     const now = new Date();
     const diffInDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
     
-    console.log(diffInDays);
     if (diffInDays === 0) {
       return 'Hoy';
     } else if (diffInDays === 1) {

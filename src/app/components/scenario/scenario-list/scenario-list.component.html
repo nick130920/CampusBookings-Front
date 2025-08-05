@@ -7,12 +7,12 @@
     <div class="flex flex-col sm:flex-row gap-3">
       <button 
         [routerLink]="['/dashboard/escenarios/disponibilidad']"
-        class="bg-linear-to-r from-usco-ocre-500 to-usco-ocre-600 hover:from-usco-ocre-600 hover:to-usco-ocre-700 text-white px-4 py-3 rounded-lg flex items-center justify-center shadow-usco-button hover:shadow-usco-button-hover transform transition-all duration-200 hover:scale-105 text-sm lg:text-base"
+        class="bg-usco-vino-tinto hover:bg-usco-vino-tinto-dark text-white px-4 py-3 rounded-lg flex items-center justify-center shadow-lg hover:shadow-xl transform transition-all duration-200 hover:scale-105 text-sm lg:text-base"
       >
         <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
         </svg>
-        <span class="hidden sm:inline">Calendario de </span>Disponibilidad
+        <span class="hidden sm:inline">Calendario de&nbsp;</span>Disponibilidad
       </button>
       <button 
         [routerLink]="['/dashboard/escenarios/nuevo']"
@@ -74,7 +74,7 @@
   <!-- Lista de escenarios -->
   <div class="bg-white rounded-xl shadow-usco border border-usco-gris-200 overflow-hidden">
     <!-- Encabezado de la tabla -->
-    <div class="hidden md:grid grid-cols-12 bg-linear-to-r from-usco-gris-100 to-usco-gris-50 text-usco-gris-700 text-sm font-semibold uppercase tracking-wider px-6 py-4 border-b border-usco-gris-200">
+    <div class="hidden xl:grid grid-cols-12 bg-linear-to-r from-usco-gris-100 to-usco-gris-50 text-usco-gris-700 text-sm font-semibold uppercase tracking-wider px-6 py-4 border-b border-usco-gris-200">
       <div class="col-span-4 flex items-center">
         <svg class="w-4 h-4 mr-2 text-usco-vino-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
@@ -112,7 +112,7 @@
     </div>
 
     <!-- Vista de tabla para desktop -->
-    <div class="hidden md:block divide-y divide-usco-gris-200">
+    <div class="hidden xl:block divide-y divide-usco-gris-200">
       <div *ngFor="let scenario of filteredScenarios" class="grid grid-cols-12 items-center p-6 hover:bg-usco-gris-50 transition-colors duration-200">
         <div class="col-span-4">
           <div class="flex items-center">
@@ -193,8 +193,8 @@
       </div>
     </div>
 
-    <!-- Vista de cards para móvil -->
-    <div class="md:hidden space-y-4">
+    <!-- Vista de cards para móvil y tablet -->
+    <div class="xl:hidden space-y-4">
       <div *ngFor="let scenario of filteredScenarios" class="bg-white rounded-lg border border-usco-gris-200 p-4 shadow-sm">
         <!-- Header con nombre y estado -->
         <div class="flex items-start justify-between mb-3">
