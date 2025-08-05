@@ -26,6 +26,12 @@ export const routes: Routes = [
     data: { auth: false } 
   },
   { 
+    path: 'forgot-password', 
+    loadComponent: () => import('./components/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent),
+    canActivate: [() => !localStorage.getItem('auth_token') ? true : false],
+    data: { auth: false } 
+  },
+  { 
     path: 'dashboard', 
     component: DashboardComponent, 
     canActivate: [AuthGuard],

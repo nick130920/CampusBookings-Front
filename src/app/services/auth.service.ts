@@ -235,4 +235,17 @@ export class AuthService {
       }
     }
   }
+
+  // Métodos para recuperación de contraseña
+  sendPasswordResetCode(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/forgot-password/send-code`, { email });
+  }
+
+  verifyPasswordResetCode(email: string, code: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/forgot-password/verify-code`, { email, code });
+  }
+
+  resetPassword(token: string, newPassword: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/forgot-password/reset`, { token, newPassword });
+  }
 }
