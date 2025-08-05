@@ -8,7 +8,7 @@
         <div class="flex-shrink-0 flex items-center">
           <img class="h-8 w-auto" src="assets/images/usco-logo.png" alt="USCO" />
           <span class="ml-3 text-lg font-bold text-usco-gris-900 hidden sm:block">CampusBookings</span>
-          <span class="ml-3 text-lg font-bold text-usco-gris-900 sm:hidden">CB</span>
+          <span class="ml-3 text-lg font-bold text-usco-gris-900 sm:hidden">CampusBookings</span>
         </div>
       </div>
 
@@ -17,16 +17,25 @@
         <div class="ml-10 flex items-baseline space-x-4">
           <a routerLink="/dashboard" 
              routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
+             [routerLinkActiveOptions]="{ exact: true }"
              class="text-usco-gris-700 hover:bg-usco-gris-100 hover:text-usco-gris-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">
             Dashboard
           </a>
           <a routerLink="/dashboard/reservas" 
              routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
+             [routerLinkActiveOptions]="{ exact: true }"
              class="text-usco-gris-700 hover:bg-usco-gris-100 hover:text-usco-gris-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">
             Mis Reservas
           </a>
-          <a routerLink="/dashboard/scenarios" 
+          <a routerLink="/dashboard/escenarios/disponibilidad" 
              routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
+             [routerLinkActiveOptions]="{ exact: true }"
+             class="text-usco-gris-700 hover:bg-usco-gris-100 hover:text-usco-gris-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            Calendario de Disponibilidad
+          </a>
+          <a routerLink="/dashboard/escenarios" 
+             routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
+             [routerLinkActiveOptions]="{ exact: true }"
              class="text-usco-gris-700 hover:bg-usco-gris-100 hover:text-usco-gris-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">
             Escenarios
           </a>
@@ -96,18 +105,28 @@
       <a routerLink="/dashboard" 
          (click)="closeMobileMenu()"
          routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
+         [routerLinkActiveOptions]="{ exact: true }"
          class="text-usco-gris-700 hover:bg-usco-gris-100 block px-3 py-2 rounded-md text-base font-medium">
         Dashboard
       </a>
       <a routerLink="/dashboard/reservas" 
          (click)="closeMobileMenu()"
          routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
+         [routerLinkActiveOptions]="{ exact: true }"
          class="text-usco-gris-700 hover:bg-usco-gris-100 block px-3 py-2 rounded-md text-base font-medium">
         Mis Reservas
       </a>
-      <a routerLink="/dashboard/scenarios" 
+      <a routerLink="/dashboard/escenarios/disponibilidad" 
          (click)="closeMobileMenu()"
          routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
+         [routerLinkActiveOptions]="{ exact: true }"
+         class="text-usco-gris-700 hover:bg-usco-gris-100 block px-3 py-2 rounded-md text-base font-medium">
+        Calendario de Disponibilidad
+      </a>
+      <a routerLink="/dashboard/escenarios" 
+         (click)="closeMobileMenu()"
+         routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
+         [routerLinkActiveOptions]="{ exact: true }"
          class="text-usco-gris-700 hover:bg-usco-gris-100 block px-3 py-2 rounded-md text-base font-medium">
         Escenarios
       </a>
@@ -118,6 +137,17 @@
          class="text-usco-gris-700 hover:bg-usco-gris-100 block px-3 py-2 rounded-md text-base font-medium">
         Administración
       </a>
+      
+      <!-- Botón de cerrar sesión adicional en la parte superior para mejor visibilidad -->
+      <div class="mt-4 pt-4 border-t border-usco-gris-200">
+        <button (click)="logout()" 
+                class="w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50 hover:text-red-700 flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+          </svg>
+          Cerrar Sesión
+        </button>
+      </div>
     </div>
     
     <!-- Usuario móvil -->
