@@ -1,7 +1,7 @@
 <div class="min-h-screen bg-linear-to-br from-usco-gris-100 to-usco-ocre-100 flex items-center justify-center p-4 login-container">
-  <div class="w-full max-w-lg bg-white rounded-xl shadow-usco overflow-hidden border border-usco-gris-200 login-card">
+  <div class="w-full max-w-md sm:max-w-lg bg-white rounded-xl shadow-usco overflow-hidden border border-usco-gris-200 login-card">
     <!-- Header con logo y colores USCO -->
-    <div class="bg-linear-to-r from-usco-vino-500 to-usco-vino-700 p-8 text-center relative">
+    <div class="bg-linear-to-r from-usco-vino-500 to-usco-vino-700 p-6 sm:p-8 text-center relative">
       <div class="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent"></div>
       <div class="relative z-10">
         <div class="mb-4">
@@ -12,18 +12,18 @@
             onerror="this.style.display='none'"
           >
         </div>
-        <h1 class="text-xl font-bold text-white mb-2 font-usco-condensed">SISTEMA DE RESERVAS</h1>
+        <h1 class="text-lg sm:text-xl font-bold text-white mb-2 font-usco-condensed">SISTEMA DE RESERVAS</h1>
         <p class="text-sm text-amber-200">Universidad Surcolombiana</p>
       </div>
     </div>
     
-    <div class="p-8">
+    <div class="p-6 sm:p-8">
       <div class="text-center mb-8">
         <h2 class="text-xl font-bold text-usco-gris-800">Crear Cuenta</h2>
         <p class="text-sm mt-2 text-usco-gris-500">Regístrate para acceder al sistema</p>
       </div>
 
-      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-4 sm:space-y-6">
         <!-- Nombre -->
         <div>
           <label for="nombre" class="block text-sm font-medium text-usco-gris-800 mb-2">

@@ -54,7 +54,7 @@
 
     <!-- Filtros -->
     <p-card class="mb-6 shadow-usco border-0">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         
         <!-- Filtro por estado -->
         <div>
@@ -330,7 +330,7 @@
 
             <!-- Información de fecha y hora -->
             <div class="bg-usco-gris-50 rounded-lg p-4">
-              <div class="grid grid-cols-2 gap-4 text-sm">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                 <div>
                   <span class="text-usco-gris-500 block">Fecha:</span>
                   <span class="font-medium text-usco-gris-900">{{ formatDate(reservation.fechaInicio) }}</span>
@@ -383,7 +383,8 @@
   [(visible)]="showDetailDialog" 
   [modal]="true" 
   header="Detalle de Reserva" 
-  [style]="{width: '50vw'}" 
+  [style]="{width: '95vw', maxWidth: '600px'}"
+  [breakpoints]="{'960px': '75vw', '640px': '95vw'}" 
   [dismissableMask]="true"
   [resizable]="false">
   
@@ -399,7 +400,7 @@
       <h4 class="text-sm font-medium text-usco-gris-900 mb-3">
         <i class="pi pi-user mr-2"></i>Información del Usuario
       </h4>
-      <div class="grid grid-cols-2 gap-4 text-sm">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
         <div>
           <span class="text-usco-gris-500 block">Nombre:</span>
           <span class="font-medium text-usco-gris-900">{{ getUserDisplayName(selectedReservation) }}</span>
@@ -416,7 +417,7 @@
       <h4 class="text-sm font-medium text-usco-gris-900 mb-3">
         <i class="pi pi-calendar mr-2"></i>Detalles de la Reserva
       </h4>
-      <div class="grid grid-cols-2 gap-4 text-sm">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
         <div>
           <span class="text-usco-gris-500 block">Fecha:</span>
           <span class="font-medium text-usco-gris-900">{{ formatDate(selectedReservation.fechaInicio) }}</span>

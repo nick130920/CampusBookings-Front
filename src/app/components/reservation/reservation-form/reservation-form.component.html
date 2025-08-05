@@ -4,7 +4,7 @@
     
     <!-- Encabezado -->
     <div class="text-center mb-8">
-      <h1 class="text-3xl font-bold text-usco-gris-900 font-usco-condensed">Nueva Reserva</h1>
+      <h1 class="text-2xl sm:text-3xl font-bold text-usco-gris-900 font-usco-condensed">Nueva Reserva</h1>
       <p class="mt-2 text-usco-gris-600">Reserve su espacio de manera rápida y sencilla</p>
     </div>
 
@@ -77,7 +77,7 @@
               <h3 class="font-medium text-usco-gris-900 mb-2">{{ selectedScenario.nombre }}</h3>
               <p class="text-sm text-usco-gris-700 mb-3">{{ selectedScenario.descripcion }}</p>
               
-              <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
                 <div>
                   <span class="text-usco-gris-500">Tipo:</span>
                   <div class="font-medium">{{ selectedScenario.tipo }}</div>
@@ -238,8 +238,8 @@
             <p class="text-usco-gris-600">Revise los detalles antes de confirmar</p>
           </div>
 
-          <div class="bg-usco-gris-50 rounded-lg p-6 border border-usco-gris-200">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div class="bg-usco-gris-50 rounded-lg p-4 sm:p-6 border border-usco-gris-200">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
               <!-- Detalles del escenario -->
               <div>
                 <h3 class="font-medium text-usco-gris-900 mb-3">Escenario</h3>
@@ -282,7 +282,7 @@
         <!-- Botones de navegación -->
         <p-divider></p-divider>
         
-        <div class="flex justify-between items-center pt-4">
+                  <div class="flex flex-col sm:flex-row sm:justify-between items-center pt-4 gap-4">
           <!-- Botón anterior -->
           <p-button
             *ngIf="currentStep > 0"
@@ -293,7 +293,7 @@
           </p-button>
           <div *ngIf="currentStep === 0"></div> <!-- Spacer -->
 
-          <div class="flex space-x-3">
+          <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
             <!-- Botón cancelar -->
             <p-button
               label="Cancelar"

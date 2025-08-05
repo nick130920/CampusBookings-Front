@@ -1,0 +1,147 @@
+<!-- Navegación responsive moderna -->
+<nav class="bg-white shadow-lg sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      
+      <!-- Logo y título -->
+      <div class="flex items-center">
+        <div class="flex-shrink-0 flex items-center">
+          <img class="h-8 w-auto" src="assets/images/usco-logo.png" alt="USCO" />
+          <span class="ml-3 text-lg font-bold text-usco-gris-900 hidden sm:block">CampusBookings</span>
+          <span class="ml-3 text-lg font-bold text-usco-gris-900 sm:hidden">CB</span>
+        </div>
+      </div>
+
+      <!-- Menú desktop -->
+      <div class="hidden md:block">
+        <div class="ml-10 flex items-baseline space-x-4">
+          <a routerLink="/dashboard" 
+             routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
+             class="text-usco-gris-700 hover:bg-usco-gris-100 hover:text-usco-gris-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            Dashboard
+          </a>
+          <a routerLink="/dashboard/reservas" 
+             routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
+             class="text-usco-gris-700 hover:bg-usco-gris-100 hover:text-usco-gris-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            Mis Reservas
+          </a>
+          <a routerLink="/dashboard/scenarios" 
+             routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
+             class="text-usco-gris-700 hover:bg-usco-gris-100 hover:text-usco-gris-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            Escenarios
+          </a>
+          <a *ngIf="isAdmin" 
+             routerLink="/admin/dashboard" 
+             routerLinkActive="bg-usco-ocre-100 text-usco-ocre-700"
+             class="text-usco-gris-700 hover:bg-usco-gris-100 hover:text-usco-gris-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            Admin
+          </a>
+        </div>
+      </div>
+
+      <!-- Botones de acción -->
+      <div class="hidden md:flex items-center space-x-4">
+        <div class="relative">
+          <button class="text-usco-gris-700 hover:text-usco-gris-900 p-2 rounded-full hover:bg-usco-gris-100 transition-colors">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5-5-5h5v-5h5v5z"/>
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Usuario -->
+        <div class="relative">
+          <button (click)="toggleUserMenu()" 
+                  class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-usco-vino-500">
+            <div class="h-8 w-8 rounded-full bg-usco-vino-600 flex items-center justify-center text-white font-medium">
+              {{ getUserInitials() }}
+            </div>
+            <span class="ml-2 text-usco-gris-700 hidden lg:block">{{ getCurrentUser()?.nombre }}</span>
+            <svg class="ml-1 h-4 w-4 text-usco-gris-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          
+          <!-- Dropdown de usuario -->
+          <div *ngIf="showUserMenu" 
+               class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <div class="py-1">
+              <a routerLink="/profile" class="block px-4 py-2 text-sm text-usco-gris-700 hover:bg-usco-gris-100">
+                Mi Perfil
+              </a>
+              <button (click)="logout()" class="block w-full text-left px-4 py-2 text-sm text-usco-gris-700 hover:bg-usco-gris-100">
+                Cerrar Sesión
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botón menú móvil -->
+      <div class="md:hidden">
+        <button (click)="toggleMobileMenu()" 
+                class="text-usco-gris-700 hover:text-usco-gris-900 hover:bg-usco-gris-100 p-2 rounded-md">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path *ngIf="!showMobileMenu" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            <path *ngIf="showMobileMenu" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menú móvil -->
+  <div *ngIf="showMobileMenu" class="md:hidden bg-white border-t border-usco-gris-200">
+    <div class="px-2 pt-2 pb-3 space-y-1">
+      <a routerLink="/dashboard" 
+         (click)="closeMobileMenu()"
+         routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
+         class="text-usco-gris-700 hover:bg-usco-gris-100 block px-3 py-2 rounded-md text-base font-medium">
+        Dashboard
+      </a>
+      <a routerLink="/dashboard/reservas" 
+         (click)="closeMobileMenu()"
+         routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
+         class="text-usco-gris-700 hover:bg-usco-gris-100 block px-3 py-2 rounded-md text-base font-medium">
+        Mis Reservas
+      </a>
+      <a routerLink="/dashboard/scenarios" 
+         (click)="closeMobileMenu()"
+         routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
+         class="text-usco-gris-700 hover:bg-usco-gris-100 block px-3 py-2 rounded-md text-base font-medium">
+        Escenarios
+      </a>
+      <a *ngIf="isAdmin" 
+         routerLink="/admin/dashboard" 
+         (click)="closeMobileMenu()"
+         routerLinkActive="bg-usco-ocre-100 text-usco-ocre-700"
+         class="text-usco-gris-700 hover:bg-usco-gris-100 block px-3 py-2 rounded-md text-base font-medium">
+        Administración
+      </a>
+    </div>
+    
+    <!-- Usuario móvil -->
+    <div class="pt-4 pb-3 border-t border-usco-gris-200">
+      <div class="flex items-center px-5">
+        <div class="h-10 w-10 rounded-full bg-usco-vino-600 flex items-center justify-center text-white font-medium">
+          {{ getUserInitials() }}
+        </div>
+        <div class="ml-3">
+          <div class="text-base font-medium text-usco-gris-800">{{ getCurrentUser()?.nombre }}</div>
+          <div class="text-sm text-usco-gris-500">{{ getCurrentUser()?.email }}</div>
+        </div>
+      </div>
+      <div class="mt-3 px-2 space-y-1">
+        <a routerLink="/profile" 
+           (click)="closeMobileMenu()"
+           class="block px-3 py-2 rounded-md text-base font-medium text-usco-gris-700 hover:bg-usco-gris-100">
+          Mi Perfil
+        </a>
+        <button (click)="logout()" 
+                class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-usco-gris-700 hover:bg-usco-gris-100">
+          Cerrar Sesión
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
