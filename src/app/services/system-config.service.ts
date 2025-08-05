@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, catchError, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface SystemConfig {
@@ -56,7 +55,7 @@ export class SystemConfigService {
     const updateRequest = {
       diasMinimosAnticipacion: config.minDaysAdvance,
       diasMaximosAnticipacion: config.maxDaysAdvance,
-      descripcion: config.descripcion || 'Configuración actualizada desde el panel de administración'
+      descripcion: (config as any).descripcion || 'Configuración actualizada desde el panel de administración'
     };
 
     return this.http.put<SystemConfig>(`${this.API_URL}/reservas`, updateRequest).pipe(
