@@ -12,42 +12,6 @@
         </div>
       </div>
 
-      <!-- Menú desktop -->
-      <div class="hidden md:block">
-        <div class="ml-10 flex items-baseline space-x-4">
-          <a routerLink="/dashboard" 
-             routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
-             [routerLinkActiveOptions]="{ exact: true }"
-             class="text-usco-gris-700 hover:bg-usco-gris-100 hover:text-usco-gris-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-            Dashboard
-          </a>
-          <a routerLink="/dashboard/reservas" 
-             routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
-             [routerLinkActiveOptions]="{ exact: true }"
-             class="text-usco-gris-700 hover:bg-usco-gris-100 hover:text-usco-gris-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-            Mis Reservas
-          </a>
-          <a routerLink="/dashboard/escenarios/disponibilidad" 
-             routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
-             [routerLinkActiveOptions]="{ exact: true }"
-             class="text-usco-gris-700 hover:bg-usco-gris-100 hover:text-usco-gris-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-            Calendario de Disponibilidad
-          </a>
-          <a routerLink="/dashboard/escenarios" 
-             routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
-             [routerLinkActiveOptions]="{ exact: true }"
-             class="text-usco-gris-700 hover:bg-usco-gris-100 hover:text-usco-gris-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-            Escenarios
-          </a>
-          <a *ngIf="isAdmin" 
-             routerLink="/admin/dashboard" 
-             routerLinkActive="bg-usco-ocre-100 text-usco-ocre-700"
-             class="text-usco-gris-700 hover:bg-usco-gris-100 hover:text-usco-gris-900 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-            Admin
-          </a>
-        </div>
-      </div>
-
       <!-- Botones de acción -->
       <div class="hidden md:flex items-center space-x-4">
         <div class="relative">
@@ -131,7 +95,7 @@
         Escenarios
       </a>
       <a *ngIf="isAdmin" 
-         routerLink="/admin/dashboard" 
+         routerLink="/dashboard/admin" 
          (click)="closeMobileMenu()"
          routerLinkActive="bg-usco-ocre-100 text-usco-ocre-700"
          class="text-usco-gris-700 hover:bg-usco-gris-100 block px-3 py-2 rounded-md text-base font-medium">

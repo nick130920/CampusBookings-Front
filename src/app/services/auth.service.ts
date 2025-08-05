@@ -49,6 +49,22 @@ export class AuthService {
   }
 
   /**
+   * Notificar que el usuario se ha autenticado (para iniciar monitoreo de actividad)
+   */
+  private notifyUserLoggedIn(): void {
+    // Enviar evento personalizado para que ActivityService lo escuche
+    window.dispatchEvent(new CustomEvent('user-logged-in'));
+  }
+
+  /**
+   * Notificar que el usuario se ha desconectado (para detener monitoreo)
+   */
+  private notifyUserLoggedOut(): void {
+    // Enviar evento personalizado para que ActivityService lo escuche
+    window.dispatchEvent(new CustomEvent('user-logged-out'));
+  }
+
+  /**
    * Observable del usuario actual
    */
   getCurrentUser$(): Observable<User | null> {
@@ -102,6 +118,9 @@ export class AuthService {
     this.isAuthenticated.next(true);
     const expirationTime = this.getTokenExpiration(token).getTime() - new Date().getTime();
     this.autoLogout(expirationTime);
+    
+    // Notificar que el usuario se ha autenticado
+    this.notifyUserLoggedIn();
   }
 
   logout(navigateToLogin: boolean = true): void {
@@ -120,6 +139,9 @@ export class AuthService {
     localStorage.removeItem('user_data');
     this.isAuthenticated.next(false);
     this.currentUser.next(null);
+    
+    // Notificar que el usuario se ha desconectado
+    this.notifyUserLoggedOut();
   }
 
   private autoLogout(expirationDuration: number): void {
@@ -130,7 +152,7 @@ export class AuthService {
     }
   }
 
-  private isTokenExpired(token: string): boolean {
+  public isTokenExpired(token: string): boolean {
     const expiration = this.getTokenExpiration(token);
     return expiration.getTime() < new Date().getTime();
   }
@@ -154,6 +176,16 @@ export class AuthService {
 
   getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);
+  }
+
+  /**
+   * Actualizar token renovado desde el backend
+   */
+  updateToken(newToken: string): void {
+    if (newToken && newToken.trim()) {
+      localStorage.setItem(this.TOKEN_KEY, newToken);
+      console.log('🔄 Token actualizado por renovación automática del backend');
+    }
   }
 
   isLoggedIn(): boolean {

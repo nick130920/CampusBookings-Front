@@ -363,11 +363,38 @@
             </div>
 
             <!-- Acciones -->
-            <div *ngIf="canCancelReservation(reservation)" class="flex justify-end">
+            <div class="flex flex-wrap gap-2 justify-end">
+              <!-- Botón Ver Detalle - siempre disponible -->
               <p-button
-                label="Cancelar Reserva"
+                label="Ver Detalle"
+                icon="pi pi-eye"
+                styleClass="p-button-outlined p-button-info p-button-sm"
+                (onClick)="showReservationDetail(reservation)">
+              </p-button>
+              
+              <!-- Botones de administración -->
+              <p-button
+                *ngIf="canApprove(reservation)"
+                label="Aprobar"
+                icon="pi pi-check"
+                styleClass="p-button-outlined p-button-success p-button-sm"
+                (onClick)="approveReservation(reservation)">
+              </p-button>
+              
+              <p-button
+                *ngIf="canReject(reservation)"
+                label="Rechazar"
                 icon="pi pi-times"
                 styleClass="p-button-outlined p-button-danger p-button-sm"
+                (onClick)="rejectReservation(reservation)">
+              </p-button>
+              
+              <!-- Botón de cancelación para usuarios -->
+              <p-button
+                *ngIf="canCancelReservation(reservation)"
+                label="Cancelar"
+                icon="pi pi-ban"
+                styleClass="p-button-outlined p-button-warning p-button-sm"
                 (onClick)="onCancelReservation(reservation)">
               </p-button>
             </div>

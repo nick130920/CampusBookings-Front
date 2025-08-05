@@ -238,3 +238,97 @@ html, body {
     margin: 0.125rem 0 !important;
   }
 }
+
+/* === CONFIRM DIALOG RESPONSIVE FIXES === */
+/* Asegurar que los diálogos de confirmación se vean correctamente en móvil */
+.p-confirm-dialog {
+  max-width: calc(100vw - 4rem) !important;
+  margin: 2rem !important;
+}
+
+.p-confirm-dialog .p-dialog-content {
+  padding: 1.5rem !important;
+  text-align: center !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
+.p-confirm-dialog .p-confirm-dialog-message {
+  font-size: 0.875rem !important;
+  line-height: 1.5 !important;
+  margin: 1rem 0 !important;
+}
+
+.p-confirm-dialog .p-dialog-footer {
+  padding: 1rem 1.5rem !important;
+  gap: 0.5rem !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+}
+
+.p-confirm-dialog .p-dialog-footer .p-button {
+  min-width: 80px !important;
+  margin: 0.25rem !important;
+}
+
+/* Estilos responsivos para confirm dialog */
+@media (max-width: 640px) {
+  .p-confirm-dialog {
+    width: calc(100vw - 4rem) !important;
+    max-width: none !important;
+    margin: 2rem !important;
+    border-radius: 0.75rem !important;
+  }
+  
+  .p-confirm-dialog .p-dialog-header {
+    padding: 1rem 1.5rem 0.5rem !important;
+    font-size: 1rem !important;
+    text-align: center !important;
+  }
+  
+  .p-confirm-dialog .p-dialog-content {
+    padding: 1rem 1.5rem !important;
+  }
+  
+  .p-confirm-dialog .p-confirm-dialog-message {
+    font-size: 0.8rem !important;
+    margin: 0.75rem 0 !important;
+  }
+  
+  .p-confirm-dialog .p-dialog-footer {
+    padding: 0.75rem 1.5rem 1.5rem !important;
+    flex-direction: column !important;
+  }
+  
+  .p-confirm-dialog .p-dialog-footer .p-button {
+    width: 100% !important;
+    margin: 0.25rem 0 !important;
+    min-width: auto !important;
+  }
+}
+
+/* Para pantallas muy pequeñas */
+@media (max-width: 480px) {
+  .p-confirm-dialog {
+    width: calc(100vw - 3rem) !important;
+    margin: 1.5rem !important;
+  }
+  
+  .p-confirm-dialog .p-dialog-header {
+    padding: 0.75rem 1rem 0.25rem !important;
+    font-size: 0.9rem !important;
+  }
+  
+  .p-confirm-dialog .p-dialog-content {
+    padding: 0.75rem 1rem !important;
+  }
+  
+  .p-confirm-dialog .p-confirm-dialog-message {
+    font-size: 0.75rem !important;
+    margin: 0.5rem 0 !important;
+  }
+  
+  .p-confirm-dialog .p-dialog-footer {
+    padding: 0.5rem 1rem 1rem !important;
+  }
+}

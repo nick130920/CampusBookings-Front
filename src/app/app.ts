@@ -5,6 +5,7 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 // Services
 import { NotificationService } from './services/notification.service';
+import { ActivityService } from './services/activity.service';
 
 @Component({
   selector: 'app-root',
@@ -15,12 +16,14 @@ import { NotificationService } from './services/notification.service';
 export class App implements OnInit, OnDestroy {
   protected title = 'CampusBookings';
   
-  // Inject notification service to initialize it
+  // Inject services to initialize them
   private notificationService = inject(NotificationService);
+  private activityService = inject(ActivityService);
 
   ngOnInit(): void {
-    // El NotificationService se inicializa automáticamente al ser inyectado
+    // Los servicios se inicializan automáticamente al ser inyectados
     console.log('🔔 Sistema de notificaciones en tiempo real iniciado');
+    console.log('🕒 Sistema de monitoreo de actividad iniciado');
   }
 
   ngOnDestroy(): void {
