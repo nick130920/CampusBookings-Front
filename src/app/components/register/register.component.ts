@@ -26,7 +26,11 @@ export class RegisterComponent implements OnInit {
       nombre: ['', [Validators.required]],
       apellido: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]]
+      password: ['', [
+        Validators.required, 
+        Validators.minLength(8),
+        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/)
+      ]]
     });
   }
 
@@ -51,8 +55,25 @@ export class RegisterComponent implements OnInit {
       },
       error: (error) => {
         console.error('Registration error details:', error);
-        this.errorMessage = error.error?.message || 'Error en el registro. Por favor intente de nuevo.';
         this.isLoading = false;
+        
+        // Manejar errores de validación específicos
+        if (error.status === 400 && error.error) {
+          // Si hay errores de validación específicos
+          if (error.error.message) {
+            this.errorMessage = error.error.message;
+          } else if (error.error.errors) {
+            // Manejar múltiples errores de validación
+            const fieldErrors = Object.values(error.error.errors).join(', ');
+            this.errorMessage = fieldErrors;
+          } else if (typeof error.error === 'string') {
+            this.errorMessage = error.error;
+          } else {
+            this.errorMessage = 'Error de validación. Verifique los datos ingresados.';
+          }
+        } else {
+          this.errorMessage = error.error?.message || 'Error en el registro. Por favor intente de nuevo.';
+        }
       }
     });
   }

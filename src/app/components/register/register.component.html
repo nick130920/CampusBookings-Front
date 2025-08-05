@@ -126,6 +126,9 @@
           <div *ngIf="password?.invalid && password?.touched" class="mt-2 text-sm text-red-600">
             <span *ngIf="password?.hasError('required')">La contraseña es requerida</span>
             <span *ngIf="password?.hasError('minlength')">La contraseña debe tener al menos 8 caracteres</span>
+            <span *ngIf="password?.hasError('pattern')">
+              La contraseña debe contener al menos: 1 minúscula, 1 mayúscula, 1 número y 1 carácter especial (@$!%*?&)
+            </span>
           </div>
         </div>
 
