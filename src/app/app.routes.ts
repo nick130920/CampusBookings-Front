@@ -53,7 +53,8 @@ export const routes: Routes = [
         path: 'admin',
         children: [
           { path: '', component: AdminDashboardComponent },
-          { path: 'reportes', component: ReportsComponent }
+          { path: 'reportes', component: ReportsComponent },
+          { path: 'configuracion', loadComponent: () => import('./components/admin/system-config/system-config.component').then(m => m.SystemConfigComponent) }
         ]
       },
       // Redirecciones para compatibilidad

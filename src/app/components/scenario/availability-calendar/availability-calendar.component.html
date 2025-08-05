@@ -13,7 +13,7 @@
   <!-- Formulario de búsqueda -->
   <p-card class="mb-6 shadow-usco border-0">
     <form [formGroup]="searchForm">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       
       <!-- Selección de escenario -->
       <div>
@@ -83,8 +83,8 @@
       </div>
 
       <!-- Botones de acción -->
-      <div class="flex justify-between items-center mt-6">
-      <div class="flex gap-3">
+      <div class="flex flex-col sm:flex-row sm:justify-between items-center mt-6 gap-4">
+      <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
         <p-button
           type="button"
           label="Buscar Disponibilidad"
@@ -120,7 +120,7 @@
           <h3 class="text-lg font-semibold text-usco-gris-900 mb-1">
             {{ selectedScenario.nombre }}
           </h3>
-          <div class="flex gap-4 text-sm text-usco-gris-600">
+          <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 text-sm text-usco-gris-600">
             <span><i class="pi pi-tag mr-1"></i>{{ selectedScenario.tipo }}</span>
             <span><i class="pi pi-map-marker mr-1"></i>{{ selectedScenario.ubicacion }}</span>
             <span><i class="pi pi-users mr-1"></i>Capacidad: {{ selectedScenario.capacidad }}</span>
@@ -137,9 +137,9 @@
   <!-- Calendario -->
   <p-card class="shadow-usco border-0">
     <!-- Header del calendario -->
-    <div class="flex justify-between items-center mb-6">
-      <div class="flex items-center gap-4">
-        <h2 class="text-xl font-semibold text-usco-gris-900">
+    <div class="flex flex-col sm:flex-row sm:justify-between items-center mb-6 gap-4">
+      <div class="flex flex-col sm:flex-row items-center gap-4">
+        <h2 class="text-lg sm:text-xl font-semibold text-usco-gris-900">
           {{ getMonthName() }} {{ currentYear }}
         </h2>
         <div class="flex gap-2">
@@ -180,7 +180,7 @@
       <div *ngFor="let day of calendarDays; let i = index"
            (click)="onDayClick(day)"
            [class]="getDayClasses(day)"
-           class="p-3 min-h-[80px] border border-usco-gris-200 rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md">
+           class="p-2 sm:p-3 min-h-[60px] sm:min-h-[80px] border border-usco-gris-200 rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md">
         
         <!-- Número del día -->
         <div class="text-sm font-medium mb-1"

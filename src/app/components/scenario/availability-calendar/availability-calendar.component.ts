@@ -19,6 +19,7 @@ import { ScenarioService, Scenario } from '../../../services/scenario.service';
 import { ReservationService } from '../../../services/reservation.service';
 import { ToastService } from '../../../services/toast.service';
 import { AuthService } from '../../../services/auth.service';
+import { SystemConfigService } from '../../../services/system-config.service';
 
 interface CalendarDay {
   date: Date;
@@ -92,6 +93,7 @@ export class AvailabilityCalendarComponent implements OnInit {
   private reservationService = inject(ReservationService);
   private toastService = inject(ToastService);
   private authService = inject(AuthService);
+  private systemConfigService = inject(SystemConfigService);
 
   constructor() {
     this.initForm();
@@ -115,9 +117,16 @@ export class AvailabilityCalendarComponent implements OnInit {
   }
 
   private setDateLimits(): void {
-    this.minDate = new Date();
-    this.maxDate = new Date();
-    this.maxDate.setMonth(this.maxDate.getMonth() + 6); // 6 meses en el futuro
+    // Usar configuración dinámica del sistema
+    this.minDate = this.systemConfigService.getMinAllowedDate();
+    this.maxDate = this.systemConfigService.getMaxAllowedDate();
+    
+    // Suscribirse a cambios en la configuración
+    this.systemConfigService.config$.subscribe(config => {
+      this.minDate = this.systemConfigService.getMinAllowedDate();
+      this.maxDate = this.systemConfigService.getMaxAllowedDate();
+      this.generateCalendar(); // Regenerar calendario con nuevos límites
+    });
   }
 
   private loadInitialData(): void {
@@ -221,7 +230,8 @@ export class AvailabilityCalendarComponent implements OnInit {
   }
 
   private getDayAvailability(date: Date): 'DISPONIBLE' | 'RESERVADO' | 'NO_DISPONIBLE' | 'UNKNOWN' {
-    if (date < new Date()) {
+    // Verificar si está dentro del rango permitido usando la configuración dinámica
+    if (!this.systemConfigService.isDateAllowed(date)) {
       return 'NO_DISPONIBLE';
     }
 
@@ -258,7 +268,7 @@ export class AvailabilityCalendarComponent implements OnInit {
         year: currentDate.getFullYear(),
         isCurrentMonth: currentDate.getMonth() === this.currentMonth,
         isToday: this.isSameDay(currentDate, today),
-        isPast: currentDate < today,
+        isPast: !this.systemConfigService.isDateAllowed(currentDate),
         availability: 'UNKNOWN'
       });
     }
@@ -375,13 +385,20 @@ export class AvailabilityCalendarComponent implements OnInit {
   }
 
   onDayClick(day: CalendarDay): void {
-    if (day.isPast || !day.isCurrentMonth) {
+    if (!day.isCurrentMonth) {
+      return;
+    }
+    
+    // Verificar restricciones de fecha usando la configuración dinámica
+    if (!this.systemConfigService.isDateAllowed(day.date)) {
+      const errorMessage = this.systemConfigService.getDateErrorMessage(day.date);
+      this.toastService.showWarning(errorMessage);
       return;
     }
 
     // Si hay un escenario seleccionado, abrir el formulario de reserva
     if (this.selectedScenario) {
-      this.router.navigate(['/reservas/nueva'], {
+      this.router.navigate(['/dashboard/reservas/nueva'], {
         queryParams: {
           scenarioId: this.selectedScenario.id,
           fecha: this.formatDateForAPI(day.date)

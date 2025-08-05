@@ -25,6 +25,7 @@ import { ReservationService, CreateReservationRequest, AvailabilityResponse, Alt
 import { ScenarioService, Scenario } from '../../../services/scenario.service';
 import { ToastService } from '../../../services/toast.service';
 import { AuthService } from '../../../services/auth.service';
+import { SystemConfigService } from '../../../services/system-config.service';
 import { formatForAPI, combineDateTime } from '../../../utils/date.utils';
 
 interface TimeSlot {
@@ -99,6 +100,7 @@ export class ReservationFormComponent implements OnInit {
   private scenarioService = inject(ScenarioService);
   private toastService = inject(ToastService);
   private authService = inject(AuthService);
+  private systemConfigService = inject(SystemConfigService);
 
   constructor() {
     this.initForm();
@@ -106,8 +108,8 @@ export class ReservationFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Primero cargar escenarios, luego manejar parámetros
     this.loadScenarios();
-    this.checkForPreselectedScenario();
     this.setupAvailabilityCheck();
   }
 
@@ -123,9 +125,15 @@ export class ReservationFormComponent implements OnInit {
   }
 
   private setDateLimits(): void {
-    this.minDate = new Date();
-    this.maxDate = new Date();
-    this.maxDate.setDate(this.maxDate.getDate() + 30); // 30 días máximo
+    // Usar configuración dinámica del sistema
+    this.minDate = this.systemConfigService.getMinAllowedDate();
+    this.maxDate = this.systemConfigService.getMaxAllowedDate();
+    
+    // Suscribirse a cambios en la configuración
+    this.systemConfigService.config$.subscribe(config => {
+      this.minDate = this.systemConfigService.getMinAllowedDate();
+      this.maxDate = this.systemConfigService.getMaxAllowedDate();
+    });
   }
 
   private loadScenarios(): void {
@@ -134,6 +142,8 @@ export class ReservationFormComponent implements OnInit {
       next: (scenarios) => {
         this.scenarios = scenarios.filter(s => s.disponible);
         this.isLoading = false;
+        // Después de cargar escenarios, manejar parámetros de query
+        this.checkForPreselectedScenario();
       },
       error: (error) => {
         console.error('Error loading scenarios:', error);
@@ -145,12 +155,37 @@ export class ReservationFormComponent implements OnInit {
 
   private checkForPreselectedScenario(): void {
     this.route.queryParams.subscribe(params => {
-      if (params['escenarioId']) {
-        this.preselectedScenarioId = Number(params['escenarioId']);
-        this.reservationForm.patchValue({
-          escenarioId: this.preselectedScenarioId
-        });
-        this.onScenarioChange();
+      console.log('Query params received:', params);
+      
+      if (params['scenarioId']) {
+        this.preselectedScenarioId = Number(params['scenarioId']);
+        console.log('Preselected scenario ID:', this.preselectedScenarioId);
+        
+        // Verificar que el escenario existe en la lista
+        const scenario = this.scenarios.find(s => s.id === this.preselectedScenarioId);
+        console.log('Found scenario:', scenario);
+        
+        if (scenario) {
+          this.reservationForm.patchValue({
+            escenarioId: this.preselectedScenarioId
+          });
+          this.onScenarioChange();
+        } else {
+          console.warn(`Scenario with ID ${this.preselectedScenarioId} not found in available scenarios`);
+        }
+      }
+      
+      // También manejar fecha preseleccionada
+      if (params['fecha']) {
+        const fechaPreseleccionada = new Date(params['fecha']);
+        console.log('Preselected date:', fechaPreseleccionada);
+        
+        if (!isNaN(fechaPreseleccionada.getTime())) {
+          this.reservationForm.patchValue({
+            fechaSeleccionada: fechaPreseleccionada
+          });
+          this.onDateChange();
+        }
       }
     });
   }

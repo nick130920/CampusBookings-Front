@@ -1,0 +1,207 @@
+<div class="min-h-screen bg-usco-gris-100 p-4 sm:p-6">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="mb-6 sm:mb-8">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-4xl font-bold text-usco-gris-900 font-usco-condensed">
+            Configuración del Sistema
+          </h1>
+          <p class="mt-2 text-base sm:text-lg text-usco-gris-600">
+            Gestiona los parámetros globales de CampusBookings
+          </p>
+        </div>
+        
+        <p-button
+          type="button"
+          label="Volver"
+          icon="pi pi-arrow-left"
+          (onClick)="goBack()"
+          styleClass="p-button-outlined p-button-secondary">
+        </p-button>
+      </div>
+    </div>
+
+    <!-- Configuración de Reservas -->
+    <p-card styleClass="shadow-usco border-0">
+      <ng-template pTemplate="header">
+        <div class="flex items-center p-4 bg-usco-vino-50 border-b border-usco-gris-200">
+          <div class="flex items-center justify-center w-12 h-12 bg-usco-vino-100 rounded-lg mr-4">
+            <i class="pi pi-calendar text-xl text-usco-vino-600"></i>
+          </div>
+          <div>
+            <h2 class="text-xl font-semibold text-usco-gris-900">
+              Límites de Reservas
+            </h2>
+            <p class="text-sm text-usco-gris-600 mt-1">
+              Define el rango de tiempo permitido para realizar reservas
+            </p>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="content">
+        <div *ngIf="isLoading" class="flex justify-center py-8">
+          <p-progressSpinner 
+            strokeWidth="3" 
+            animationDuration="1s">
+          </p-progressSpinner>
+        </div>
+
+        <form [formGroup]="configForm" (ngSubmit)="onSave()" *ngIf="!isLoading">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+            <!-- Días mínimos de anticipación -->
+            <div>
+              <label for="minDaysAdvance" class="block text-sm font-medium text-usco-gris-900 mb-2">
+                <i class="pi pi-clock mr-2 text-usco-vino-600"></i>
+                Días mínimos de anticipación
+              </label>
+              <p-inputNumber
+                id="minDaysAdvance"
+                formControlName="minDaysAdvance"
+                [min]="0"
+                [max]="7"
+                suffix=" días"
+                placeholder="Ej: 2"
+                styleClass="w-full"
+                [class.ng-invalid]="configForm.get('minDaysAdvance')?.invalid && configForm.get('minDaysAdvance')?.touched">
+              </p-inputNumber>
+              
+              <small class="block mt-2 text-usco-gris-600">
+                Tiempo mínimo requerido entre la fecha actual y la fecha de reserva
+              </small>
+              
+              <p-message 
+                *ngIf="minDaysError" 
+                severity="error" 
+                [text]="minDaysError"
+                styleClass="mt-2">
+              </p-message>
+            </div>
+
+            <!-- Días máximos de anticipación -->
+            <div>
+              <label for="maxDaysAdvance" class="block text-sm font-medium text-usco-gris-900 mb-2">
+                <i class="pi pi-calendar-plus mr-2 text-usco-ocre-600"></i>
+                Días máximos de anticipación
+              </label>
+              <p-inputNumber
+                id="maxDaysAdvance"
+                formControlName="maxDaysAdvance"
+                [min]="7"
+                [max]="365"
+                suffix=" días"
+                placeholder="Ej: 90"
+                styleClass="w-full"
+                [class.ng-invalid]="configForm.get('maxDaysAdvance')?.invalid && configForm.get('maxDaysAdvance')?.touched">
+              </p-inputNumber>
+              
+              <small class="block mt-2 text-usco-gris-600">
+                Tiempo máximo permitido entre la fecha actual y la fecha de reserva
+              </small>
+              
+              <p-message 
+                *ngIf="maxDaysError" 
+                severity="error" 
+                [text]="maxDaysError"
+                styleClass="mt-2">
+              </p-message>
+            </div>
+          </div>
+
+          <!-- Error de rango de fechas -->
+          <p-message 
+            *ngIf="dateRangeError" 
+            severity="error" 
+            text="Los días máximos deben ser mayores que los días mínimos"
+            styleClass="mt-4">
+          </p-message>
+
+          <p-divider></p-divider>
+
+          <!-- Vista previa de configuración actual -->
+          <div *ngIf="currentConfig" class="bg-usco-gris-50 rounded-lg p-4 sm:p-6">
+            <h3 class="text-lg font-semibold text-usco-gris-900 mb-4">
+              <i class="pi pi-info-circle mr-2 text-usco-vino-600"></i>
+              Configuración Actual
+            </h3>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="bg-white rounded-lg p-4 border border-usco-gris-200">
+                <div class="flex items-center mb-2">
+                  <i class="pi pi-clock text-usco-vino-600 mr-2"></i>
+                  <span class="font-medium text-usco-gris-900">Mínimo</span>
+                </div>
+                <div class="text-2xl font-bold text-usco-vino-600">
+                  {{ currentConfig.minDaysAdvance }} días
+                </div>
+                <div class="text-sm text-usco-gris-600 mt-1">
+                  de anticipación mínima
+                </div>
+              </div>
+              
+              <div class="bg-white rounded-lg p-4 border border-usco-gris-200">
+                <div class="flex items-center mb-2">
+                  <i class="pi pi-calendar-plus text-usco-ocre-600 mr-2"></i>
+                  <span class="font-medium text-usco-gris-900">Máximo</span>
+                </div>
+                <div class="text-2xl font-bold text-usco-ocre-600">
+                  {{ currentConfig.maxDaysAdvance }} días
+                </div>
+                <div class="text-sm text-usco-gris-600 mt-1">
+                  de anticipación máxima
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="currentConfig.updatedAt" class="mt-4 pt-4 border-t border-usco-gris-200">
+              <p class="text-sm text-usco-gris-600">
+                <i class="pi pi-clock mr-1"></i>
+                Última actualización: {{ currentConfig.updatedAt | date:'medium' }}
+                <span *ngIf="currentConfig.updatedBy"> por {{ currentConfig.updatedBy }}</span>
+              </p>
+            </div>
+          </div>
+
+          <p-divider></p-divider>
+
+          <!-- Botones de acción -->
+          <div class="flex flex-col sm:flex-row gap-3 sm:justify-end">
+            <p-button
+              type="button"
+              label="Cancelar"
+              icon="pi pi-times"
+              (onClick)="onCancel()"
+              styleClass="p-button-outlined">
+            </p-button>
+            
+            <p-button
+              type="submit"
+              label="Guardar Configuración"
+              icon="pi pi-save"
+              [loading]="isSaving"
+              [disabled]="configForm.invalid"
+              styleClass="p-button-success">
+            </p-button>
+          </div>
+        </form>
+      </ng-template>
+    </p-card>
+
+    <!-- Información adicional -->
+    <div class="mt-6 sm:mt-8 bg-usco-ocre-50 rounded-lg p-4 sm:p-6 border border-usco-ocre-200">
+      <div class="flex items-start">
+        <i class="pi pi-info-circle text-usco-ocre-600 text-xl mr-3 mt-1"></i>
+        <div>
+          <h4 class="font-semibold text-usco-gris-900 mb-2">Información importante</h4>
+          <ul class="text-sm text-usco-gris-700 space-y-1">
+            <li>• Los cambios se aplican inmediatamente a todas las nuevas reservas</li>
+            <li>• Las reservas existentes no se ven afectadas por estos cambios</li>
+            <li>• Se recomienda un mínimo de 1-2 días para permitir la planificación</li>
+            <li>• El máximo recomendado es de 90-180 días para mantener flexibilidad</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
