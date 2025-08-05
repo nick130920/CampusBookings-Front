@@ -282,24 +282,16 @@
         <!-- Botones de navegación -->
         <p-divider></p-divider>
         
-                  <div class="flex flex-col sm:flex-row sm:justify-between items-center pt-4 gap-4">
-          <!-- Botón anterior -->
-          <p-button
-            *ngIf="currentStep > 0"
-            label="Anterior"
-            icon="pi pi-chevron-left"
-            styleClass="p-button-outlined p-button-secondary"
-            (onClick)="previousStep()">
-          </p-button>
-          <div *ngIf="currentStep === 0"></div> <!-- Spacer -->
-
-          <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
-            <!-- Botón cancelar -->
+        <div class="pt-4">
+          <!-- Layout móvil: botones en columna -->
+          <div class="block sm:hidden space-y-3">
+            <!-- Botón anterior (solo si existe) -->
             <p-button
-              label="Cancelar"
-              icon="pi pi-times"
-              styleClass="p-button-outlined p-button-secondary"
-              (onClick)="onCancel()">
+              *ngIf="currentStep > 0"
+              label="Anterior"
+              icon="pi pi-chevron-left"
+              styleClass="p-button-outlined p-button-secondary w-full"
+              (onClick)="previousStep()">
             </p-button>
 
             <!-- Botón siguiente/confirmar -->
@@ -307,6 +299,7 @@
               *ngIf="currentStep < steps.length - 1"
               label="Siguiente"
               icon="pi pi-chevron-right"
+              styleClass="w-full"
               [disabled]="!isStepValid(currentStep)"
               (onClick)="nextStep()">
             </p-button>
@@ -315,10 +308,60 @@
               *ngIf="currentStep === steps.length - 1"
               label="Confirmar Reserva"
               icon="pi pi-check"
+              styleClass="w-full"
               [disabled]="!isFormValid"
               [loading]="isSubmitting"
               (onClick)="onSubmit()">
             </p-button>
+
+            <!-- Botón cancelar al final en móvil -->
+            <p-button
+              label="Cancelar"
+              icon="pi pi-times"
+              styleClass="p-button-outlined p-button-secondary w-full"
+              (onClick)="onCancel()">
+            </p-button>
+          </div>
+
+          <!-- Layout desktop: botones en fila -->
+          <div class="hidden sm:flex sm:justify-between items-center">
+            <!-- Botón anterior -->
+            <p-button
+              *ngIf="currentStep > 0"
+              label="Anterior"
+              icon="pi pi-chevron-left"
+              styleClass="p-button-outlined p-button-secondary"
+              (onClick)="previousStep()">
+            </p-button>
+            <div *ngIf="currentStep === 0"></div> <!-- Spacer -->
+
+            <div class="flex space-x-3">
+              <!-- Botón cancelar -->
+              <p-button
+                label="Cancelar"
+                icon="pi pi-times"
+                styleClass="p-button-outlined p-button-secondary"
+                (onClick)="onCancel()">
+              </p-button>
+
+              <!-- Botón siguiente/confirmar -->
+              <p-button
+                *ngIf="currentStep < steps.length - 1"
+                label="Siguiente"
+                icon="pi pi-chevron-right"
+                [disabled]="!isStepValid(currentStep)"
+                (onClick)="nextStep()">
+              </p-button>
+
+              <p-button
+                *ngIf="currentStep === steps.length - 1"
+                label="Confirmar Reserva"
+                icon="pi pi-check"
+                [disabled]="!isFormValid"
+                [loading]="isSubmitting"
+                (onClick)="onSubmit()">
+              </p-button>
+            </div>
           </div>
         </div>
       </p-card>
