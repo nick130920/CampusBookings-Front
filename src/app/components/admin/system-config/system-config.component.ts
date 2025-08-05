@@ -61,13 +61,14 @@ export class SystemConfigComponent implements OnInit {
     this.configForm.setValidators(this.validateDateRange.bind(this));
   }
 
-  private validateDateRange(control: any): { [key: string]: any } | null {
-    if (!control || !control.get) {
+  private validateDateRange(control: AbstractControl): { [key: string]: any } | null {
+    const form = control as FormGroup;
+    if (!form || !form.get) {
       return null;
     }
     
-    const minDays = control.get('minDaysAdvance')?.value;
-    const maxDays = control.get('maxDaysAdvance')?.value;
+    const minDays = form.get('minDaysAdvance')?.value;
+    const maxDays = form.get('maxDaysAdvance')?.value;
     
     if (minDays && maxDays && minDays >= maxDays) {
       return { dateRangeInvalid: true };
