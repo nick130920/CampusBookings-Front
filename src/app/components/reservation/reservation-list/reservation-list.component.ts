@@ -16,6 +16,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
+import { SelectButtonModule } from 'primeng/selectbutton';
 import { TabsModule } from 'primeng/tabs';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmationService } from 'primeng/api';
@@ -24,6 +25,9 @@ import { ConfirmationService } from 'primeng/api';
 import { ReservationService, Reservation } from '../../../services/reservation.service';
 import { AuthService, User } from '../../../services/auth.service';
 import { ToastService } from '../../../services/toast.service';
+
+// Utils
+import { formatRelativeDate } from '../../../utils/date.utils';
 
 interface ReservationFilter {
   estado?: string;
@@ -51,8 +55,8 @@ interface ReservationFilter {
     SelectModule,
     DatePickerModule,
     InputTextModule,
-    TabsModule,
-    DialogModule
+    DialogModule,
+    SelectButtonModule
   ],
   providers: [ConfirmationService],
   templateUrl: './reservation-list.component.html',
@@ -153,6 +157,9 @@ export class ReservationListComponent implements OnInit {
     
     this.loadReservations();
     this.checkForSuccessMessage();
+    
+    // Prueba temporal del cálculo de fechas
+    this.testDateCalculation();
   }
 
   private checkForSuccessMessage(): void {
@@ -260,10 +267,6 @@ export class ReservationListComponent implements OnInit {
   private updateActiveReservations(): void {
     if (this.isAdmin) {
       this.reservations = this.activeTabValue === 'my' ? this.myReservations : this.allReservations;
-      console.log('🔍 DEBUG: updateActiveReservations - Tab activo (value):', this.activeTabValue);
-      console.log('🔍 DEBUG: updateActiveReservations - Reservas mostradas:', this.reservations.length);
-      console.log('🔍 DEBUG: updateActiveReservations - myReservations.length:', this.myReservations.length);
-      console.log('🔍 DEBUG: updateActiveReservations - allReservations.length:', this.allReservations.length);
     }
     this.filteredReservations = [...this.reservations];
     this.applyFilters();
@@ -448,23 +451,26 @@ export class ReservationListComponent implements OnInit {
   }
 
   formatCreatedDate(dateString: string): string {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
-    
-    if (diffInDays === 0) {
-      return 'Hoy';
-    } else if (diffInDays === 1) {
-      return 'Ayer';
-    } else if (diffInDays < 7) {
-      return `Hace ${diffInDays} días`;
-    } else {
-      return date.toLocaleDateString('es-ES', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric'
-      });
-    }
+    return formatRelativeDate(dateString);
+  }
+
+  // Método temporal para verificar el cálculo de fechas
+  testDateCalculation(): void {
+    const testCases = [
+      '2025-08-04T20:57:38.521106', // Caso del usuario
+      '2025-08-05T10:00:00',        // Ayer
+      '2025-08-06T15:30:00',        // Hoy
+      '2025-08-01T08:00:00',        // Hace 5 días
+      '2025-07-20T12:00:00'         // Hace más de una semana
+    ];
+
+    console.log('=== PRUEBA DE CÁLCULO DE FECHAS ===');
+    console.log('Fecha actual:', new Date().toISOString());
+    testCases.forEach(testDate => {
+      const result = this.formatCreatedDate(testDate);
+      console.log(`${testDate} → "${result}"`);
+    });
+    console.log('=================================');
   }
 
   getDurationInMinutes(startDate: string, endDate: string): number {
@@ -621,6 +627,12 @@ export class ReservationListComponent implements OnInit {
   /**
    * Método para cambiar programáticamente el tab (útil para testing)
    */
+  // Opciones para el SelectButton
+  viewOptions = [
+    { label: 'Mis Reservas', value: 'my', icon: 'pi pi-user' },
+    { label: 'Todas las Reservas', value: 'all', icon: 'pi pi-globe' }
+  ];
+
   switchToTab(tabValue: 'my' | 'all'): void {
     console.log('🔍 DEBUG: switchToTab called with:', tabValue);
     this.activeTabValue = tabValue;

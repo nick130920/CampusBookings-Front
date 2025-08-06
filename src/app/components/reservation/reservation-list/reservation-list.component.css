@@ -161,6 +161,38 @@
   }
 }
 
+/* Customización de SelectButton */
+:host ::ng-deep .p-selectbutton {
+  .p-button {
+    border-radius: 8px;
+    border: 2px solid var(--usco-gris-300);
+    color: var(--usco-gris-700);
+    background: white;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    padding: 0.75rem 1.25rem;
+    
+    &:not(.p-highlight):hover {
+      border-color: var(--usco-vino-400);
+      color: var(--usco-vino-600);
+      background: var(--usco-vino-50);
+      transform: translateY(-1px);
+    }
+    
+    &.p-highlight {
+      background: linear-gradient(135deg, var(--usco-vino-600) 0%, var(--usco-vino-700) 100%);
+      border-color: var(--usco-vino-600);
+      color: white;
+      box-shadow: 0 4px 8px rgba(143, 20, 27, 0.3);
+      transform: translateY(-1px);
+    }
+    
+    &:first-child {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
 /* Accessibility improvements */
 @media (prefers-reduced-motion: reduce) {
   .reservation-card,
@@ -174,5 +206,10 @@
   
   .action-button:hover {
     transform: none;
+  }
+  
+  :host ::ng-deep .p-selectbutton .p-button {
+    transition: none;
+    transform: none !important;
   }
 }

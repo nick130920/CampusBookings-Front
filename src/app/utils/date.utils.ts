@@ -43,3 +43,40 @@ export function formatForAPI(date: Date): string {
   
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
 }
+
+/**
+ * Calcula la diferencia en días calendario entre dos fechas
+ * Ignora las horas para comparar solo fechas calendario
+ */
+export function getDaysDifference(dateString: string, referenceDate: Date = new Date()): number {
+  const date = new Date(dateString);
+  
+  // Normalizar ambas fechas a medianoche para comparar solo días calendario
+  const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const referenceOnly = new Date(referenceDate.getFullYear(), referenceDate.getMonth(), referenceDate.getDate());
+  
+  // Calcular diferencia en días
+  return Math.floor((referenceOnly.getTime() - dateOnly.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+/**
+ * Formatea una fecha para mostrar de forma relativa (Hoy, Ayer, Hace X días)
+ */
+export function formatRelativeDate(dateString: string): string {
+  const diffInDays = getDaysDifference(dateString);
+  
+  if (diffInDays === 0) {
+    return 'Hoy';
+  } else if (diffInDays === 1) {
+    return 'Ayer';
+  } else if (diffInDays < 7) {
+    return `Hace ${diffInDays} días`;
+  } else {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    });
+  }
+}

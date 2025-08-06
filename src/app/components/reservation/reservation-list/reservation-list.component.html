@@ -34,42 +34,20 @@
       </div>
     </div>
 
-    <!-- Pestañas de administrador -->
+    <!-- Selector de vista para administradores -->
     <div *ngIf="isAdmin" class="mb-6">
-      <!-- Botones de prueba temporales -->
-      <div class="mb-4 p-4 bg-blue-100 rounded border-l-4 border-blue-500">
-        <p class="text-sm text-blue-700 mb-2">🧪 Debug: Tab actual = {{ activeTabValue }}</p>
-        <div class="flex gap-2">
-          <p-button 
-            label="🔍 Mis Reservas" 
-            size="small"
-            [outlined]="activeTabValue !== 'my'"
-            (onClick)="switchToTab('my')">
-          </p-button>
-          <p-button 
-            label="🌐 Todas las Reservas" 
-            size="small"
-            [outlined]="activeTabValue !== 'all'"
-            (onClick)="switchToTab('all')">
-          </p-button>
-        </div>
-        <p class="text-xs text-blue-600 mt-2">Mostrando {{ filteredReservations.length }} reservas</p>
+      <div class="flex items-center gap-4">
+        <p-selectbutton 
+          [options]="viewOptions" 
+          [(ngModel)]="activeTabValue"
+          optionLabel="label" 
+          optionValue="value">
+          <ng-template #item let-item>
+            <i [class]="item.icon + ' mr-2'"></i>
+            {{ item.label }}
+          </ng-template>
+        </p-selectbutton>
       </div>
-      
-      <p-tabs [(value)]="activeTabValue">
-        <p-tablist>
-          <p-tab value="my">Mis Reservas</p-tab>
-          <p-tab value="all">Todas las Reservas</p-tab>
-        </p-tablist>
-        <p-tabpanels>
-          <p-tabpanel value="my">
-            <!-- Contenido se mostrará dinámicamente -->
-          </p-tabpanel>
-          <p-tabpanel value="all">
-            <!-- Contenido se mostrará dinámicamente -->
-          </p-tabpanel>
-        </p-tabpanels>
-      </p-tabs>
     </div>
 
     <!-- Filtros -->
