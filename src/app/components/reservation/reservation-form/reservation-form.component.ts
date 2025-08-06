@@ -226,6 +226,19 @@ export class ReservationFormComponent implements OnInit {
       horaInicio: slot.start,
       horaFin: slot.end
     });
+
+    // Si el slot está marcado como disponible, actualizar availabilityResponse
+    if (slot.available === true) {
+      const formValue = this.reservationForm.value;
+      this.availabilityResponse = {
+        disponible: true,
+        escenarioId: formValue.escenarioId,
+        fechaInicio: slot.start.toISOString(),
+        fechaFin: slot.end.toISOString(),
+        mensaje: 'Horario disponible para reserva',
+        alternativas: []
+      };
+    }
   }
 
   private generateTimeSlots(): void {
@@ -452,7 +465,7 @@ export class ReservationFormComponent implements OnInit {
       formValue.observaciones || undefined
     ).subscribe({
       next: (reservation) => {
-        this.toastService.showSuccess('Reserva creada exitosamente');
+        // Solo navegar, la alerta se muestra en el dashboard
         this.router.navigate(['/dashboard/reservas'], {
           queryParams: { created: reservation.id }
         });
@@ -527,6 +540,12 @@ export class ReservationFormComponent implements OnInit {
   }
 
   get isFormValid(): boolean {
+    // Si hay un slot seleccionado y está disponible, el formulario es válido
+    if (this.selectedTimeSlot && this.selectedTimeSlot.available === true) {
+      return this.reservationForm.valid;
+    }
+    
+    // Si hay availabilityResponse y es disponible, también es válido
     return this.reservationForm.valid && (this.availabilityResponse?.disponible || false);
   }
 }

@@ -206,6 +206,22 @@
   box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1) !important;
 }
 
+/* Botones adaptativos */
+@media (max-width: 640px) {
+  /* Botones de tamaño completo en móvil */
+  :host ::ng-deep .p-button.responsive-button {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+}
+
+@media (min-width: 640px) {
+  /* Botones de tamaño automático en desktop */
+  :host ::ng-deep .p-button.responsive-button {
+    width: auto !important;
+  }
+}
+
 /* Print styles */
 @media print {
   :host ::ng-deep .p-button {
