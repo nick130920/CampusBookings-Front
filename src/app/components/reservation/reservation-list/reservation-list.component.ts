@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
@@ -68,7 +68,22 @@ export class ReservationListComponent implements OnInit {
   // Admin data
   allReservations: Reservation[] = [];
   myReservations: Reservation[] = [];
-  activeTabValue: string = 'my';
+  private _activeTabValue: string = 'my';
+  
+  get activeTabValue(): string {
+    return this._activeTabValue;
+  }
+  
+  set activeTabValue(value: string) {
+    if (this._activeTabValue !== value) {
+      console.log('🔍 DEBUG: activeTabValue changed from', this._activeTabValue, 'to', value);
+      this._activeTabValue = value;
+      // Solo actualizar si ya tenemos datos cargados
+      if (this.isAdmin && (this.allReservations.length > 0 || this.myReservations.length > 0)) {
+        this.updateActiveReservations();
+      }
+    }
+  }
   
   // Loading states
   isLoading = true;
@@ -132,7 +147,7 @@ export class ReservationListComponent implements OnInit {
     
     // Si es admin, iniciar en "Mis Reservas" por defecto
     if (this.isAdmin) {
-      this.activeTabValue = 'my'; // 'my' = Mis Reservas, 'all' = Todas las Reservas
+      this._activeTabValue = 'my'; // 'my' = Mis Reservas, 'all' = Todas las Reservas
       console.log('🔍 DEBUG: ngOnInit - activeTabValue inicial para admin:', this.activeTabValue);
     }
     
@@ -604,23 +619,11 @@ export class ReservationListComponent implements OnInit {
   // ==================== MÉTODOS DE PESTAÑAS ====================
 
   /**
-   * Cambiar entre pestañas de admin
+   * Método para cambiar programáticamente el tab (útil para testing)
    */
-  onTabChange(event: any): void {
-    console.log('🔍 DEBUG: onTabChange - event:', event);
-    console.log('🔍 DEBUG: onTabChange - event completo:', JSON.stringify(event, null, 2));
-    
-    // Con la nueva API, podríamos recibir el índice directamente
-    // Vamos a manejar ambos casos para estar seguros
-    if (typeof event === 'number') {
-      this.activeTabValue = event === 0 ? 'my' : 'all';
-    } else if (event.index !== undefined) {
-      this.activeTabValue = event.index === 0 ? 'my' : 'all';
-    }
-    
-    console.log('🔍 DEBUG: onTabChange - activeTabValue actualizado a:', this.activeTabValue);
-    
-    this.updateActiveReservations();
+  switchToTab(tabValue: 'my' | 'all'): void {
+    console.log('🔍 DEBUG: switchToTab called with:', tabValue);
+    this.activeTabValue = tabValue;
   }
 
   /**

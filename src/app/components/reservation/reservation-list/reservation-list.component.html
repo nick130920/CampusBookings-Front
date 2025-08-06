@@ -36,7 +36,27 @@
 
     <!-- Pestañas de administrador -->
     <div *ngIf="isAdmin" class="mb-6">
-      <p-tabs [(value)]="activeTabValue" (onActiveIndexChange)="onTabChange($event)">
+      <!-- Botones de prueba temporales -->
+      <div class="mb-4 p-4 bg-blue-100 rounded border-l-4 border-blue-500">
+        <p class="text-sm text-blue-700 mb-2">🧪 Debug: Tab actual = {{ activeTabValue }}</p>
+        <div class="flex gap-2">
+          <p-button 
+            label="🔍 Mis Reservas" 
+            size="small"
+            [outlined]="activeTabValue !== 'my'"
+            (onClick)="switchToTab('my')">
+          </p-button>
+          <p-button 
+            label="🌐 Todas las Reservas" 
+            size="small"
+            [outlined]="activeTabValue !== 'all'"
+            (onClick)="switchToTab('all')">
+          </p-button>
+        </div>
+        <p class="text-xs text-blue-600 mt-2">Mostrando {{ filteredReservations.length }} reservas</p>
+      </div>
+      
+      <p-tabs [(value)]="activeTabValue">
         <p-tablist>
           <p-tab value="my">Mis Reservas</p-tab>
           <p-tab value="all">Todas las Reservas</p-tab>

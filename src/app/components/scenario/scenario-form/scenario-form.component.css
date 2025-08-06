@@ -31,11 +31,49 @@
 /* Responsive */
 @media (max-width: 768px) {
   .scenario-form-container {
-    padding: 0 1rem;
+    padding: 0;
   }
   
   .characteristic-suggestion {
     font-size: 0.8rem;
     padding: 0.4rem 0.8rem;
+  }
+}
+
+/* Optimizaciones para PrimeNG en móvil */
+@media (max-width: 640px) {
+  /* Cards más compactas en móvil */
+  :host ::ng-deep .p-card {
+    margin-bottom: 1rem !important;
+  }
+  
+  :host ::ng-deep .p-card-content {
+    padding: 1rem !important;
+  }
+  
+  :host ::ng-deep .p-card-header {
+    padding: 0.75rem 1rem !important;
+  }
+  
+  /* Float labels más pequeños en móvil */
+  :host ::ng-deep .p-float-label label {
+    font-size: 0.875rem !important;
+  }
+  
+  /* Inputs más compactos */
+  :host ::ng-deep .p-inputtext,
+  :host ::ng-deep .p-dropdown,
+  :host ::ng-deep .p-inputnumber input {
+    padding: 0.75rem !important;
+  }
+  
+  /* Botones de características - no aplicar full width */
+  :host ::ng-deep .characteristic-suggestion {
+    width: auto !important;
+  }
+  
+  /* Solo botones principales de tamaño completo en móvil */
+  :host ::ng-deep .p-button:not(.characteristic-suggestion) {
+    justify-content: center !important;
   }
 }
