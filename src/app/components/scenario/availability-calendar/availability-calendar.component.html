@@ -180,7 +180,7 @@
       <div *ngFor="let day of calendarDays; let i = index"
            (click)="onDayClick(day)"
            [class]="getDayClasses(day)"
-           class="p-2 sm:p-3 min-h-[60px] sm:min-h-[80px] border border-usco-gris-200 rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md">
+           class="p-2 sm:p-3 min-h-[80px] sm:min-h-[100px] border border-usco-gris-200 rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md">
         
         <!-- Número del día -->
         <div class="text-sm font-medium mb-1"
@@ -188,11 +188,27 @@
           {{ day.day }}
         </div>
 
-        <!-- Estado de disponibilidad -->
-        <div *ngIf="day.availability !== 'UNKNOWN' && day.isCurrentMonth && !day.isPast"
+        <!-- Ocupaciones específicas cuando hay un escenario seleccionado -->
+        <div *ngIf="selectedScenario && day.ocupaciones && day.ocupaciones.length > 0 && day.isCurrentMonth && !day.isPast"
+             class="space-y-1">
+          <div *ngFor="let ocupacion of day.ocupaciones"
+               class="text-xs font-medium px-1 py-0.5 rounded text-center bg-usco-vino-100 text-usco-vino-800 border-l-2 border-usco-vino-600"
+               [title]="ocupacion.motivo + ' (' + ocupacion.estado + ')'">
+            {{ getOccupationTimeRange(ocupacion) }}
+          </div>
+        </div>
+
+        <!-- Estado de disponibilidad general (cuando no hay escenario específico) -->
+        <div *ngIf="!selectedScenario && day.availability !== 'UNKNOWN' && day.isCurrentMonth && !day.isPast"
              class="text-xs font-medium px-2 py-1 rounded-full text-center"
              [class]="getAvailabilityClass(day.availability)">
           {{ getAvailabilityText(day.availability) }}
+        </div>
+
+        <!-- Indicador de disponible cuando hay escenario seleccionado pero sin ocupaciones -->
+        <div *ngIf="selectedScenario && day.ocupaciones && day.ocupaciones.length === 0 && day.isCurrentMonth && !day.isPast"
+             class="text-xs font-medium px-2 py-1 rounded-full text-center bg-green-100 text-green-800 border-green-300">
+          Disponible
         </div>
 
         <!-- Indicador de hoy -->
@@ -212,7 +228,11 @@
           <div class="w-4 h-4 bg-green-100 border border-green-300 rounded"></div>
           <span class="text-sm text-usco-gris-700">Disponible</span>
         </div>
-        <div class="flex items-center gap-2">
+        <div *ngIf="selectedScenario" class="flex items-center gap-2">
+          <div class="w-4 h-4 bg-usco-vino-100 border-l-2 border-usco-vino-600 rounded"></div>
+          <span class="text-sm text-usco-gris-700">Horarios ocupados</span>
+        </div>
+        <div *ngIf="!selectedScenario" class="flex items-center gap-2">
           <div class="w-4 h-4 bg-red-100 border border-red-300 rounded"></div>
           <span class="text-sm text-usco-gris-700">Reservado</span>
         </div>
@@ -220,10 +240,18 @@
           <div class="w-4 h-4 bg-gray-100 border border-gray-300 rounded"></div>
           <span class="text-sm text-usco-gris-700">No Disponible</span>
         </div>
-        <div class="flex items-center gap-2">
+        <div *ngIf="!selectedScenario" class="flex items-center gap-2">
           <div class="w-4 h-4 bg-white border border-gray-200 rounded"></div>
           <span class="text-sm text-usco-gris-700">Sin información</span>
         </div>
+      </div>
+      
+      <!-- Instrucción adicional cuando hay escenario seleccionado -->
+      <div *ngIf="selectedScenario" class="mt-3 p-3 bg-usco-vino-50 rounded-lg border border-usco-vino-200">
+        <p class="text-sm text-usco-vino-800">
+          <i class="pi pi-info-circle mr-2"></i>
+          Pase el cursor sobre los horarios ocupados para ver más detalles de la reserva.
+        </p>
       </div>
     </p-card>
   </div>

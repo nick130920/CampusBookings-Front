@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
-import { switchMap, catchError, of } from 'rxjs';
+import { switchMap, catchError, of, forkJoin } from 'rxjs';
 
 // PrimeNG Imports
 import { ButtonModule } from 'primeng/button';
@@ -16,7 +16,7 @@ import { ChipModule } from 'primeng/chip';
 
 // Services
 import { ScenarioService, Scenario } from '../../../services/scenario.service';
-import { ReservationService } from '../../../services/reservation.service';
+import { ReservationService, BloqueOcupado } from '../../../services/reservation.service';
 import { ToastService } from '../../../services/toast.service';
 import { AuthService } from '../../../services/auth.service';
 import { SystemConfigService } from '../../../services/system-config.service';
@@ -31,6 +31,7 @@ interface CalendarDay {
   isPast: boolean;
   availability: 'DISPONIBLE' | 'RESERVADO' | 'NO_DISPONIBLE' | 'UNKNOWN';
   reservations?: any[];
+  ocupaciones?: BloqueOcupado[]; // Nueva propiedad para mostrar rangos específicos
 }
 
 interface AvailabilityRequest {
@@ -68,7 +69,7 @@ export class AvailabilityCalendarComponent implements OnInit {
   isCheckingAvailability = false;
   
   // Data del escenario
-  selectedScenario: Scenario | null = null;
+  selectedScenario: (Scenario & { id: number }) | null = null;
   scenarios: Scenario[] = [];
   scenarioTypes: string[] = [];
   locations: string[] = [];
@@ -164,16 +165,21 @@ export class AvailabilityCalendarComponent implements OnInit {
 
   onScenarioChange(scenarioId: number): void {
     if (scenarioId) {
-      this.selectedScenario = this.scenarios.find(s => s.id === scenarioId) || null;
-      if (this.selectedScenario) {
+      const scenario = this.scenarios.find(s => s.id === scenarioId);
+      if (scenario && scenario.id) {
+        this.selectedScenario = scenario as (Scenario & { id: number });
         this.searchForm.patchValue({
           scenarioName: this.selectedScenario.nombre,
           scenarioType: this.selectedScenario.tipo,
           location: this.selectedScenario.ubicacion
         });
+        // Cargar ocupaciones para el mes actual cuando se selecciona un escenario
+        this.loadOccupationsForCurrentMonth();
       }
     } else {
       this.selectedScenario = null;
+      // Limpiar ocupaciones cuando no hay escenario seleccionado
+      this.clearOccupations();
     }
   }
 
@@ -287,6 +293,10 @@ export class AvailabilityCalendarComponent implements OnInit {
       this.currentYear--;
     }
     this.generateCalendar();
+    // Cargar ocupaciones del nuevo mes si hay un escenario seleccionado
+    if (this.selectedScenario) {
+      this.loadOccupationsForCurrentMonth();
+    }
   }
 
   nextMonth(): void {
@@ -296,6 +306,10 @@ export class AvailabilityCalendarComponent implements OnInit {
       this.currentYear++;
     }
     this.generateCalendar();
+    // Cargar ocupaciones del nuevo mes si hay un escenario seleccionado
+    if (this.selectedScenario) {
+      this.loadOccupationsForCurrentMonth();
+    }
   }
 
   goToToday(): void {
@@ -413,10 +427,128 @@ export class AvailabilityCalendarComponent implements OnInit {
     return date.toISOString().split('T')[0];
   }
 
+  /**
+   * Carga ocupaciones para todos los días visibles del mes actual cuando hay un escenario seleccionado
+   */
+  private loadOccupationsForCurrentMonth(): void {
+    if (!this.selectedScenario) {
+      return;
+    }
+
+    this.isCheckingAvailability = true;
+    
+    // Obtener todos los días únicos del mes actual que están en el calendario
+    const daysToCheck = this.calendarDays
+      .filter(day => day.isCurrentMonth && !day.isPast)
+      .map(day => day.date);
+
+    // Agrupar por semanas para reducir el número de consultas
+    const maxConcurrentRequests = 7; // Máximo 7 consultas paralelas
+    const batches: Date[][] = [];
+    
+    for (let i = 0; i < daysToCheck.length; i += maxConcurrentRequests) {
+      batches.push(daysToCheck.slice(i, i + maxConcurrentRequests));
+    }
+
+    // Procesar cada batch secuencialmente para no sobrecargar el servidor
+    this.processBatches(batches, 0);
+  }
+
+  /**
+   * Procesa los batches de consultas secuencialmente
+   */
+  private processBatches(batches: Date[][], batchIndex: number): void {
+    if (batchIndex >= batches.length) {
+      this.isCheckingAvailability = false;
+      return;
+    }
+
+    const currentBatch = batches[batchIndex];
+    
+    if (!this.selectedScenario) {
+      this.isCheckingAvailability = false;
+      return;
+    }
+    
+    const occupationRequests = currentBatch.map(date => 
+      this.reservationService.obtenerOcupacionesDiaFromDate(this.selectedScenario!.id, date)
+    );
+
+    // Procesar el batch actual
+    forkJoin(occupationRequests).subscribe({
+      next: (responses) => {
+        // Procesar las respuestas y actualizar el calendario
+        responses.forEach((ocupacionResponse, index) => {
+          const day = currentBatch[index];
+          this.updateDayWithOccupations(day, ocupacionResponse.bloquesOcupados);
+        });
+        
+        // Procesar el siguiente batch después de un breve delay
+        setTimeout(() => {
+          this.processBatches(batches, batchIndex + 1);
+        }, 100);
+      },
+      error: (error) => {
+        console.error(`Error loading occupations for batch ${batchIndex}:`, error);
+        // Continuar con el siguiente batch aunque falle uno
+        setTimeout(() => {
+          this.processBatches(batches, batchIndex + 1);
+        }, 100);
+      }
+    });
+  }
+
+  /**
+   * Actualiza un día específico con sus ocupaciones
+   */
+  private updateDayWithOccupations(date: Date, bloquesOcupados: BloqueOcupado[]): void {
+    const dayIndex = this.calendarDays.findIndex(day => 
+      this.isSameDay(day.date, date)
+    );
+
+    if (dayIndex !== -1) {
+      this.calendarDays[dayIndex].ocupaciones = bloquesOcupados;
+      // Actualizar el estado de disponibilidad basado en las ocupaciones
+      this.calendarDays[dayIndex].availability = bloquesOcupados.length > 0 ? 'RESERVADO' : 'DISPONIBLE';
+    }
+  }
+
+  /**
+   * Limpia las ocupaciones de todos los días
+   */
+  private clearOccupations(): void {
+    this.calendarDays.forEach(day => {
+      day.ocupaciones = [];
+      day.availability = 'UNKNOWN';
+    });
+  }
+
+  /**
+   * Convierte una hora en formato string a texto legible (ej: "09:00")
+   */
+  formatTimeFromDateTime(dateTimeStr: string): string {
+    const date = new Date(dateTimeStr);
+    return date.toLocaleTimeString('es-ES', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: false 
+    });
+  }
+
+  /**
+   * Genera el texto del rango de horas para mostrar en el calendario
+   */
+  getOccupationTimeRange(bloque: BloqueOcupado): string {
+    const inicio = this.formatTimeFromDateTime(bloque.horaInicio);
+    const fin = this.formatTimeFromDateTime(bloque.horaFin);
+    return `${inicio}-${fin}`;
+  }
+
   clearFilters(): void {
     this.searchForm.reset();
     this.selectedScenario = null;
     this.availabilityData = [];
+    this.clearOccupations();
     this.updateCalendarAvailability();
   }
 } 
