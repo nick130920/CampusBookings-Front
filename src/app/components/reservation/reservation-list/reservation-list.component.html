@@ -36,16 +36,16 @@
 
     <!-- Pestañas de administrador -->
     <div *ngIf="isAdmin" class="mb-6">
-      <p-tabs [value]="activeTab === 'my' ? '0' : '1'" (onChange)="onTabChange($event)">
+      <p-tabs [(value)]="activeTabValue" (onActiveIndexChange)="onTabChange($event)">
         <p-tablist>
-          <p-tab value="0">Mis Reservas</p-tab>
-          <p-tab value="1">Todas las Reservas</p-tab>
+          <p-tab value="my">Mis Reservas</p-tab>
+          <p-tab value="all">Todas las Reservas</p-tab>
         </p-tablist>
         <p-tabpanels>
-          <p-tabpanel value="0">
+          <p-tabpanel value="my">
             <!-- Contenido se mostrará dinámicamente -->
           </p-tabpanel>
-          <p-tabpanel value="1">
+          <p-tabpanel value="all">
             <!-- Contenido se mostrará dinámicamente -->
           </p-tabpanel>
         </p-tabpanels>
@@ -189,7 +189,7 @@
             <ng-template pTemplate="header">
               <tr>
                 <!-- Columna de usuario solo para admins en vista "Todas las Reservas" -->
-                <th *ngIf="isAdmin && activeTab === 'all'" pSortableColumn="usuarioNombre">
+                <th *ngIf="isAdmin && activeTabValue === 'all'" pSortableColumn="usuarioNombre">
                   Usuario
                   <p-sortIcon field="usuarioNombre"></p-sortIcon>
                 </th>
@@ -217,7 +217,7 @@
             <ng-template pTemplate="body" let-reservation>
               <tr>
                 <!-- Usuario (solo para admins en vista "Todas las Reservas") -->
-                <td *ngIf="isAdmin && activeTab === 'all'">
+                <td *ngIf="isAdmin && activeTabValue === 'all'">
                   <div class="flex items-center space-x-2">
                     <i class="pi pi-user text-usco-gris-500"></i>
                     <div>

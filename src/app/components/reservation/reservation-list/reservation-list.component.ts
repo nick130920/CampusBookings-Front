@@ -68,7 +68,7 @@ export class ReservationListComponent implements OnInit {
   // Admin data
   allReservations: Reservation[] = [];
   myReservations: Reservation[] = [];
-  activeTab: 'my' | 'all' = 'my';
+  activeTabValue: string = 'my';
   
   // Loading states
   isLoading = true;
@@ -127,9 +127,13 @@ export class ReservationListComponent implements OnInit {
     this.currentUser = this.authService.getCurrentUser();
     this.isAdmin = this.authService.isAdmin();
     
-    // Si es admin, iniciar en "Todas las Reservas"
+    console.log('🔍 DEBUG: ngOnInit - currentUser:', this.currentUser);
+    console.log('🔍 DEBUG: ngOnInit - isAdmin:', this.isAdmin);
+    
+    // Si es admin, iniciar en "Mis Reservas" por defecto
     if (this.isAdmin) {
-      this.activeTab = 'all';
+      this.activeTabValue = 'my'; // 'my' = Mis Reservas, 'all' = Todas las Reservas
+      console.log('🔍 DEBUG: ngOnInit - activeTabValue inicial para admin:', this.activeTabValue);
     }
     
     this.loadReservations();
@@ -166,8 +170,11 @@ export class ReservationListComponent implements OnInit {
     if (!this.currentUser?.id) {
       this.toastService.showError('Usuario no encontrado');
       this.isLoading = false;
+      this.isRefreshing = false;
       return;
     }
+
+    console.log('🔍 DEBUG: Cargando reservas para admin con ID:', this.currentUser.id);
 
     // Cargar todas las reservas Y las reservas propias en paralelo
     const allReservations$ = this.reservationService.getAllReservations();
@@ -176,17 +183,39 @@ export class ReservationListComponent implements OnInit {
     // Usar forkJoin para cargar ambas listas al mismo tiempo
     forkJoin([allReservations$, myReservations$]).subscribe({
       next: ([allReservations, myReservations]) => {
+        console.log('🔍 DEBUG: Todas las reservas recibidas:', allReservations.length);
+        console.log('🔍 DEBUG: Mis reservas recibidas:', myReservations.length);
+        console.log('🔍 DEBUG: Tab activo:', this.activeTabValue);
+        
         this.allReservations = allReservations;
         this.myReservations = myReservations;
         
+        // Log de las primeras reservas para verificar datos
+        if (myReservations.length > 0) {
+          console.log('🔍 DEBUG: Primera reserva mía:', {
+            id: myReservations[0].id,
+            usuarioId: myReservations[0].usuarioId,
+            escenario: myReservations[0].escenarioNombre
+          });
+        }
+        
         // Mostrar la pestaña activa
         this.updateActiveReservations();
+        
+        // Solo mostrar mensaje de éxito si es un refresh manual
+        const wasRefreshing = this.isRefreshing;
         this.isLoading = false;
+        this.isRefreshing = false;
+        
+        if (wasRefreshing) {
+          this.toastService.showSuccess('Lista actualizada');
+        }
       },
       error: (error) => {
         console.error('Error loading admin reservations:', error);
         this.toastService.showError('Error al cargar las reservas');
         this.isLoading = false;
+        this.isRefreshing = false;
       }
     });
   }
@@ -215,7 +244,11 @@ export class ReservationListComponent implements OnInit {
 
   private updateActiveReservations(): void {
     if (this.isAdmin) {
-      this.reservations = this.activeTab === 'my' ? this.myReservations : this.allReservations;
+      this.reservations = this.activeTabValue === 'my' ? this.myReservations : this.allReservations;
+      console.log('🔍 DEBUG: updateActiveReservations - Tab activo (value):', this.activeTabValue);
+      console.log('🔍 DEBUG: updateActiveReservations - Reservas mostradas:', this.reservations.length);
+      console.log('🔍 DEBUG: updateActiveReservations - myReservations.length:', this.myReservations.length);
+      console.log('🔍 DEBUG: updateActiveReservations - allReservations.length:', this.allReservations.length);
     }
     this.filteredReservations = [...this.reservations];
     this.applyFilters();
@@ -223,21 +256,32 @@ export class ReservationListComponent implements OnInit {
 
   refreshReservations(): void {
     this.isRefreshing = true;
-    if (!this.currentUser?.id) return;
-
-    this.reservationService.getUserReservations(this.currentUser.id).subscribe({
-      next: (reservations) => {
-        this.reservations = reservations;
-        this.applyFilters();
+    
+    if (this.isAdmin) {
+      // Administradores refrescan ambas listas
+      this.loadAdminReservations();
+    } else {
+      // Usuarios regulares solo sus propias reservas
+      if (!this.currentUser?.id) {
         this.isRefreshing = false;
-        this.toastService.showSuccess('Lista actualizada');
-      },
-      error: (error) => {
-        console.error('Error refreshing reservations:', error);
-        this.toastService.showError('Error al actualizar las reservas');
-        this.isRefreshing = false;
+        return;
       }
-    });
+
+      this.reservationService.getUserReservations(this.currentUser.id).subscribe({
+        next: (reservations) => {
+          this.reservations = reservations;
+          this.filteredReservations = [...reservations];
+          this.applyFilters();
+          this.isRefreshing = false;
+          this.toastService.showSuccess('Lista actualizada');
+        },
+        error: (error) => {
+          console.error('Error refreshing reservations:', error);
+          this.toastService.showError('Error al actualizar las reservas');
+          this.isRefreshing = false;
+        }
+      });
+    }
   }
 
   onFilterChange(): void {
@@ -301,12 +345,8 @@ export class ReservationListComponent implements OnInit {
         if (reservation.id) {
           this.reservationService.cancelReservation(reservation.id).subscribe({
             next: (updatedReservation) => {
-              // Actualizar la reserva en la lista
-              const index = this.reservations.findIndex(r => r.id === updatedReservation.id);
-              if (index !== -1) {
-                this.reservations[index] = updatedReservation;
-                this.applyFilters();
-              }
+              this.updateReservationInLists(updatedReservation);
+              
               this.toastService.showSuccess('Reserva cancelada exitosamente');
             },
             error: (error) => {
@@ -470,7 +510,8 @@ export class ReservationListComponent implements OnInit {
         this.reservationService.approveReservation(reservation.id).subscribe({
           next: (updatedReservation) => {
             this.toastService.showSuccess('Reserva aprobada exitosamente');
-            this.loadReservations(); // Recargar la lista
+            
+            this.updateReservationInLists(updatedReservation);
           },
           error: (error) => {
             console.error('Error approving reservation:', error);
@@ -511,7 +552,9 @@ export class ReservationListComponent implements OnInit {
     this.reservationService.rejectReservationWithReason(this.selectedReservation.id, this.rejectionReason.trim()).subscribe({
       next: (updatedReservation) => {
         this.toastService.showSuccess('Reserva rechazada exitosamente');
-        this.loadReservations(); // Recargar la lista
+        
+        this.updateReservationInLists(updatedReservation);
+        
         this.closeRejectDialog();
       },
       error: (error) => {
@@ -564,7 +607,19 @@ export class ReservationListComponent implements OnInit {
    * Cambiar entre pestañas de admin
    */
   onTabChange(event: any): void {
-    this.activeTab = event.value === '0' ? 'my' : 'all';
+    console.log('🔍 DEBUG: onTabChange - event:', event);
+    console.log('🔍 DEBUG: onTabChange - event completo:', JSON.stringify(event, null, 2));
+    
+    // Con la nueva API, podríamos recibir el índice directamente
+    // Vamos a manejar ambos casos para estar seguros
+    if (typeof event === 'number') {
+      this.activeTabValue = event === 0 ? 'my' : 'all';
+    } else if (event.index !== undefined) {
+      this.activeTabValue = event.index === 0 ? 'my' : 'all';
+    }
+    
+    console.log('🔍 DEBUG: onTabChange - activeTabValue actualizado a:', this.activeTabValue);
+    
     this.updateActiveReservations();
   }
 
@@ -575,7 +630,7 @@ export class ReservationListComponent implements OnInit {
     if (!this.isAdmin) {
       return 'Mis Reservas';
     }
-    return this.activeTab === 'my' ? 'Mis Reservas' : 'Gestión de Reservas';
+    return this.activeTabValue === 'my' ? 'Mis Reservas' : 'Gestión de Reservas';
   }
 
   /**
@@ -585,7 +640,7 @@ export class ReservationListComponent implements OnInit {
     if (!this.isAdmin) {
       return 'Gestiona y consulta todas tus reservas de espacios';
     }
-    return this.activeTab === 'my' 
+    return this.activeTabValue === 'my' 
       ? 'Gestiona y consulta tus reservas personales'
       : 'Administra todas las reservas del sistema';
   }
@@ -613,5 +668,33 @@ export class ReservationListComponent implements OnInit {
    */
   isMyReservation(reservation: Reservation): boolean {
     return reservation.usuarioId === this.currentUser?.id;
+  }
+
+  /**
+   * Actualizar una reserva en todas las listas relevantes (helper method)
+   */
+  private updateReservationInLists(updatedReservation: Reservation): void {
+    if (this.isAdmin) {
+      // Actualizar en allReservations
+      const allIndex = this.allReservations.findIndex(r => r.id === updatedReservation.id);
+      if (allIndex !== -1) {
+        this.allReservations[allIndex] = updatedReservation;
+      }
+      
+      // Actualizar en myReservations si es propia
+      const myIndex = this.myReservations.findIndex(r => r.id === updatedReservation.id);
+      if (myIndex !== -1) {
+        this.myReservations[myIndex] = updatedReservation;
+      }
+      
+      this.updateActiveReservations();
+    } else {
+      // Actualizar en la lista principal para usuarios normales
+      const index = this.reservations.findIndex(r => r.id === updatedReservation.id);
+      if (index !== -1) {
+        this.reservations[index] = updatedReservation;
+        this.applyFilters();
+      }
+    }
   }
 }
