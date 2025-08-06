@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
-import { of, BehaviorSubject } from 'rxjs';
+import { of, BehaviorSubject, forkJoin } from 'rxjs';
 
 // PrimeNG Imports
 import { ButtonModule } from 'primeng/button';
@@ -21,7 +21,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MenuItem } from 'primeng/api';
 
 // Services
-import { ReservationService, CreateReservationRequest, AvailabilityResponse, AlternativeSlot } from '../../../services/reservation.service';
+import { ReservationService, CreateReservationRequest, AvailabilityResponse, AlternativeSlot, BloqueOcupado } from '../../../services/reservation.service';
 import { ScenarioService, Scenario } from '../../../services/scenario.service';
 import { ToastService } from '../../../services/toast.service';
 import { AuthService } from '../../../services/auth.service';
@@ -191,32 +191,15 @@ export class ReservationFormComponent implements OnInit {
   }
 
   private setupAvailabilityCheck(): void {
-    // Verificar disponibilidad cuando cambian los campos relevantes
-    this.reservationForm.valueChanges.pipe(
-      debounceTime(500),
-      distinctUntilChanged((prev, curr) => 
-        prev?.escenarioId === curr?.escenarioId &&
-        prev?.fechaSeleccionada?.getTime() === curr?.fechaSeleccionada?.getTime() &&
-        prev?.horaInicio?.getTime() === curr?.horaInicio?.getTime() &&
-        prev?.horaFin?.getTime() === curr?.horaFin?.getTime()
-      ),
-      switchMap(formValue => {
-        if (this.canCheckAvailability(formValue)) {
-          return this.checkAvailability();
-        }
-        return of(null);
-      }),
-      catchError(error => {
-        console.error('Error in availability check:', error);
-        return of(null);
-      })
-    ).subscribe();
+    // La verificación de disponibilidad ahora se hace proactivamente
+    // cuando se generan los time slots, no después de seleccionar
   }
 
   onScenarioChange(): void {
     const escenarioId = this.reservationForm.get('escenarioId')?.value;
     if (escenarioId) {
       this.selectedScenario = this.scenarios.find(s => s.id === escenarioId) || null;
+      this.resetTimeSelection();
       this.generateTimeSlots();
     }
   }
@@ -232,6 +215,11 @@ export class ReservationFormComponent implements OnInit {
   }
 
   onTimeSlotSelect(slot: TimeSlot): void {
+    // Solo permitir seleccionar slots disponibles
+    if (slot.available === false) {
+      return;
+    }
+    
     console.log('Selected time slot:', slot);
     this.selectedTimeSlot = slot;
     this.reservationForm.patchValue({
@@ -243,6 +231,7 @@ export class ReservationFormComponent implements OnInit {
   private generateTimeSlots(): void {
     const fecha = this.reservationForm.get('fechaSeleccionada')?.value;
     const duracion = this.reservationForm.get('duracion')?.value || 60;
+    const escenarioId = this.reservationForm.get('escenarioId')?.value;
     
     if (!fecha) {
       this.availableTimeSlots = [];
@@ -250,6 +239,11 @@ export class ReservationFormComponent implements OnInit {
     }
 
     this.availableTimeSlots = this.reservationService.generateTimeSlots(fecha, duracion);
+    
+    // Si tenemos escenario seleccionado, verificar disponibilidad de todos los slots
+    if (escenarioId) {
+      this.checkAllSlotsAvailability();
+    }
   }
 
   private resetTimeSelection(): void {
@@ -326,6 +320,57 @@ export class ReservationFormComponent implements OnInit {
           return !(slot.end <= conflictStart || slot.start >= conflictEnd);
         });
         slot.available = !hasConflict;
+      }
+    });
+  }
+
+  private checkAllSlotsAvailability(): void {
+    const escenarioId = this.reservationForm.get('escenarioId')?.value;
+    const fecha = this.reservationForm.get('fechaSeleccionada')?.value;
+    
+    if (!escenarioId || !fecha || this.availableTimeSlots.length === 0) {
+      return;
+    }
+
+    this.isCheckingAvailability = true;
+    
+    // Usar la nueva API más eficiente - una sola consulta para todo el día
+    this.reservationService.obtenerOcupacionesDiaFromDate(escenarioId, fecha).subscribe({
+      next: (ocupacionesResponse) => {
+        // Procesar las ocupaciones y marcar slots como disponibles/no disponibles
+        this.updateTimeSlotsWithOccupations(ocupacionesResponse.bloquesOcupados);
+        this.isCheckingAvailability = false;
+      },
+      error: (error) => {
+        console.error('Error checking day occupations:', error);
+        this.isCheckingAvailability = false;
+        // En caso de error, marcar todos como disponibles para no bloquear completamente
+        this.availableTimeSlots.forEach(slot => {
+          slot.available = true;
+        });
+      }
+    });
+  }
+
+  private updateTimeSlotsWithOccupations(bloquesOcupados: BloqueOcupado[]): void {
+    // Marcar todos los slots como disponibles inicialmente
+    this.availableTimeSlots.forEach(slot => {
+      slot.available = true;
+    });
+
+    // Verificar cada slot contra los bloques ocupados
+    this.availableTimeSlots.forEach(slot => {
+      for (const bloque of bloquesOcupados) {
+        const bloqueInicio = new Date(bloque.horaInicio);
+        const bloqueFin = new Date(bloque.horaFin);
+        
+        // Verificar si el slot se solapa con el bloque ocupado
+        const hasSolapamiento = !(slot.end <= bloqueInicio || slot.start >= bloqueFin);
+        
+        if (hasSolapamiento) {
+          slot.available = false;
+          break; // Ya encontramos un conflicto, no necesitamos verificar más bloques
+        }
       }
     });
   }

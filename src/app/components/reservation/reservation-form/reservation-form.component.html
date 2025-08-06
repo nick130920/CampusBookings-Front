@@ -152,20 +152,39 @@
               Horarios Disponibles
             </label>
             
+            <!-- Leyenda de horarios -->
+            <div class="mb-3 flex flex-wrap gap-4 text-xs text-usco-gris-600">
+              <div class="flex items-center">
+                <div class="w-3 h-3 bg-white border border-usco-gris-300 rounded mr-2"></div>
+                <span>Disponible</span>
+              </div>
+              <div class="flex items-center">
+                <div class="w-3 h-3 bg-usco-gris-100 border border-usco-gris-200 rounded mr-2"></div>
+                <span>No disponible</span>
+              </div>
+              <div class="flex items-center">
+                <div class="w-3 h-3 bg-usco-vino-600 rounded mr-2"></div>
+                <span>Seleccionado</span>
+              </div>
+            </div>
+            
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               <button
                 *ngFor="let slot of availableTimeSlots"
                 type="button"
                 (click)="onTimeSlotSelect(slot)"
                 [disabled]="slot.available === false"
+                [title]="slot.available === false ? 'Horario no disponible - Ya está reservado' : 'Horario disponible - Clic para seleccionar'"
                 [ngClass]="{
-                  'p-3 rounded-lg text-sm font-medium transition-all duration-200 border': true,
+                  'p-3 rounded-lg text-sm font-medium transition-all duration-200 border relative': true,
                   'bg-usco-vino-600 text-white border-usco-vino-600 shadow-md': selectedTimeSlot === slot,
                   'bg-white text-usco-gris-900 border-usco-gris-300 hover:border-usco-vino-600 hover:bg-usco-vino-50': selectedTimeSlot !== slot && slot.available !== false,
-                  'bg-usco-gris-100 text-usco-gris-400 border-usco-gris-200 cursor-not-allowed': slot.available === false
+                  'bg-usco-gris-100 text-usco-gris-400 border-usco-gris-200 cursor-not-allowed opacity-60': slot.available === false
                 }"
               >
                 {{ slot.label }}
+                <i *ngIf="slot.available === false" class="pi pi-lock text-xs absolute top-1 right-1"></i>
+                <i *ngIf="selectedTimeSlot === slot" class="pi pi-check text-xs absolute top-1 right-1"></i>
               </button>
             </div>
           </div>
@@ -176,11 +195,11 @@
             <p class="mt-2 text-sm text-usco-gris-600">Verificando disponibilidad...</p>
           </div>
 
-          <!-- Mensaje de disponibilidad -->
-          <div *ngIf="availabilityMessage && !isCheckingAvailability" class="mt-6">
+          <!-- Mensaje de disponibilidad (solo para confirmación) -->
+          <div *ngIf="selectedTimeSlot && selectedTimeSlot.available === true" class="mt-6">
             <p-message 
-              [severity]="availabilityResponse?.disponible ? 'success' : 'warn'"
-              [text]="availabilityMessage"
+              severity="success"
+              text="Horario seleccionado disponible para reserva"
               styleClass="w-full">
             </p-message>
           </div>

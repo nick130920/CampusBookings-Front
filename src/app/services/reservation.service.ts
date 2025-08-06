@@ -60,6 +60,26 @@ export interface AlternativeSlot {
   descripcion: string;
 }
 
+export interface OcupacionesDiaRequest {
+  escenarioId: number;
+  fecha: string; // Formato YYYY-MM-DD
+}
+
+export interface OcupacionesDiaResponse {
+  escenarioId: number;
+  escenarioNombre: string;
+  fecha: string;
+  bloquesOcupados: BloqueOcupado[];
+}
+
+export interface BloqueOcupado {
+  horaInicio: string; // ISO format
+  horaFin: string; // ISO format
+  motivo: string;
+  estado: string;
+  reservaId?: number;
+}
+
 /**
  * Servicio para gestión de reservas.
  * Implementa las mejores prácticas de Cal.com para reservas en tiempo real.
@@ -118,6 +138,25 @@ export class ReservationService {
       fechaFin: formatForAPI(fechaFin)
     };
     return this.verifyAvailability(request);
+  }
+
+  /**
+   * Obtener todas las ocupaciones de un escenario en un día específico.
+   * Optimización para evitar múltiples consultas de disponibilidad.
+   */
+  obtenerOcupacionesDia(request: OcupacionesDiaRequest): Observable<OcupacionesDiaResponse> {
+    return this.http.post<OcupacionesDiaResponse>(`${this.apiUrl}/ocupaciones-dia`, request);
+  }
+
+  /**
+   * Obtener ocupaciones de un día usando un objeto Date
+   */
+  obtenerOcupacionesDiaFromDate(escenarioId: number, fecha: Date): Observable<OcupacionesDiaResponse> {
+    const request: OcupacionesDiaRequest = {
+      escenarioId,
+      fecha: fecha.toISOString().split('T')[0] // Formato YYYY-MM-DD
+    };
+    return this.obtenerOcupacionesDia(request);
   }
 
   /**
