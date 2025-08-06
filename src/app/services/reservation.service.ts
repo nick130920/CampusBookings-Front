@@ -72,12 +72,28 @@ export interface OcupacionesDiaResponse {
   bloquesOcupados: BloqueOcupado[];
 }
 
+export interface OcupacionesMesRequest {
+  escenarioId: number;
+  año: number;
+  mes: number; // 1-12
+}
+
+export interface OcupacionesMesResponse {
+  escenarioId: number;
+  escenarioNombre: string;
+  año: number;
+  mes: number;
+  ocupacionesPorDia: { [dia: number]: BloqueOcupado[] }; // Día del mes (1-31) -> ocupaciones
+  todasLasOcupaciones: BloqueOcupado[];
+}
+
 export interface BloqueOcupado {
   horaInicio: string; // ISO format
   horaFin: string; // ISO format
   motivo: string;
   estado: string;
   reservaId?: number;
+  diaDelMes?: number; // Solo presente en OcupacionesMesResponse
 }
 
 /**
@@ -157,6 +173,26 @@ export class ReservationService {
       fecha: fecha.toISOString().split('T')[0] // Formato YYYY-MM-DD
     };
     return this.obtenerOcupacionesDia(request);
+  }
+
+  /**
+   * Obtener todas las ocupaciones de un escenario en un mes específico.
+   * Optimización para calendarios - una sola consulta por mes.
+   */
+  obtenerOcupacionesMes(request: OcupacionesMesRequest): Observable<OcupacionesMesResponse> {
+    return this.http.post<OcupacionesMesResponse>(`${this.apiUrl}/ocupaciones-mes`, request);
+  }
+
+  /**
+   * Obtener ocupaciones de un mes usando año y mes
+   */
+  obtenerOcupacionesMesFromDate(escenarioId: number, fecha: Date): Observable<OcupacionesMesResponse> {
+    const request: OcupacionesMesRequest = {
+      escenarioId,
+      año: fecha.getFullYear(),
+      mes: fecha.getMonth() + 1 // JavaScript usa 0-11, backend usa 1-12
+    };
+    return this.obtenerOcupacionesMes(request);
   }
 
   /**

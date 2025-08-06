@@ -191,9 +191,15 @@
         <!-- Ocupaciones específicas cuando hay un escenario seleccionado -->
         <div *ngIf="selectedScenario && day.ocupaciones && day.ocupaciones.length > 0 && day.isCurrentMonth && !day.isPast"
              class="space-y-1">
-          <div *ngFor="let ocupacion of day.ocupaciones"
-               class="text-xs font-medium px-1 py-0.5 rounded text-center bg-usco-vino-100 text-usco-vino-800 border-l-2 border-usco-vino-600"
-               [title]="ocupacion.motivo + ' (' + ocupacion.estado + ')'">
+                    <div *ngFor="let ocupacion of day.ocupaciones"
+               class="text-xs font-medium px-1 py-0.5 rounded text-center bg-usco-vino-100 text-usco-vino-800 border-l-2 border-usco-vino-600 cursor-help hover:bg-usco-vino-200 transition-all duration-200"
+               [pTooltip]="getOccupationTooltip(ocupacion)"
+               tooltipPosition="top"
+               [escape]="false"
+               [showDelay]="500"
+               [hideDelay]="100"
+               tooltipStyleClass="custom-tooltip">
+            <i class="pi pi-calendar-clock mr-1"></i>
             {{ getOccupationTimeRange(ocupacion) }}
           </div>
         </div>
@@ -250,7 +256,7 @@
       <div *ngIf="selectedScenario" class="mt-3 p-3 bg-usco-vino-50 rounded-lg border border-usco-vino-200">
         <p class="text-sm text-usco-vino-800">
           <i class="pi pi-info-circle mr-2"></i>
-          Pase el cursor sobre los horarios ocupados para ver más detalles de la reserva.
+          Pase el cursor sobre los horarios ocupados para ver detalles de la reserva.
         </p>
       </div>
     </p-card>

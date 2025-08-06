@@ -295,6 +295,8 @@ export class ReservationListComponent implements OnInit {
       header: 'Confirmar Cancelación',
       icon: 'pi pi-exclamation-triangle',
       acceptButtonStyleClass: 'p-button-danger',
+      acceptLabel: 'Confirmar Cancelación',
+      rejectLabel: 'Regresar',
       accept: () => {
         if (reservation.id) {
           this.reservationService.cancelReservation(reservation.id).subscribe({
@@ -462,6 +464,8 @@ export class ReservationListComponent implements OnInit {
       icon: 'pi pi-check-circle',
       acceptButtonStyleClass: 'p-button-success',
       rejectButtonStyleClass: 'p-button-text',
+      acceptLabel: 'Aprobar',
+      rejectLabel: 'Cancelar',
       accept: () => {
         this.reservationService.approveReservation(reservation.id).subscribe({
           next: (updatedReservation) => {

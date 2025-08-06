@@ -83,6 +83,8 @@ export class ScenarioDetailComponent implements OnInit {
       header: 'Confirmar eliminación',
       icon: 'pi pi-exclamation-triangle',
       acceptButtonStyleClass: 'p-button-danger',
+      acceptLabel: 'Eliminar',
+      rejectLabel: 'Cancelar',
       accept: () => {
         if (this.scenario?.id) {
           this.scenarioService.deleteScenario(this.scenario.id).subscribe({

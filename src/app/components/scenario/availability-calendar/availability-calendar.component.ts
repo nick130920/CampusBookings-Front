@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
-import { switchMap, catchError, of, forkJoin } from 'rxjs';
+import { switchMap, catchError, of } from 'rxjs';
 
 // PrimeNG Imports
 import { ButtonModule } from 'primeng/button';
@@ -13,10 +13,11 @@ import { MessageModule } from 'primeng/message';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CardModule } from 'primeng/card';
 import { ChipModule } from 'primeng/chip';
+import { TooltipModule } from 'primeng/tooltip';
 
 // Services
 import { ScenarioService, Scenario } from '../../../services/scenario.service';
-import { ReservationService, BloqueOcupado } from '../../../services/reservation.service';
+import { ReservationService, BloqueOcupado, OcupacionesMesResponse } from '../../../services/reservation.service';
 import { ToastService } from '../../../services/toast.service';
 import { AuthService } from '../../../services/auth.service';
 import { SystemConfigService } from '../../../services/system-config.service';
@@ -57,7 +58,8 @@ interface AvailabilityRequest {
     MessageModule,
     ProgressSpinnerModule,
     CardModule,
-    ChipModule
+    ChipModule,
+    TooltipModule
   ],
   templateUrl: './availability-calendar.component.html',
   styleUrls: ['./availability-calendar.component.css']
@@ -428,7 +430,7 @@ export class AvailabilityCalendarComponent implements OnInit {
   }
 
   /**
-   * Carga ocupaciones para todos los días visibles del mes actual cuando hay un escenario seleccionado
+   * Carga ocupaciones para todo el mes actual en una sola consulta
    */
   private loadOccupationsForCurrentMonth(): void {
     if (!this.selectedScenario) {
@@ -437,80 +439,59 @@ export class AvailabilityCalendarComponent implements OnInit {
 
     this.isCheckingAvailability = true;
     
-    // Obtener todos los días únicos del mes actual que están en el calendario
-    const daysToCheck = this.calendarDays
-      .filter(day => day.isCurrentMonth && !day.isPast)
-      .map(day => day.date);
-
-    // Agrupar por semanas para reducir el número de consultas
-    const maxConcurrentRequests = 7; // Máximo 7 consultas paralelas
-    const batches: Date[][] = [];
+    // Crear fecha del mes actual
+    const currentMonthDate = new Date(this.currentYear, this.currentMonth, 1);
     
-    for (let i = 0; i < daysToCheck.length; i += maxConcurrentRequests) {
-      batches.push(daysToCheck.slice(i, i + maxConcurrentRequests));
-    }
-
-    // Procesar cada batch secuencialmente para no sobrecargar el servidor
-    this.processBatches(batches, 0);
-  }
-
-  /**
-   * Procesa los batches de consultas secuencialmente
-   */
-  private processBatches(batches: Date[][], batchIndex: number): void {
-    if (batchIndex >= batches.length) {
-      this.isCheckingAvailability = false;
-      return;
-    }
-
-    const currentBatch = batches[batchIndex];
-    
-    if (!this.selectedScenario) {
-      this.isCheckingAvailability = false;
-      return;
-    }
-    
-    const occupationRequests = currentBatch.map(date => 
-      this.reservationService.obtenerOcupacionesDiaFromDate(this.selectedScenario!.id, date)
-    );
-
-    // Procesar el batch actual
-    forkJoin(occupationRequests).subscribe({
-      next: (responses) => {
-        // Procesar las respuestas y actualizar el calendario
-        responses.forEach((ocupacionResponse, index) => {
-          const day = currentBatch[index];
-          this.updateDayWithOccupations(day, ocupacionResponse.bloquesOcupados);
-        });
-        
-        // Procesar el siguiente batch después de un breve delay
-        setTimeout(() => {
-          this.processBatches(batches, batchIndex + 1);
-        }, 100);
+    // Una sola consulta para todo el mes
+    this.reservationService.obtenerOcupacionesMesFromDate(this.selectedScenario.id, currentMonthDate).subscribe({
+      next: (ocupacionesResponse) => {
+        // Distribuir las ocupaciones en los días del calendario
+        this.distributeOccupationsToCalendarDays(ocupacionesResponse);
+        this.isCheckingAvailability = false;
       },
       error: (error) => {
-        console.error(`Error loading occupations for batch ${batchIndex}:`, error);
-        // Continuar con el siguiente batch aunque falle uno
-        setTimeout(() => {
-          this.processBatches(batches, batchIndex + 1);
-        }, 100);
+        console.error('Error loading month occupations:', error);
+        this.isCheckingAvailability = false;
+        // En caso de error, limpiar ocupaciones
+        this.clearOccupations();
       }
     });
   }
 
   /**
-   * Actualiza un día específico con sus ocupaciones
+   * Distribuye las ocupaciones del mes en los días correspondientes del calendario
    */
-  private updateDayWithOccupations(date: Date, bloquesOcupados: BloqueOcupado[]): void {
-    const dayIndex = this.calendarDays.findIndex(day => 
-      this.isSameDay(day.date, date)
-    );
+  private distributeOccupationsToCalendarDays(ocupacionesResponse: OcupacionesMesResponse): void {
+    // Limpiar ocupaciones existentes
+    this.clearOccupations();
+    
+    // Distribuir ocupaciones por día
+    Object.keys(ocupacionesResponse.ocupacionesPorDia).forEach(diaStr => {
+      const dia = parseInt(diaStr);
+      const ocupacionesDelDia = ocupacionesResponse.ocupacionesPorDia[dia];
+      
+      // Encontrar el día correspondiente en el calendario
+      const dayIndex = this.calendarDays.findIndex(calendarDay => 
+        calendarDay.day === dia && 
+        calendarDay.month === this.currentMonth &&
+        calendarDay.year === this.currentYear &&
+        calendarDay.isCurrentMonth
+      );
 
-    if (dayIndex !== -1) {
-      this.calendarDays[dayIndex].ocupaciones = bloquesOcupados;
-      // Actualizar el estado de disponibilidad basado en las ocupaciones
-      this.calendarDays[dayIndex].availability = bloquesOcupados.length > 0 ? 'RESERVADO' : 'DISPONIBLE';
-    }
+      if (dayIndex !== -1) {
+        this.calendarDays[dayIndex].ocupaciones = ocupacionesDelDia;
+        // Actualizar el estado de disponibilidad basado en las ocupaciones
+        this.calendarDays[dayIndex].availability = ocupacionesDelDia.length > 0 ? 'RESERVADO' : 'DISPONIBLE';
+      }
+    });
+
+    // Marcar días sin ocupaciones como disponibles
+    this.calendarDays.forEach(day => {
+      if (day.isCurrentMonth && !day.isPast && !day.ocupaciones) {
+        day.ocupaciones = [];
+        day.availability = 'DISPONIBLE';
+      }
+    });
   }
 
   /**
@@ -542,6 +523,40 @@ export class AvailabilityCalendarComponent implements OnInit {
     const inicio = this.formatTimeFromDateTime(bloque.horaInicio);
     const fin = this.formatTimeFromDateTime(bloque.horaFin);
     return `${inicio}-${fin}`;
+  }
+
+  /**
+   * Genera el contenido del tooltip para una ocupación - versión simple
+   */
+  getOccupationTooltip(bloque: BloqueOcupado): string {
+    const estadoIcon = this.getEstadoIcon(bloque.estado);
+    return `${bloque.motivo} <i class="${estadoIcon}" style="margin-left: 8px;"></i>`;
+  }
+
+  /**
+   * Obtiene la etiqueta legible del estado
+   */
+  private getEstadoLabel(estado: string): string {
+    const estados: { [key: string]: string } = {
+      'APROBADA': 'Aprobada',
+      'PENDIENTE': 'Pendiente',
+      'RECHAZADA': 'Rechazada',
+      'CANCELADA': 'Cancelada'
+    };
+    return estados[estado] || estado;
+  }
+
+  /**
+   * Obtiene el icono apropiado para el estado
+   */
+  private getEstadoIcon(estado: string): string {
+    const iconos: { [key: string]: string } = {
+      'APROBADA': 'pi pi-check-circle',
+      'PENDIENTE': 'pi pi-clock',
+      'RECHAZADA': 'pi pi-times-circle',
+      'CANCELADA': 'pi pi-ban'
+    };
+    return iconos[estado] || 'pi pi-info-circle';
   }
 
   clearFilters(): void {
