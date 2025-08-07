@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Subscription } from 'rxjs';
 // PrimeNG imports
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -13,8 +14,12 @@ import { ToastModule } from 'primeng/toast';
 import { ToastService } from '../../../services/toast.service';
 import { Scenario, ScenarioService } from '../../../services/scenario.service';
 import { AuthService } from '../../../services/auth.service';
+import { SidebarService } from '../../../services/sidebar.service';
 import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
 import { environment } from '../../../../environments/environment';
+// Feedback component
+import { FeedbackComponent } from '../../feedback/feedback.component';
+import { FeedbackResponse } from '../../../services/feedback.service';
 
 @Component({
   selector: 'app-scenario-detail',
@@ -30,14 +35,19 @@ import { environment } from '../../../../environments/environment';
     TabsModule,
     ChipModule,
     ToastModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    FeedbackComponent
   ]
 })
-export class ScenarioDetailComponent implements OnInit {
+export class ScenarioDetailComponent implements OnInit, OnDestroy {
   scenario: Scenario | null = null;
   isLoading = true;
   isAdmin = false;
   selectedTab = 0;
+  
+  // Sidebar state
+  sidebarCollapsed = false;
+  private sidebarSubscription?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -45,12 +55,19 @@ export class ScenarioDetailComponent implements OnInit {
     private scenarioService: ScenarioService,
     private authService: AuthService,
     private toastService: ToastService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private sidebarService: SidebarService
   ) {}
 
   ngOnInit(): void {
     this.isAdmin = this.authService.isAdmin();
     console.log('User role:', this.authService.getUserRole(), 'Is admin:', this.isAdmin);
+    
+    // Suscribirse al estado del sidebar
+    this.sidebarSubscription = this.sidebarService.sidebarCollapsed$.subscribe(collapsed => {
+      this.sidebarCollapsed = collapsed;
+    });
+    
     this.loadScenario();
   }
 
@@ -150,5 +167,27 @@ export class ScenarioDetailComponent implements OnInit {
     // Construir URL completa con el dominio del backend
     const baseUrl = environment.apiUrl.replace('/api', ''); // http://localhost:8081
     return `${baseUrl}${imagePath}`;
+  }
+
+  /**
+   * Manejar evento cuando se crea un nuevo feedback
+   */
+  onFeedbackCreated(feedback: FeedbackResponse): void {
+    console.log('Nuevo feedback creado:', feedback);
+    // Podríamos actualizar algún estado local si fuera necesario
+  }
+
+  /**
+   * Manejar evento cuando se actualiza un feedback
+   */
+  onFeedbackUpdated(feedback: FeedbackResponse): void {
+    console.log('Feedback actualizado:', feedback);
+    // Podríamos actualizar algún estado local si fuera necesario
+  }
+
+  ngOnDestroy(): void {
+    if (this.sidebarSubscription) {
+      this.sidebarSubscription.unsubscribe();
+    }
   }
 }

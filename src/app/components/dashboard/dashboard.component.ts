@@ -5,6 +5,7 @@ import { filter } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../services/auth.service';
 import { NavigationComponent } from '../../shared/navigation/navigation.component';
+import { SidebarService } from '../../services/sidebar.service';
 // PrimeNG imports
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
@@ -28,13 +29,22 @@ export class DashboardComponent implements OnInit {
   userEmail = '';
   currentUser: User | null = null;
   public currentRoute = ''; // Update this line to make currentRoute public
+  
+  // Sidebar state
+  sidebarCollapsed = false;
 
   constructor(
     public authService: AuthService,
-    private router: Router
+    private router: Router,
+    private sidebarService: SidebarService
   ) {
     this.authService.currentUser.subscribe(user => {
       this.currentUser = user;
+    });
+    
+    // Sincronizar el estado del sidebar con el servicio
+    this.sidebarService.sidebarCollapsed$.subscribe(collapsed => {
+      this.sidebarCollapsed = collapsed;
     });
   }
 
@@ -61,5 +71,9 @@ export class DashboardComponent implements OnInit {
   getInitials(name?: string): string {
     const userFullName = this.currentUser?.nombre || name || 'Usuario';
     return userFullName.charAt(0).toUpperCase();
+  }
+
+  toggleSidebar(): void {
+    this.sidebarService.toggleSidebar();
   }
 }

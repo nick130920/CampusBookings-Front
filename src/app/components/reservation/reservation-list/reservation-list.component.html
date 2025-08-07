@@ -1,6 +1,6 @@
 <!-- Contenedor principal de reservas -->
 <div class="min-h-screen bg-usco-gris-100 py-8">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div [class]="'mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-300 ' + (sidebarCollapsed ? 'max-w-full' : 'max-w-7xl')">
     
     <!-- Encabezado -->
     <div class="mb-8">
@@ -9,9 +9,11 @@
           <h1 class="text-3xl font-bold text-usco-gris-900 font-usco-condensed">{{ getPageTitle() }}</h1>
           <p class="mt-2 text-usco-gris-600">
             {{ getPageDescription() }}
-            <span *ngIf="totalCount > 0" class="ml-2">
+            @if (totalCount > 0) {
+            <span class="ml-2">
               ({{ filteredCount }} de {{ totalCount }})
             </span>
+            }
           </p>
         </div>
         
@@ -35,7 +37,8 @@
     </div>
 
     <!-- Selector de vista para administradores -->
-    <div *ngIf="isAdmin" class="mb-6">
+    @if (isAdmin) {
+    <div class="mb-6">
       <div class="flex items-center gap-4">
         <p-selectbutton 
           [options]="viewOptions" 
@@ -49,6 +52,7 @@
         </p-selectbutton>
       </div>
     </div>
+    }
 
     <!-- Filtros -->
     <p-card class="mb-6 shadow-usco border-0">
@@ -122,7 +126,8 @@
       </div>
 
       <!-- Botón limpiar filtros -->
-      <div *ngIf="hasFilters" class="mt-4 flex justify-end">
+      @if (hasFilters) {
+      <div class="mt-4 flex justify-end">
         <p-button
           label="Limpiar Filtros"
           icon="pi pi-times"
@@ -130,19 +135,24 @@
           (onClick)="clearFilters()">
         </p-button>
       </div>
+      }
     </p-card>
 
     <!-- Loading -->
-    <div *ngIf="isLoading" class="text-center py-12">
+    @if (isLoading) {
+    <div class="text-center py-12">
       <p-progressSpinner strokeWidth="3"></p-progressSpinner>
       <p class="mt-4 text-usco-gris-600">Cargando reservas...</p>
     </div>
+    }
 
     <!-- Lista de reservas -->
-    <div *ngIf="!isLoading">
+    @if (!isLoading) {
+    <div>
       
       <!-- Estado vacío -->
-      <div *ngIf="reservations.length === 0" class="text-center py-12">
+      @if (reservations.length === 0) {
+      <div class="text-center py-12">
         <div class="mx-auto w-24 h-24 bg-usco-gris-200 rounded-full flex items-center justify-center mb-6">
           <i class="pi pi-calendar text-3xl text-usco-gris-400"></i>
         </div>
@@ -154,9 +164,11 @@
           (onClick)="onCreateNewReservation()">
         </p-button>
       </div>
+      }
 
       <!-- Sin resultados de filtros -->
-      <div *ngIf="reservations.length > 0 && filteredReservations.length === 0" class="text-center py-12">
+      @if (reservations.length > 0 && filteredReservations.length === 0) {
+      <div class="text-center py-12">
         <div class="mx-auto w-24 h-24 bg-usco-ocre-200 rounded-full flex items-center justify-center mb-6">
           <i class="pi pi-filter text-3xl text-usco-ocre-600"></i>
         </div>
@@ -169,9 +181,11 @@
           (onClick)="clearFilters()">
         </p-button>
       </div>
+      }
 
       <!-- Tabla de reservas para pantallas grandes -->
-      <div *ngIf="filteredReservations.length > 0" class="hidden lg:block">
+      @if (filteredReservations.length > 0) {
+      <div class="hidden lg:block">
         <p-card class="shadow-usco border-0">
           <p-table 
             [value]="filteredReservations"
@@ -187,10 +201,12 @@
             <ng-template pTemplate="header">
               <tr>
                 <!-- Columna de usuario solo para admins en vista "Todas las Reservas" -->
-                <th *ngIf="isAdmin && activeTabValue === 'all'" pSortableColumn="usuarioNombre">
+                @if (isAdmin && activeTabValue === 'all') {
+                <th pSortableColumn="usuarioNombre">
                   Usuario
                   <p-sortIcon field="usuarioNombre"></p-sortIcon>
                 </th>
+                }
                 <th pSortableColumn="escenarioNombre">
                   Escenario
                   <p-sortIcon field="escenarioNombre"></p-sortIcon>
@@ -215,7 +231,8 @@
             <ng-template pTemplate="body" let-reservation>
               <tr>
                 <!-- Usuario (solo para admins en vista "Todas las Reservas") -->
-                <td *ngIf="isAdmin && activeTabValue === 'all'">
+                @if (isAdmin && activeTabValue === 'all') {
+                <td>
                   <div class="flex items-center space-x-2">
                     <i class="pi pi-user text-usco-gris-500"></i>
                     <div>
@@ -224,6 +241,7 @@
                     </div>
                   </div>
                 </td>
+                }
                 
                 <!-- Escenario -->
                 <td>
@@ -271,33 +289,36 @@
                     </p-button>
                     
                     <!-- Botones de administración -->
+                    @if (canApprove(reservation)) {
                     <p-button
-                      *ngIf="canApprove(reservation)"
                       icon="pi pi-check"
                       styleClass="p-button-outlined p-button-success p-button-sm"
                       pTooltip="Aprobar reserva"
                       tooltipPosition="top"
                       (onClick)="approveReservation(reservation)">
                     </p-button>
+                    }
                     
+                    @if (canReject(reservation)) {
                     <p-button
-                      *ngIf="canReject(reservation)"
                       icon="pi pi-times"
                       styleClass="p-button-outlined p-button-danger p-button-sm"
                       pTooltip="Rechazar reserva"
                       tooltipPosition="top"
                       (onClick)="rejectReservation(reservation)">
                     </p-button>
+                    }
                     
                     <!-- Botón de cancelación para usuarios -->
+                    @if (canCancelReservation(reservation)) {
                     <p-button
-                      *ngIf="canCancelReservation(reservation)"
                       icon="pi pi-ban"
                       styleClass="p-button-outlined p-button-warning p-button-sm"
                       pTooltip="Cancelar reserva"
                       tooltipPosition="top"
                       (onClick)="onCancelReservation(reservation)">
                     </p-button>
+                    }
                   </div>
                 </td>
               </tr>
@@ -305,9 +326,11 @@
           </p-table>
         </p-card>
       </div>
+      }
 
       <!-- Cards para pantallas pequeñas -->
-      <div *ngIf="filteredReservations.length > 0" class="lg:hidden space-y-4">
+      @if (filteredReservations.length > 0) {
+      <div class="lg:hidden space-y-4">
         <p-card
           *ngFor="let reservation of filteredReservations"
           class="shadow-usco border-0">
@@ -349,16 +372,20 @@
             </div>
 
             <!-- Observaciones si existen -->
-            <div *ngIf="reservation.observaciones" class="bg-usco-ocre-50 rounded-lg p-3 border border-usco-ocre-200">
+            @if (reservation.observaciones) {
+            <div class="bg-usco-ocre-50 rounded-lg p-3 border border-usco-ocre-200">
               <span class="text-usco-gris-500 text-sm block mb-1">Observaciones:</span>
               <p class="text-usco-gris-900 text-sm">{{ reservation.observaciones }}</p>
             </div>
+            }
 
             <!-- Motivo de rechazo si existe -->
-            <div *ngIf="reservation.motivoRechazo" class="bg-red-50 rounded-lg p-3 border border-red-200">
+            @if (reservation.motivoRechazo) {
+            <div class="bg-red-50 rounded-lg p-3 border border-red-200">
               <span class="text-red-500 text-sm block mb-1">Motivo de rechazo:</span>
               <p class="text-red-900 text-sm">{{ reservation.motivoRechazo }}</p>
             </div>
+            }
 
             <!-- Acciones -->
             <div class="flex flex-wrap gap-2 justify-end">
@@ -371,35 +398,40 @@
               </p-button>
               
               <!-- Botones de administración -->
+              @if (canApprove(reservation)) {
               <p-button
-                *ngIf="canApprove(reservation)"
                 label="Aprobar"
                 icon="pi pi-check"
                 styleClass="p-button-outlined p-button-success p-button-sm"
                 (onClick)="approveReservation(reservation)">
               </p-button>
+              }
               
+              @if (canReject(reservation)) {
               <p-button
-                *ngIf="canReject(reservation)"
                 label="Rechazar"
                 icon="pi pi-times"
                 styleClass="p-button-outlined p-button-danger p-button-sm"
                 (onClick)="rejectReservation(reservation)">
               </p-button>
+              }
               
               <!-- Botón de cancelación para usuarios -->
+              @if (canCancelReservation(reservation)) {
               <p-button
-                *ngIf="canCancelReservation(reservation)"
                 label="Cancelar"
                 icon="pi pi-ban"
                 styleClass="p-button-outlined p-button-warning p-button-sm"
                 (onClick)="onCancelReservation(reservation)">
               </p-button>
+              }
             </div>
           </div>
         </p-card>
       </div>
+      }
     </div>
+    }
   </div>
 </div>
 
@@ -413,7 +445,8 @@
   [dismissableMask]="true"
   [resizable]="false">
   
-  <div *ngIf="selectedReservation" class="space-y-6">
+  @if (selectedReservation) {
+  <div class="space-y-6">
     <!-- Información del escenario -->
     <div class="border-b border-gray-200 pb-4">
       <h3 class="text-lg font-semibold text-usco-gris-900 mb-2">{{ selectedReservation.escenarioNombre }}</h3>
@@ -421,7 +454,8 @@
     </div>
     
     <!-- Información del usuario (solo visible para admins) -->
-    <div *ngIf="isAdmin" class="bg-usco-gris-50 rounded-lg p-4">
+    @if (isAdmin) {
+    <div class="bg-usco-gris-50 rounded-lg p-4">
       <h4 class="text-sm font-medium text-usco-gris-900 mb-3">
         <i class="pi pi-user mr-2"></i>Información del Usuario
       </h4>
@@ -436,6 +470,7 @@
         </div>
       </div>
     </div>
+    }
     
     <!-- Información de la reserva -->
     <div class="bg-usco-ocre-50 rounded-lg p-4">
@@ -471,23 +506,28 @@
     </div>
     
     <!-- Observaciones -->
-    <div *ngIf="selectedReservation.observaciones" class="bg-blue-50 rounded-lg p-4 border border-blue-200">
+    @if (selectedReservation.observaciones) {
+    <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
       <h4 class="text-sm font-medium text-blue-900 mb-2">
         <i class="pi pi-comment mr-2"></i>Observaciones
       </h4>
       <p class="text-blue-800 text-sm">{{ selectedReservation.observaciones }}</p>
     </div>
+    }
     
     <!-- Motivo de rechazo -->
-    <div *ngIf="selectedReservation.motivoRechazo" class="bg-red-50 rounded-lg p-4 border border-red-200">
+    @if (selectedReservation.motivoRechazo) {
+    <div class="bg-red-50 rounded-lg p-4 border border-red-200">
       <h4 class="text-sm font-medium text-red-900 mb-2">
         <i class="pi pi-exclamation-triangle mr-2"></i>Motivo de Rechazo
       </h4>
       <p class="text-red-800 text-sm">{{ selectedReservation.motivoRechazo }}</p>
     </div>
+    }
     
     <!-- Acciones para administrador -->
-    <div *ngIf="isAdmin && selectedReservation.estadoNombre === 'PENDIENTE'" class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+    @if (isAdmin && selectedReservation.estadoNombre === 'PENDIENTE') {
+    <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
       <p-button 
         label="Rechazar" 
         icon="pi pi-times" 
@@ -501,7 +541,9 @@
         (onClick)="approveReservation(selectedReservation); closeDetailDialog()">
       </p-button>
     </div>
+    }
   </div>
+  }
   
   <ng-template pTemplate="footer">
     <p-button 
@@ -522,7 +564,8 @@
   [dismissableMask]="false"
   [resizable]="false">
   
-  <div *ngIf="selectedReservation" class="space-y-4">
+  @if (selectedReservation) {
+  <div class="space-y-4">
     <!-- Información de la reserva a rechazar -->
     <div class="bg-red-50 border border-red-200 rounded-lg p-4">
       <h4 class="text-sm font-medium text-red-900 mb-2">
@@ -564,6 +607,7 @@
       </p>
     </div>
   </div>
+  }
   
   <ng-template pTemplate="footer">
     <div class="flex justify-end space-x-3">

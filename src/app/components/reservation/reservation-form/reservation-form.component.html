@@ -23,18 +23,22 @@
       <p-card class="shadow-usco border-0">
         
         <!-- PASO 1: Selección de Escenario -->
-        <div *ngIf="currentStep === 0" class="step-content">
+        @if (currentStep === 0) {
+        <div class="step-content">
           <div class="text-center mb-6">
             <h2 class="text-xl font-semibold text-usco-gris-900 mb-2">Seleccionar Escenario</h2>
             <p class="text-usco-gris-600">Elija el espacio que desea reservar</p>
           </div>
 
-          <div *ngIf="isLoading" class="text-center py-8">
+          @if (isLoading) {
+          <div class="text-center py-8">
             <p-progressSpinner strokeWidth="3"></p-progressSpinner>
             <p class="mt-4 text-usco-gris-600">Cargando escenarios...</p>
           </div>
+          }
 
-          <div *ngIf="!isLoading" class="space-y-4">
+          @if (!isLoading) {
+          <div class="space-y-4">
             <!-- Dropdown de escenarios -->
             <div class="field">
               <label for="escenario" class="block text-sm font-medium text-usco-gris-900 mb-2">
@@ -52,28 +56,31 @@
                 (onChange)="onScenarioChange()"
                 [class.ng-invalid]="reservationForm.get('escenarioId')?.invalid && reservationForm.get('escenarioId')?.touched">
                 <ng-template pTemplate="selectedItem">
-                  <div *ngIf="selectedScenario" class="flex items-center">
+                  @if (selectedScenario) {
+                  <div class="flex items-center">
                     <i class="pi pi-building mr-2 text-usco-vino-600"></i>
                     <span>{{ selectedScenario.nombre }}</span>
                   </div>
+                  }
                 </ng-template>
                 <ng-template let-scenario pTemplate="item">
                   <div class="flex items-center justify-between p-2">
                     <div>
                       <div class="font-medium">{{ scenario.nombre }}</div>
                       <div class="text-sm text-gray-500">{{ scenario.ubicacion }} • {{ scenario.tipo }}</div>
+                      <p-chip 
+                        [label]="scenario.capacidad + ' personas'" 
+                        styleClass="text-xs bg-usco-ocre-100 text-usco-ocre-800">
+                      </p-chip>
                     </div>
-                    <p-chip 
-                      [label]="scenario.capacidad + ' personas'" 
-                      styleClass="text-xs bg-usco-ocre-100 text-usco-ocre-800">
-                    </p-chip>
                   </div>
                 </ng-template>
               </p-select>
             </div>
 
             <!-- Información del escenario seleccionado -->
-            <div *ngIf="selectedScenario" class="mt-6 p-4 bg-usco-gris-50 rounded-lg border border-usco-gris-200">
+            @if (selectedScenario) {
+            <div class="mt-6 p-4 bg-usco-gris-50 rounded-lg border border-usco-gris-200">
               <h3 class="font-medium text-usco-gris-900 mb-2">{{ selectedScenario.nombre }}</h3>
               <p class="text-sm text-usco-gris-700 mb-3">{{ selectedScenario.descripcion }}</p>
               
@@ -90,17 +97,23 @@
                   <span class="text-usco-gris-500">Capacidad:</span>
                   <div class="font-medium">{{ selectedScenario.capacidad }} personas</div>
                 </div>
-                <div *ngIf="selectedScenario.costoPorHora">
+                @if (selectedScenario.costoPorHora) {
+                <div>
                   <span class="text-usco-gris-500">Costo/hora:</span>
                   <div class="font-medium">{{ selectedScenario.costoPorHora | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
                 </div>
+                }
               </div>
             </div>
+            }
           </div>
+          }
         </div>
+        }
 
         <!-- PASO 2: Fecha y Hora -->
-        <div *ngIf="currentStep === 1" class="step-content">
+        @if (currentStep === 1) {
+        <div class="step-content">
           <div class="text-center mb-6">
             <h2 class="text-xl font-semibold text-usco-gris-900 mb-2">Fecha y Hora</h2>
             <p class="text-usco-gris-600">Seleccione cuándo desea usar el espacio</p>
@@ -146,7 +159,8 @@
           </div>
 
           <!-- Horarios disponibles -->
-          <div *ngIf="availableTimeSlots.length > 0" class="mt-6">
+          @if (availableTimeSlots.length > 0) {
+          <div class="mt-6">
             <label class="block text-sm font-medium text-usco-gris-900 mb-3">
               <i class="pi pi-clock mr-2 text-usco-vino-600"></i>
               Horarios Disponibles
@@ -183,29 +197,39 @@
                 }"
               >
                 {{ slot.label }}
-                <i *ngIf="slot.available === false" class="pi pi-lock text-xs absolute top-1 right-1"></i>
-                <i *ngIf="selectedTimeSlot === slot" class="pi pi-check text-xs absolute top-1 right-1"></i>
+                @if (slot.available === false) {
+                <i class="pi pi-lock text-xs absolute top-1 right-1"></i>
+                }
+                @if (selectedTimeSlot === slot) {
+                <i class="pi pi-check text-xs absolute top-1 right-1"></i>
+                }
               </button>
             </div>
           </div>
+          }
 
           <!-- Estado de disponibilidad -->
-          <div *ngIf="isCheckingAvailability" class="mt-6 text-center">
+          @if (isCheckingAvailability) {
+          <div class="mt-6 text-center">
             <p-progressSpinner strokeWidth="3" [style]="{'width': '30px', 'height': '30px'}"></p-progressSpinner>
             <p class="mt-2 text-sm text-usco-gris-600">Verificando disponibilidad...</p>
           </div>
+          }
 
           <!-- Mensaje de disponibilidad (solo para confirmación) -->
-          <div *ngIf="selectedTimeSlot && selectedTimeSlot.available === true" class="mt-6">
+          @if (selectedTimeSlot && selectedTimeSlot.available === true) {
+          <div class="mt-6">
             <p-message 
               severity="success"
               text="Horario seleccionado disponible para reserva"
               styleClass="w-full">
             </p-message>
           </div>
+          }
 
           <!-- Horarios alternativos -->
-          <div *ngIf="suggestedSlots.length > 0" class="mt-6">
+          @if (suggestedSlots.length > 0) {
+          <div class="mt-6">
             <h4 class="text-sm font-medium text-usco-gris-900 mb-3">Horarios Alternativos Sugeridos</h4>
             <div class="space-y-2">
               <button
@@ -221,10 +245,13 @@
               </button>
             </div>
           </div>
+          }
         </div>
+        }
 
         <!-- PASO 3: Detalles -->
-        <div *ngIf="currentStep === 2" class="step-content">
+        @if (currentStep === 2) {
+        <div class="step-content">
           <div class="text-center mb-6">
             <h2 class="text-xl font-semibold text-usco-gris-900 mb-2">Detalles de la Reserva</h2>
             <p class="text-usco-gris-600">Información adicional (opcional)</p>
@@ -249,9 +276,11 @@
             </small>
           </div>
         </div>
+        }
 
         <!-- PASO 4: Confirmación -->
-        <div *ngIf="currentStep === 3" class="step-content">
+        @if (currentStep === 3) {
+        <div class="step-content">
           <div class="text-center mb-6">
             <h2 class="text-xl font-semibold text-usco-gris-900 mb-2">Confirmar Reserva</h2>
             <p class="text-usco-gris-600">Revise los detalles antes de confirmar</p>
@@ -282,21 +311,26 @@
             </div>
 
             <!-- Observaciones -->
-            <div *ngIf="reservationForm.get('observaciones')?.value" class="mt-6 pt-6 border-t border-usco-gris-200">
+            @if (reservationForm.get('observaciones')?.value) {
+            <div class="mt-6 pt-6 border-t border-usco-gris-200">
               <h3 class="font-medium text-usco-gris-900 mb-2">Observaciones</h3>
               <p class="text-usco-gris-700">{{ reservationForm.get('observaciones')?.value }}</p>
             </div>
+            }
 
             <!-- Estado de disponibilidad final -->
-            <div *ngIf="availabilityResponse" class="mt-6 pt-6 border-t border-usco-gris-200">
+            @if (availabilityResponse) {
+            <div class="mt-6 pt-6 border-t border-usco-gris-200">
               <p-message 
                 [severity]="availabilityResponse.disponible ? 'success' : 'error'"
                 [text]="availabilityResponse.mensaje"
                 styleClass="w-full">
               </p-message>
             </div>
+            }
           </div>
         </div>
+        }
 
         <!-- Botones de navegación -->
         <p-divider></p-divider>
@@ -306,13 +340,14 @@
           <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
             <!-- Botón anterior (solo si existe) -->
             <div class="flex flex-col sm:flex-row sm:justify-start">
+              @if (currentStep > 0) {
               <p-button
-                *ngIf="currentStep > 0"
                 label="Anterior"
                 icon="pi pi-chevron-left"
                 styleClass="p-button-outlined p-button-secondary responsive-button"
                 (onClick)="previousStep()">
               </p-button>
+              }
             </div>
 
             <!-- Botones principales -->
@@ -326,18 +361,19 @@
               </p-button>
 
               <!-- Botón siguiente -->
+              @if (currentStep < steps.length - 1) {
               <p-button
-                *ngIf="currentStep < steps.length - 1"
                 label="Siguiente"
                 icon="pi pi-chevron-right"
                 styleClass="responsive-button"
                 [disabled]="!isStepValid(currentStep)"
                 (onClick)="nextStep()">
               </p-button>
+              }
 
               <!-- Botón confirmar -->
+              @if (currentStep === steps.length - 1) {
               <p-button
-                *ngIf="currentStep === steps.length - 1"
                 label="Confirmar Reserva"
                 icon="pi pi-check"
                 styleClass="responsive-button"
@@ -345,6 +381,7 @@
                 [loading]="isSubmitting"
                 (onClick)="onSubmit()">
               </p-button>
+              }
             </div>
           </div>
         </div>

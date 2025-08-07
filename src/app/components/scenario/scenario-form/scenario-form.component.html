@@ -1,5 +1,5 @@
 <div class="p-4 sm:p-6 bg-usco-gris-50 min-h-screen">
-  <div class="max-w-4xl mx-auto">
+  <div [class]="'transition-all duration-300 ' + (sidebarCollapsed ? 'max-w-full' : 'max-w-4xl mx-auto')">
     <!-- Botón de regreso -->
     <p-button (onClick)="onCancel()" [text]="true" icon="pi pi-arrow-left"
       label="{{ isEditMode ? 'Volver al detalle' : 'Volver a la lista' }}"

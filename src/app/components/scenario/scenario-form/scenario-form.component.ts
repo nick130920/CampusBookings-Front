@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Subscription } from 'rxjs';
 // PrimeNG imports
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -18,6 +19,7 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { ToastService } from '../../../services/toast.service';
 import { Scenario, ScenarioService, ImageUploadConfig, ImageUploadResponse } from '../../../services/scenario.service';
+import { SidebarService } from '../../../services/sidebar.service';
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -44,12 +46,16 @@ import { environment } from '../../../../environments/environment';
     FloatLabelModule
   ]
 })
-export class ScenarioFormComponent implements OnInit {
+export class ScenarioFormComponent implements OnInit, OnDestroy {
   scenarioForm: FormGroup;
   isEditMode = false;
   isLoading = false;
   isSubmitting = false;
   scenarioId: number | null = null;
+  
+  // Sidebar state
+  sidebarCollapsed = false;
+  private sidebarSubscription?: Subscription;
 
   // Propiedades para manejo de imágenes
   selectedImageFile: File | null = null;
@@ -89,7 +95,8 @@ export class ScenarioFormComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private scenarioService: ScenarioService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private sidebarService: SidebarService
   ) {
     this.scenarioForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.maxLength(100)]],
@@ -106,6 +113,11 @@ export class ScenarioFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Suscribirse al estado del sidebar
+    this.sidebarSubscription = this.sidebarService.sidebarCollapsed$.subscribe(collapsed => {
+      this.sidebarCollapsed = collapsed;
+    });
+    
     // Cargar configuración de upload de imágenes
     this.loadImageUploadConfig();
     
@@ -503,5 +515,11 @@ export class ScenarioFormComponent implements OnInit {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  ngOnDestroy(): void {
+    if (this.sidebarSubscription) {
+      this.sidebarSubscription.unsubscribe();
+    }
   }
 }

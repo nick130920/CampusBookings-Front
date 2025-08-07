@@ -1,8 +1,8 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
-import { switchMap, catchError, of } from 'rxjs';
+import { switchMap, catchError, of, Subscription } from 'rxjs';
 
 // PrimeNG Imports
 import { ButtonModule } from 'primeng/button';
@@ -21,6 +21,7 @@ import { ReservationService, BloqueOcupado, OcupacionesMesResponse } from '../..
 import { ToastService } from '../../../services/toast.service';
 import { AuthService } from '../../../services/auth.service';
 import { SystemConfigService } from '../../../services/system-config.service';
+import { SidebarService } from '../../../services/sidebar.service';
 
 interface CalendarDay {
   date: Date;
@@ -64,11 +65,15 @@ interface AvailabilityRequest {
   templateUrl: './availability-calendar.component.html',
   styleUrls: ['./availability-calendar.component.css']
 })
-export class AvailabilityCalendarComponent implements OnInit {
+export class AvailabilityCalendarComponent implements OnInit, OnDestroy {
   // Form y estado
   searchForm!: FormGroup;
   isLoading = false;
   isCheckingAvailability = false;
+  
+  // Sidebar state
+  sidebarCollapsed = false;
+  private sidebarSubscription?: Subscription;
   
   // Data del escenario
   selectedScenario: (Scenario & { id: number }) | null = null;
@@ -97,6 +102,7 @@ export class AvailabilityCalendarComponent implements OnInit {
   private toastService = inject(ToastService);
   private authService = inject(AuthService);
   private systemConfigService = inject(SystemConfigService);
+  private sidebarService = inject(SidebarService);
 
   constructor() {
     this.initForm();
@@ -104,6 +110,11 @@ export class AvailabilityCalendarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Suscribirse al estado del sidebar
+    this.sidebarSubscription = this.sidebarService.sidebarCollapsed$.subscribe(collapsed => {
+      this.sidebarCollapsed = collapsed;
+    });
+    
     this.loadInitialData();
     this.generateCalendar();
     this.checkRouteParams();
@@ -565,5 +576,11 @@ export class AvailabilityCalendarComponent implements OnInit {
     this.availabilityData = [];
     this.clearOccupations();
     this.updateCalendarAvailability();
+  }
+
+  ngOnDestroy(): void {
+    if (this.sidebarSubscription) {
+      this.sidebarSubscription.unsubscribe();
+    }
   }
 } 

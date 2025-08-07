@@ -1,0 +1,321 @@
+<!-- Toasts y Confirmaciones -->
+<p-toast position="top-right"></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<div class="max-w-7xl mx-auto p-6 space-y-6">
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-usco-gris-dark">Gestión de Roles</h1>
+      <p class="text-usco-gris mt-1">Administra roles y permisos del sistema</p>
+    </div>
+    <p-button 
+      label="Nuevo Rol" 
+      icon="pi pi-plus" 
+      class="p-button-primary bg-usco-vino-tinto border-usco-vino-tinto hover:bg-usco-vino-tinto-dark"
+      (onClick)="showCreateForm()"
+      [disabled]="loading">
+    </p-button>
+  </div>
+
+  <!-- Toolbar de búsqueda -->
+  <p-toolbar class="bg-white border border-usco-gris-lighter rounded-lg">
+    <ng-template pTemplate="start">
+      <div class="flex gap-4 items-center w-full">
+        <div class="flex-1">
+          <label class="block text-sm font-medium text-usco-gris-dark mb-1">Buscar roles</label>
+          <input 
+            pInputText 
+            type="text"
+            [(ngModel)]="searchTerm" 
+            (keyup.enter)="searchRoles()"
+            placeholder="Nombre o descripción del rol"
+            class="w-full">
+        </div>
+        <div class="flex gap-2 pt-6">
+          <p-button 
+            label="Buscar" 
+            icon="pi pi-search"
+            class="p-button-primary bg-usco-vino-tinto border-usco-vino-tinto"
+            (onClick)="searchRoles()"
+            [disabled]="loading">
+          </p-button>
+          <p-button 
+            label="Limpiar" 
+            icon="pi pi-times"
+            class="p-button-secondary bg-usco-gris border-usco-gris"
+            (onClick)="clearSearch()"
+            [disabled]="loading">
+          </p-button>
+        </div>
+      </div>
+    </ng-template>
+  </p-toolbar>
+
+  <!-- Tabla de Roles -->
+  <p-card class="shadow-lg border border-usco-gris-lighter">
+    <ng-template pTemplate="header">
+      <div class="p-4 bg-usco-vino-tinto text-white rounded-t-lg">
+        <h2 class="text-xl font-semibold">Lista de Roles</h2>
+      </div>
+    </ng-template>
+
+    <div class="p-4">
+      @if (loading) {
+        <div class="flex justify-center p-8">
+          <p-progressSpinner class="w-8 h-8"></p-progressSpinner>
+        </div>
+      } @else {
+        <p-table 
+          [value]="roles" 
+          class="p-datatable-striped">
+          
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="bg-usco-gris-pale text-usco-gris-dark font-semibold">Nombre</th>
+              <th class="bg-usco-gris-pale text-usco-gris-dark font-semibold">Descripción</th>
+              <th class="bg-usco-gris-pale text-usco-gris-dark font-semibold text-center">Estado</th>
+              <th class="bg-usco-gris-pale text-usco-gris-dark font-semibold text-center">Usuarios</th>
+              <th class="bg-usco-gris-pale text-usco-gris-dark font-semibold text-center">Permisos</th>
+              <th class="bg-usco-gris-pale text-usco-gris-dark font-semibold text-center">Acciones</th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-role>
+            <tr class="hover:bg-usco-gris-pale">
+              <td>
+                <span class="font-medium text-usco-gris-dark">{{ role.nombre }}</span>
+              </td>
+              <td>
+                <span class="text-usco-gris">{{ role.descripcion }}</span>
+              </td>
+              <td class="text-center">
+                <p-tag 
+                  [value]="getStatusText(role.activo)"
+                  [severity]="role.activo ? 'success' : 'danger'"
+                  class="font-medium">
+                </p-tag>
+              </td>
+              <td class="text-center">
+                <p-chip 
+                  [label]="role.usuariosCount.toString()"
+                  class="bg-blue-100 text-blue-800">
+                </p-chip>
+              </td>
+              <td class="text-center">
+                <p-chip 
+                  [label]="role.permissionsCount.toString()"
+                  class="bg-green-100 text-green-800">
+                </p-chip>
+              </td>
+              <td class="text-center">
+                <div class="flex gap-2 justify-center">
+                  <p-button 
+                    icon="pi pi-pencil"
+                    class="p-button-rounded p-button-text p-button-info"
+                    pTooltip="Editar rol"
+                    (onClick)="showEditForm(role)"
+                    [disabled]="loading">
+                  </p-button>
+                  
+                  <p-button 
+                    [icon]="role.activo ? 'pi pi-eye-slash' : 'pi pi-eye'"
+                    [styleClass]="'p-button-rounded p-button-text ' + (role.activo ? 'p-button-warning' : 'p-button-success')"
+                    [pTooltip]="role.activo ? 'Desactivar rol' : 'Activar rol'"
+                    (onClick)="toggleRoleStatus(role)"
+                    [disabled]="loading">
+                  </p-button>
+                  
+                  <p-button 
+                    icon="pi pi-trash"
+                    class="p-button-rounded p-button-text p-button-danger"
+                    pTooltip="Eliminar rol"
+                    (onClick)="deleteRole(role)"
+                    [disabled]="loading || role.usuariosCount > 0">
+                  </p-button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="6" class="text-center py-8">
+                <div class="flex flex-col items-center">
+                  <i class="pi pi-users text-6xl text-usco-gris-lighter mb-4"></i>
+                  <p class="text-usco-gris text-lg">No hay roles para mostrar</p>
+                  <p class="text-usco-gris-light">Crea tu primer rol para comenzar</p>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      }
+    </div>
+  </p-card>
+
+  <!-- Dialog del Formulario -->
+  <p-dialog 
+    [(visible)]="showRoleForm" 
+    [modal]="true" 
+    [style]="{width: '70vw', minWidth: '400px'}"
+    [header]="editingRole ? 'Editar Rol' : 'Crear Nuevo Rol'"
+    class="p-fluid">
+    
+    <form [formGroup]="roleForm" (ngSubmit)="saveRole()">
+      <!-- Información Básica -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="field">
+          <label class="block text-sm font-medium text-usco-gris-dark mb-2">Nombre del Rol</label>
+          <input 
+            pInputText 
+            type="text"
+            formControlName="nombre" 
+            placeholder="Ej: COORDINADOR"
+            class="w-full">
+          @if (roleForm.get('nombre')?.errors?.['required'] && roleForm.get('nombre')?.touched) {
+            <small class="p-error">El nombre es obligatorio</small>
+          }
+          @if (roleForm.get('nombre')?.errors?.['minlength']) {
+            <small class="p-error">El nombre debe tener al menos 2 caracteres</small>
+          }
+        </div>
+
+        <div class="field flex items-center pt-6">
+          <p-checkbox 
+            formControlName="activo" 
+            binary="true"
+            label="Rol Activo"
+            class="mr-2">
+          </p-checkbox>
+        </div>
+      </div>
+
+              <div class="field mb-6">
+          <label class="block text-sm font-medium text-usco-gris-dark mb-2">Descripción</label>
+          <textarea 
+            formControlName="descripcion" 
+            rows="3"
+            placeholder="Describe las responsabilidades de este rol"
+            class="w-full p-inputtext">
+          </textarea>
+        @if (roleForm.get('descripcion')?.errors?.['required'] && roleForm.get('descripcion')?.touched) {
+          <small class="p-error">La descripción es obligatoria</small>
+        }
+        @if (roleForm.get('descripcion')?.errors?.['minlength']) {
+          <small class="p-error">La descripción debe tener al menos 10 caracteres</small>
+        }
+      </div>
+
+      <p-divider></p-divider>
+
+      <!-- Sección de Permisos -->
+      <div class="mb-6">
+        <h3 class="text-lg font-semibold text-usco-gris-dark mb-4">Permisos del Rol</h3>
+        
+        <!-- Filtros de Permisos -->
+        <p-panel header="Filtros de Permisos" class="mb-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="field">
+              <label class="block text-sm font-medium text-usco-gris-dark mb-1">Filtrar por Recurso</label>
+              <select 
+                [(ngModel)]="selectedResource"
+                [ngModelOptions]="{standalone: true}"
+                class="w-full p-inputtext">
+                <option value="">Todos los recursos</option>
+                <option *ngFor="let resource of availableResources" [value]="resource">
+                  {{ resource }}
+                </option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label class="block text-sm font-medium text-usco-gris-dark mb-1">Filtrar por Acción</label>
+              <select 
+                [(ngModel)]="selectedAction"
+                [ngModelOptions]="{standalone: true}"
+                class="w-full p-inputtext">
+                <option value="">Todas las acciones</option>
+                <option *ngFor="let action of availableActions" [value]="action">
+                  {{ action }}
+                </option>
+              </select>
+            </div>
+
+            <div class="field flex gap-2 items-end">
+              <p-button 
+                type="button"
+                label="Seleccionar Todos"
+                class="p-button-sm bg-usco-vino-tinto border-usco-vino-tinto"
+                (onClick)="selectAllPermissions()">
+              </p-button>
+              <p-button 
+                type="button"
+                label="Limpiar Todos"
+                class="p-button-sm p-button-secondary bg-usco-gris border-usco-gris"
+                (onClick)="clearAllPermissions()">
+              </p-button>
+            </div>
+          </div>
+        </p-panel>
+
+        <!-- Lista de Permisos -->
+        <div class="max-h-96 overflow-y-auto border border-usco-gris-lighter rounded-lg p-4">
+          @for (permission of getFilteredPermissions(); track permission.id) {
+            <div class="flex items-center p-3 border border-usco-gris-lightest rounded-lg hover:bg-usco-gris-pale mb-2 last:mb-0">
+              <p-checkbox
+                [ngModel]="isPermissionSelected(permission.id)"
+                (ngModelChange)="togglePermission(permission.id)"
+                [ngModelOptions]="{standalone: true}"
+                binary="true"
+                class="mr-4">
+              </p-checkbox>
+              
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="font-medium text-usco-gris-dark">{{ permission.name }}</span>
+                  <p-tag 
+                    [value]="permission.resource"
+                    severity="info"
+                    class="bg-blue-100 text-blue-800">
+                  </p-tag>
+                  <p-tag 
+                    [value]="permission.action"
+                    severity="success"
+                    class="bg-green-100 text-green-800">
+                  </p-tag>
+                </div>
+                <p class="text-sm text-usco-gris">{{ permission.description }}</p>
+              </div>
+            </div>
+          }
+          
+          @if (getFilteredPermissions().length === 0) {
+            <div class="text-center py-8 text-usco-gris">
+              <i class="pi pi-filter text-4xl mb-2"></i>
+              <p>No hay permisos que coincidan con los filtros seleccionados</p>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Botones de Acción -->
+      <div class="flex gap-4 justify-end pt-6 border-t border-usco-gris-lighter">
+        <p-button 
+          type="button"
+          label="Cancelar"
+          class="p-button-secondary bg-usco-gris border-usco-gris"
+          (onClick)="cancelForm()"
+          [disabled]="loading">
+        </p-button>
+        <p-button 
+          type="submit"
+          [label]="(editingRole ? 'Actualizar' : 'Crear') + ' Rol'"
+          [icon]="loading ? 'pi pi-spin pi-spinner' : 'pi pi-check'"
+          class="p-button-primary bg-usco-vino-tinto border-usco-vino-tinto"
+          [disabled]="loading || roleForm.invalid">
+        </p-button>
+      </div>
+    </form>
+  </p-dialog>
+</div>

@@ -1,0 +1,316 @@
+/* Estilos específicos para el componente de gestión de roles con PrimeNG */
+
+/* Variables CSS para colores USCO */
+:host {
+  --usco-vino-tinto: #8F141B;
+  --usco-vino-tinto-dark: #5C0E12;
+  --usco-vino-tinto-light: #B15B60;
+  --usco-gris: #4D626C;
+  --usco-gris-dark: #1E262B;
+  --usco-gris-light: #839198;
+  --usco-gris-pale: #EDEFF0;
+  --usco-ocre: #DFD4A6;
+}
+
+/* Personalización de componentes PrimeNG */
+
+/* Botones primarios con colores USCO */
+::ng-deep .p-button.p-button-primary {
+  background: var(--usco-vino-tinto) !important;
+  border-color: var(--usco-vino-tinto) !important;
+  color: white !important;
+}
+
+::ng-deep .p-button.p-button-primary:hover {
+  background: var(--usco-vino-tinto-dark) !important;
+  border-color: var(--usco-vino-tinto-dark) !important;
+}
+
+::ng-deep .p-button.p-button-primary:focus {
+  box-shadow: 0 0 0 2px rgba(143, 20, 27, 0.2) !important;
+}
+
+/* Botones secundarios */
+::ng-deep .p-button.p-button-secondary {
+  background: var(--usco-gris) !important;
+  border-color: var(--usco-gris) !important;
+  color: white !important;
+}
+
+::ng-deep .p-button.p-button-secondary:hover {
+  background: var(--usco-gris-dark) !important;
+  border-color: var(--usco-gris-dark) !important;
+}
+
+/* Inputs con estilo USCO */
+::ng-deep .p-inputtext:focus {
+  border-color: var(--usco-vino-tinto) !important;
+  box-shadow: 0 0 0 0.2rem rgba(143, 20, 27, 0.2) !important;
+}
+
+::ng-deep .p-inputtextarea:focus {
+  border-color: var(--usco-vino-tinto) !important;
+  box-shadow: 0 0 0 0.2rem rgba(143, 20, 27, 0.2) !important;
+}
+
+/* Dropdown con colores USCO */
+::ng-deep .p-dropdown:not(.p-disabled):hover {
+  border-color: var(--usco-vino-tinto) !important;
+}
+
+::ng-deep .p-dropdown:not(.p-disabled).p-focus {
+  border-color: var(--usco-vino-tinto) !important;
+  box-shadow: 0 0 0 0.2rem rgba(143, 20, 27, 0.2) !important;
+}
+
+::ng-deep .p-dropdown-panel .p-dropdown-item:not(.p-highlight):not(.p-disabled):hover {
+  background: var(--usco-gris-pale) !important;
+  color: var(--usco-gris-dark) !important;
+}
+
+::ng-deep .p-dropdown-panel .p-dropdown-item.p-highlight {
+  background: var(--usco-vino-tinto) !important;
+  color: white !important;
+}
+
+/* Checkbox con colores USCO */
+::ng-deep .p-checkbox .p-checkbox-box.p-highlight {
+  background: var(--usco-vino-tinto) !important;
+  border-color: var(--usco-vino-tinto) !important;
+}
+
+::ng-deep .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover {
+  border-color: var(--usco-vino-tinto) !important;
+}
+
+::ng-deep .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-focus {
+  border-color: var(--usco-vino-tinto) !important;
+  box-shadow: 0 0 0 0.2rem rgba(143, 20, 27, 0.2) !important;
+}
+
+/* Tabla con estilos USCO */
+::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  background: var(--usco-gris-pale) !important;
+  color: var(--usco-gris-dark) !important;
+  border-color: var(--usco-gris-light) !important;
+  font-weight: 600;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr {
+  border-color: var(--usco-gris-pale) !important;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
+  background: var(--usco-gris-pale) !important;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  border-color: var(--usco-gris-pale) !important;
+}
+
+/* Cards con bordes USCO */
+::ng-deep .p-card {
+  border: 1px solid rgba(143, 20, 27, 0.1) !important;
+  box-shadow: 0 4px 6px rgba(143, 20, 27, 0.1) !important;
+}
+
+::ng-deep .p-card .p-card-header {
+  background: var(--usco-vino-tinto) !important;
+  color: white !important;
+  border-bottom: 1px solid var(--usco-vino-tinto-dark) !important;
+}
+
+/* Panel con colores USCO */
+::ng-deep .p-panel .p-panel-header {
+  background: var(--usco-gris-pale) !important;
+  color: var(--usco-gris-dark) !important;
+  border-color: var(--usco-gris-light) !important;
+}
+
+::ng-deep .p-panel .p-panel-content {
+  border-color: var(--usco-gris-light) !important;
+}
+
+/* Tags personalizados */
+::ng-deep .p-tag.p-tag-success {
+  background: #16a34a !important;
+  color: white !important;
+}
+
+::ng-deep .p-tag.p-tag-danger {
+  background: var(--usco-vino-tinto) !important;
+  color: white !important;
+}
+
+::ng-deep .p-tag.p-tag-info {
+  background: #3b82f6 !important;
+  color: white !important;
+}
+
+/* Chips personalizados */
+.bg-blue-100 {
+  background-color: #dbeafe !important;
+}
+
+.text-blue-800 {
+  color: #1e40af !important;
+}
+
+.bg-green-100 {
+  background-color: #dcfce7 !important;
+}
+
+.text-green-800 {
+  color: #166534 !important;
+}
+
+/* Dialog con estilos USCO */
+::ng-deep .p-dialog .p-dialog-header {
+  background: var(--usco-vino-tinto) !important;
+  color: white !important;
+  border-bottom: 1px solid var(--usco-vino-tinto-dark) !important;
+}
+
+::ng-deep .p-dialog .p-dialog-header .p-dialog-title {
+  color: white !important;
+}
+
+::ng-deep .p-dialog .p-dialog-header .p-dialog-header-icon {
+  color: white !important;
+}
+
+::ng-deep .p-dialog .p-dialog-header .p-dialog-header-icon:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Confirm Dialog con colores USCO */
+::ng-deep .p-confirmdialog .p-dialog-header {
+  background: var(--usco-vino-tinto) !important;
+  color: white !important;
+}
+
+::ng-deep .p-confirmdialog .p-button.p-button-danger {
+  background: var(--usco-vino-tinto) !important;
+  border-color: var(--usco-vino-tinto) !important;
+}
+
+::ng-deep .p-confirmdialog .p-button.p-button-danger:hover {
+  background: var(--usco-vino-tinto-dark) !important;
+  border-color: var(--usco-vino-tinto-dark) !important;
+}
+
+/* Toast con colores USCO */
+::ng-deep .p-toast .p-toast-message.p-toast-message-success {
+  background: #f0fdf4 !important;
+  border: 1px solid #16a34a !important;
+  color: #166534 !important;
+}
+
+::ng-deep .p-toast .p-toast-message.p-toast-message-error {
+  background: rgba(143, 20, 27, 0.1) !important;
+  border: 1px solid var(--usco-vino-tinto) !important;
+  color: var(--usco-vino-tinto-dark) !important;
+}
+
+/* Progress Spinner con color USCO */
+::ng-deep .p-progress-spinner-svg {
+  animation: p-progress-spinner-rotate 2s linear infinite;
+}
+
+::ng-deep .p-progress-spinner-circle {
+  stroke: var(--usco-vino-tinto) !important;
+  stroke-dasharray: 89, 200;
+  stroke-dashoffset: 0;
+  animation: p-progress-spinner-dash 1.5s ease-in-out infinite;
+}
+
+/* Toolbar personalizado */
+::ng-deep .p-toolbar {
+  background: white !important;
+  border: 1px solid rgba(143, 20, 27, 0.1) !important;
+  padding: 1rem !important;
+}
+
+/* Divider con color USCO */
+::ng-deep .p-divider.p-divider-horizontal:before {
+  border-top: 1px solid var(--usco-gris-light) !important;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  ::ng-deep .p-dialog {
+    width: 90vw !important;
+    max-width: none !important;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .flex.gap-2 {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+/* Estados de hover para botones de acción */
+::ng-deep .p-button.p-button-rounded.p-button-text:hover {
+  background: rgba(143, 20, 27, 0.1) !important;
+}
+
+::ng-deep .p-button.p-button-rounded.p-button-text.p-button-info:hover {
+  background: rgba(59, 130, 246, 0.1) !important;
+}
+
+::ng-deep .p-button.p-button-rounded.p-button-text.p-button-warning:hover {
+  background: rgba(245, 158, 11, 0.1) !important;
+}
+
+::ng-deep .p-button.p-button-rounded.p-button-text.p-button-success:hover {
+  background: rgba(34, 197, 94, 0.1) !important;
+}
+
+::ng-deep .p-button.p-button-rounded.p-button-text.p-button-danger:hover {
+  background: rgba(143, 20, 27, 0.1) !important;
+}
+
+/* Scrollbar personalizado para el contenedor de permisos */
+.max-h-96::-webkit-scrollbar {
+  width: 6px;
+}
+
+.max-h-96::-webkit-scrollbar-track {
+  background: var(--usco-gris-pale);
+  border-radius: 3px;
+}
+
+.max-h-96::-webkit-scrollbar-thumb {
+  background: var(--usco-gris-light);
+  border-radius: 3px;
+}
+
+.max-h-96::-webkit-scrollbar-thumb:hover {
+  background: var(--usco-gris);
+}
+
+/* Animaciones suaves */
+.p-card,
+.p-button,
+.p-inputtext,
+.p-dropdown {
+  transition: all 0.3s ease;
+}
+
+/* Estado de loading */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}

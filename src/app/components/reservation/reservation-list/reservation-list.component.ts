@@ -2,7 +2,7 @@ import { Component, OnInit, inject, OnDestroy, ChangeDetectorRef } from '@angula
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 
 // PrimeNG Imports
 import { ButtonModule } from 'primeng/button';
@@ -25,6 +25,7 @@ import { ConfirmationService } from 'primeng/api';
 import { ReservationService, Reservation } from '../../../services/reservation.service';
 import { AuthService, User } from '../../../services/auth.service';
 import { ToastService } from '../../../services/toast.service';
+import { SidebarService } from '../../../services/sidebar.service';
 
 // Utils
 import { formatRelativeDate } from '../../../utils/date.utils';
@@ -62,7 +63,7 @@ interface ReservationFilter {
   templateUrl: './reservation-list.component.html',
   styleUrls: ['./reservation-list.component.css']
 })
-export class ReservationListComponent implements OnInit {
+export class ReservationListComponent implements OnInit, OnDestroy {
   // Data
   reservations: Reservation[] = [];
   filteredReservations: Reservation[] = [];
@@ -134,6 +135,10 @@ export class ReservationListComponent implements OnInit {
     return this.isAdmin ? this.adminColumns : this.columns;
   }
 
+  // Sidebar state
+  sidebarCollapsed = false;
+  private sidebarSubscription?: Subscription;
+
   // Injected services
   private reservationService = inject(ReservationService);
   private authService = inject(AuthService);
@@ -141,6 +146,7 @@ export class ReservationListComponent implements OnInit {
   private confirmationService = inject(ConfirmationService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private sidebarService = inject(SidebarService);
 
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
@@ -148,6 +154,11 @@ export class ReservationListComponent implements OnInit {
     
     console.log('🔍 DEBUG: ngOnInit - currentUser:', this.currentUser);
     console.log('🔍 DEBUG: ngOnInit - isAdmin:', this.isAdmin);
+    
+    // Suscribirse al estado del sidebar
+    this.sidebarSubscription = this.sidebarService.sidebarCollapsed$.subscribe(collapsed => {
+      this.sidebarCollapsed = collapsed;
+    });
     
     // Si es admin, iniciar en "Mis Reservas" por defecto
     if (this.isAdmin) {
@@ -710,6 +721,12 @@ export class ReservationListComponent implements OnInit {
         this.reservations[index] = updatedReservation;
         this.applyFilters();
       }
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.sidebarSubscription) {
+      this.sidebarSubscription.unsubscribe();
     }
   }
 }

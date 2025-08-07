@@ -60,7 +60,8 @@ export const routes: Routes = [
         children: [
           { path: '', component: AdminDashboardComponent },
           { path: 'reportes', component: ReportsComponent },
-          { path: 'configuracion', loadComponent: () => import('./components/admin/system-config/system-config.component').then(m => m.SystemConfigComponent) }
+          { path: 'configuracion', loadComponent: () => import('./components/admin/system-config/system-config.component').then(m => m.SystemConfigComponent) },
+          { path: 'roles', loadComponent: () => import('./components/admin/role-management/role-management.component').then(m => m.RoleManagementComponent) }
         ]
       },
       // Redirecciones para compatibilidad

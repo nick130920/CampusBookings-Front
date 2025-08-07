@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 // PrimeNG imports
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -16,6 +17,7 @@ import { ToastService } from '../../../services/toast.service';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { Scenario, ScenarioService } from '../../../services/scenario.service';
+import { SidebarService } from '../../../services/sidebar.service';
 import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
@@ -38,11 +40,15 @@ import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-d
     FormsModule
   ]
 })
-export class ScenarioListComponent implements OnInit {
+export class ScenarioListComponent implements OnInit, OnDestroy {
   scenarios: Scenario[] = [];
   filteredScenarios: Scenario[] = [];
   isLoading = true;
   isAdmin = false;
+  
+  // Sidebar state
+  sidebarCollapsed = false;
+  private sidebarSubscription?: Subscription;
   
   // Filtros
   filtroTipo = '';
@@ -54,12 +60,19 @@ export class ScenarioListComponent implements OnInit {
     private scenarioService: ScenarioService,
     private authService: AuthService,
     private toastService: ToastService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private sidebarService: SidebarService
   ) {}
 
   ngOnInit(): void {
     this.isAdmin = this.authService.isAdmin();
     console.log('User role:', this.authService.getUserRole(), 'Is admin:', this.isAdmin);
+    
+    // Suscribirse al estado del sidebar
+    this.sidebarSubscription = this.sidebarService.sidebarCollapsed$.subscribe(collapsed => {
+      this.sidebarCollapsed = collapsed;
+    });
+    
     this.loadScenarios();
     this.loadFiltros();
   }
@@ -131,5 +144,11 @@ export class ScenarioListComponent implements OnInit {
         });
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.sidebarSubscription) {
+      this.sidebarSubscription.unsubscribe();
+    }
   }
 }

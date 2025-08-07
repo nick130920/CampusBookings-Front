@@ -1,4 +1,4 @@
-<div class="p-6">
+<div [class]="'transition-all duration-300 ' + (sidebarCollapsed ? 'p-4 sm:p-6 max-w-full' : 'p-6 max-w-7xl mx-auto')">
   <!-- Botón de regreso -->
   <button 
     (click)="router.navigate(['/dashboard/escenarios'])"
@@ -11,12 +11,15 @@
   </button>
 
   <!-- Cargando -->
-  <div *ngIf="isLoading" class="flex justify-center items-center h-64">
+  @if (isLoading) {
+  <div class="flex justify-center items-center h-64">
     <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-vino-600"></div>
   </div>
+  }
 
   <!-- Detalle del escenario -->
-  <div *ngIf="!isLoading && scenario" class="bg-white rounded-lg shadow-sm overflow-hidden">
+  @if (!isLoading && scenario) {
+  <div class="bg-white rounded-lg shadow-sm overflow-hidden">
     <!-- Encabezado con acciones -->
     <div class="px-6 py-4 border-b border-gris-200 flex justify-between items-center">
       <div>
@@ -43,7 +46,8 @@
         >
           Ver Disponibilidad
         </button>
-        <div *ngIf="isAdmin" class="flex space-x-2">
+        @if (isAdmin) {
+        <div class="flex space-x-2">
           <button 
             (click)="onToggleStatus()"
             [ngClass]="{
@@ -67,6 +71,7 @@
             Eliminar
           </button>
         </div>
+        }
       </div>
     </div>
 
@@ -77,10 +82,14 @@
         <div class="md:col-span-2">
           <!-- Imagen del escenario -->
           <div class="bg-gris-100 rounded-lg overflow-hidden mb-6" style="height: 300px;">
-            <div *ngIf="scenario.imagenUrl" class="h-full w-full bg-cover bg-center" [style.backgroundImage]="'url(' + getFullImageUrl(scenario.imagenUrl) + ')'"></div>
-            <div *ngIf="!scenario.imagenUrl" class="h-full w-full flex items-center justify-center bg-gris-200">
+            @if (scenario.imagenUrl) {
+            <div class="h-full w-full bg-cover bg-center" [style.backgroundImage]="'url(' + getFullImageUrl(scenario.imagenUrl) + ')'"></div>
+            }
+            @if (!scenario.imagenUrl) {
+            <div class="h-full w-full flex items-center justify-center bg-gris-200">
               <span class="text-gris-400">Sin imagen</span>
             </div>
+            }
           </div>
           
           <!-- Descripción -->
@@ -90,7 +99,8 @@
           </div>
           
           <!-- Características -->
-          <div *ngIf="scenario.caracteristicas && scenario.caracteristicas.length > 0">
+          @if (scenario.caracteristicas && scenario.caracteristicas.length > 0) {
+          <div>
             <h3 class="text-lg font-medium text-gris-900 mb-3">Características</h3>
             <div class="flex flex-wrap gap-2">
               <span 
@@ -101,6 +111,7 @@
               </span>
             </div>
           </div>
+          }
         </div>
         
         <!-- Columna derecha: Información detallada -->
@@ -114,17 +125,21 @@
                 <p class="font-medium">{{ scenario.capacidad }} personas</p>
               </div>
               
-              <div *ngIf="scenario.horarioApertura || scenario.horarioCierre">
+              @if (scenario.horarioApertura || scenario.horarioCierre) {
+              <div>
                 <p class="text-sm text-gris-500">Horario</p>
                 <p class="font-medium">
                   {{ scenario.horarioApertura || '--:--' }} - {{ scenario.horarioCierre || '--:--' }}
                 </p>
               </div>
+              }
               
-              <div *ngIf="scenario.costoPorHora !== undefined">
+              @if (scenario.costoPorHora !== undefined) {
+              <div>
                 <p class="text-sm text-gris-500">Costo por hora</p>
                 <p class="font-medium">{{ scenario.costoPorHora | currency:'COP':'symbol-narrow':'1.0-0' }}</p>
               </div>
+              }
               
               <div>
                 <p class="text-sm text-gris-500">Ubicación</p>
@@ -152,6 +167,22 @@
           </div>
         </div>
       </div>
+
+      <!-- Sección de Feedback -->
+      <div class="mt-8 pt-8 border-t border-gris-200">
+        <h2 class="text-2xl font-bold text-gris-900 mb-6">Reseñas y Comentarios</h2>
+        
+        <app-feedback 
+          [escenarioId]="scenario.id!"
+          [escenarioNombre]="scenario.nombre"
+          [mostrarEstadisticas]="true"
+          [mostrarListaFeedbacks]="true"
+          [soloLectura]="false"
+          (feedbackCreado)="onFeedbackCreated($event)"
+          (feedbackActualizado)="onFeedbackUpdated($event)">
+        </app-feedback>
+      </div>
     </div>
   </div>
+  }
 </div>

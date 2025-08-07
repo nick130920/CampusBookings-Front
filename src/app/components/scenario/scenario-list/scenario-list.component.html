@@ -1,5 +1,5 @@
-<div class="p-6 bg-usco-gris-50 min-h-screen">
-  <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-6 gap-4">
+<div [class]="'bg-usco-gris-50 min-h-screen transition-all duration-300 ' + (sidebarCollapsed ? 'p-4 sm:p-6' : 'p-6')">
+  <div [class]="'flex flex-col md:flex-col lg:flex-col xl:flex-row lg:justify-between lg:items-center mb-6 gap-4 ' + (sidebarCollapsed ? 'max-w-full' : 'max-w-7xl mx-auto')">
     <div>
       <h2 class="text-2xl lg:text-3xl font-bold text-usco-gris-800 font-usco-condensed">Gestión de Escenarios</h2>
       <p class="text-usco-gris-600 mt-1">Administra y consulta los espacios disponibles en el campus</p>
@@ -12,7 +12,7 @@
         <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
         </svg>
-        <span class="hidden sm:inline">Calendario de&nbsp;</span>Disponibilidad
+        <span class="hidden sm:inline">Calendario&nbsp;</span>Disponibilidad
       </button>
       <button 
         [routerLink]="['/dashboard/escenarios/nuevo']"
@@ -21,13 +21,13 @@
         <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
-        <span class="hidden sm:inline">Nuevo </span>Escenario
+        <span class="hidden sm:inline">Nuevo &nbsp;</span>Escenario
       </button>
     </div>
   </div>
 
   <!-- Filtros -->
-  <div class="bg-white p-6 rounded-xl shadow-usco border border-usco-gris-200 mb-6">
+  <div [class]="'bg-white p-6 rounded-xl shadow-usco border border-usco-gris-200 mb-6 ' + (sidebarCollapsed ? 'max-w-full' : 'max-w-7xl mx-auto')">
     <div class="flex items-center mb-4">
       <svg class="w-5 h-5 mr-2 text-usco-vino-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.414A1 1 0 013 6.707V4z"></path>
@@ -72,7 +72,7 @@
   </div>
 
   <!-- Lista de escenarios -->
-  <div class="bg-white rounded-xl shadow-usco border border-usco-gris-200 overflow-hidden">
+  <div [class]="'bg-white rounded-xl shadow-usco border border-usco-gris-200 overflow-hidden transition-all duration-300 ' + (sidebarCollapsed ? 'max-w-full' : 'max-w-7xl mx-auto')">
     <!-- Encabezado de la tabla -->
     <div class="hidden xl:grid grid-cols-12 bg-linear-to-r from-usco-gris-100 to-usco-gris-50 text-usco-gris-700 text-sm font-semibold uppercase tracking-wider px-6 py-4 border-b border-usco-gris-200">
       <div class="col-span-4 flex items-center">

@@ -48,11 +48,14 @@
   }
 }
 
-/* Customización de PrimeNG Dropdown */
-:host ::ng-deep .p-dropdown {
+/* Customización de PrimeNG Dropdown y Select */
+:host ::ng-deep .p-dropdown,
+:host ::ng-deep .p-select {
   border: 2px solid var(--usco-gris-200);
   border-radius: 8px;
   transition: all 0.3s ease;
+  width: 100%;
+  max-width: 100%;
   
   &:not(.p-disabled):hover {
     border-color: var(--usco-vino-400);
@@ -63,14 +66,66 @@
     box-shadow: 0 0 0 3px rgba(143, 20, 27, 0.1);
   }
   
-  .p-dropdown-label {
+  .p-dropdown-label,
+  .p-select-label {
     padding: 0.75rem;
     font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
-  .p-dropdown-trigger {
+  .p-dropdown-trigger,
+  .p-select-dropdown {
     color: var(--usco-gris-500);
     width: 2.5rem;
+    flex-shrink: 0;
+  }
+}
+
+/* Estilos específicos para mobile */
+@media (max-width: 640px) {
+  :host ::ng-deep .p-select,
+  :host ::ng-deep .p-dropdown {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    
+    .p-select-label,
+    .p-dropdown-label {
+      max-width: calc(100% - 3rem);
+      font-size: 0.875rem;
+      padding: 0.625rem;
+    }
+  }
+  
+  /* Panel del dropdown/select responsivo */
+  :host ::ng-deep .p-select-overlay,
+  :host ::ng-deep .p-dropdown-panel {
+    max-width: calc(100vw - 6rem) !important;
+    left: 1rem !important;
+    right: 1rem !important;
+    width: auto !important;
+  }
+  
+  /* Items del select responsivos */
+  :host ::ng-deep .p-select-option,
+  :host ::ng-deep .p-dropdown-item {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.875rem;
+    
+    .p-chip {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+    }
+  }
+  
+  /* Asegurar que los textos largos se corten correctamente */
+  :host ::ng-deep .p-select-option .font-medium,
+  :host ::ng-deep .p-dropdown-item .font-medium {
+    max-width: calc(100vw - 6rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
