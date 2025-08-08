@@ -18,6 +18,9 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DividerModule } from 'primeng/divider';
 import { PanelModule } from 'primeng/panel';
 import { ChipModule } from 'primeng/chip';
+import { SelectModule } from 'primeng/select';
+import { SelectButtonModule } from 'primeng/selectbutton';
+
 
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
@@ -30,6 +33,7 @@ import {
   CreateRolRequest, 
   UpdateRolRequest 
 } from '../../../services/role-management.service';
+import { UserManagementService, UsuarioDetail, UpdateUsuarioRolRequest } from '../../../services/user-management.service';
 import { ToastService } from '../../../services/toast.service';
 
 @Component({
@@ -53,7 +57,9 @@ import { ToastService } from '../../../services/toast.service';
     ProgressSpinnerModule,
     DividerModule,
     PanelModule,
-    ChipModule
+    ChipModule,
+    SelectModule,
+    SelectButtonModule
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './role-management.component.html',
@@ -66,14 +72,20 @@ export class RoleManagementComponent implements OnInit {
   availableResources: string[] = [];
   availableActions: string[] = [];
   
+  // Datos de usuarios
+  users: UsuarioDetail[] = [];
+  
   // Estado de la UI
   loading = false;
   showRoleForm = false;
   editingRole: RolDetailResponse | null = null;
+  showUserRoleDialog = false;
+  selectedUser: UsuarioDetail | null = null;
   
   // Formularios
   roleForm: FormGroup;
   searchTerm = '';
+  userSearchTerm = '';
   
   // Tabla
   displayedColumns: string[] = ['nombre', 'descripcion', 'activo', 'usuariosCount', 'permissionsCount', 'acciones'];
@@ -81,9 +93,22 @@ export class RoleManagementComponent implements OnInit {
   // Filtros de permisos
   selectedResource = '';
   selectedAction = '';
+  
+  // Gestión de roles de usuarios
+  selectedRoleForUser: RolResponse | null = null;
+  
+  // Vista actual
+  currentView: 'roles' | 'users' = 'roles';
+  
+  // Opciones para el selector de vista
+  viewOptions = [
+    { label: 'Gestión de Roles', value: 'roles', icon: 'pi pi-cog' },
+    { label: 'Gestión de Usuarios', value: 'users', icon: 'pi pi-users' }
+  ];
 
   constructor(
     private roleService: RoleManagementService,
+    private userService: UserManagementService,
     private fb: FormBuilder,
     private toast: ToastService,
     private confirmationService: ConfirmationService,
@@ -112,7 +137,8 @@ export class RoleManagementComponent implements OnInit {
         this.loadRoles(),
         this.loadPermissions(),
         this.loadAvailableResources(),
-        this.loadAvailableActions()
+        this.loadAvailableActions(),
+        this.loadUsers()
       ]);
     } catch (error: any) {
       console.error('Error cargando datos iniciales:', error);
@@ -406,5 +432,93 @@ export class RoleManagementComponent implements OnInit {
 
   getStatusText(activo: boolean): string {
     return activo ? 'Activo' : 'Inactivo';
+  }
+
+  // === GESTIÓN DE USUARIOS ===
+
+  private async loadUsers(): Promise<void> {
+    try {
+      this.users = await this.userService.getAllUsers().toPromise() || [];
+    } catch (error) {
+      console.error('Error cargando usuarios:', error);
+      throw error;
+    }
+  }
+
+  async searchUsers(): Promise<void> {
+    if (!this.userSearchTerm.trim()) {
+      await this.loadUsers();
+      return;
+    }
+
+    try {
+      this.loading = true;
+      this.users = await this.userService.searchUsers(this.userSearchTerm).toPromise() || [];
+    } catch (error) {
+      console.error('Error buscando usuarios:', error);
+      this.showError('Error al buscar usuarios');
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  clearUserSearch(): void {
+    this.userSearchTerm = '';
+    this.loadUsers();
+  }
+
+  showChangeRoleDialog(user: UsuarioDetail): void {
+    this.selectedUser = user;
+    this.selectedRoleForUser = user.rol ? this.roles.find(r => r.id === user.rol!.id) || null : null;
+    this.showUserRoleDialog = true;
+  }
+
+  async updateUserRole(): Promise<void> {
+    if (!this.selectedUser || !this.selectedRoleForUser) {
+      return;
+    }
+
+    try {
+      this.loading = true;
+      const request: UpdateUsuarioRolRequest = {
+        rolId: this.selectedRoleForUser.id
+      };
+
+      await this.userService.updateUserRole(this.selectedUser.id, request).toPromise();
+      this.showSuccess(`Rol del usuario ${this.selectedUser.nombre} ${this.selectedUser.apellido} actualizado exitosamente`);
+      
+      await this.loadUsers();
+      this.cancelUserRoleDialog();
+    } catch (error: any) {
+      console.error('Error actualizando rol del usuario:', error);
+      this.showError('Error al actualizar el rol del usuario');
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  cancelUserRoleDialog(): void {
+    this.showUserRoleDialog = false;
+    this.selectedUser = null;
+    this.selectedRoleForUser = null;
+  }
+
+  getUserRoleName(user: UsuarioDetail): string {
+    return user.rol ? user.rol.nombre : 'Sin Rol';
+  }
+
+  getUserRoleColor(user: UsuarioDetail): string {
+    if (!user.rol) return 'secondary';
+    
+    switch (user.rol.nombre) {
+      case 'ADMIN': return 'danger';
+      case 'COORDINATOR': return 'warning';
+      case 'USER': return 'info';
+      default: return 'secondary';
+    }
+  }
+
+  getActiveRolesForDropdown(): RolResponse[] {
+    return this.roles.filter(role => role.activo);
   }
 }

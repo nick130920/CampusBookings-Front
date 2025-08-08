@@ -91,7 +91,7 @@
           icon="pi pi-search"
           (onClick)="onSearch()"
           [loading]="isCheckingAvailability"
-          styleClass="p-button-primary">
+          class="p-button-primary">
         </p-button>
         
         <p-button
@@ -99,40 +99,44 @@
           label="Limpiar Filtros"
           icon="pi pi-refresh"
           (onClick)="clearFilters()"
-          styleClass="p-button-outlined p-button-secondary">
+          class="p-button-outlined p-button-secondary">
         </p-button>
       </div>
 
       <!-- Estado de carga -->
-      <div *ngIf="isCheckingAvailability" class="flex items-center gap-2">
-        <p-progressSpinner strokeWidth="3" [style]="{'width': '20px', 'height': '20px'}"></p-progressSpinner>
-        <span class="text-sm text-usco-gris-600">Verificando disponibilidad...</span>
-      </div>
+      @if (isCheckingAvailability) {
+        <div class="flex items-center gap-2">
+          <p-progressSpinner strokeWidth="3" [style]="{'width': '20px', 'height': '20px'}"></p-progressSpinner>
+          <span class="text-sm text-usco-gris-600">Verificando disponibilidad...</span>
+        </div>
+      }
       </div>
     </form>
   </p-card>
 
   <!-- Información del escenario seleccionado -->
-  <div *ngIf="selectedScenario" class="mb-6">
-    <p-card styleClass="border-l-4 border-l-usco-vino-600">
-      <div class="flex items-center justify-between">
-        <div>
-          <h3 class="text-lg font-semibold text-usco-gris-900 mb-1">
-            {{ selectedScenario.nombre }}
-          </h3>
-          <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 text-sm text-usco-gris-600">
-            <span><i class="pi pi-tag mr-1"></i>{{ selectedScenario.tipo }}</span>
-            <span><i class="pi pi-map-marker mr-1"></i>{{ selectedScenario.ubicacion }}</span>
-            <span><i class="pi pi-users mr-1"></i>Capacidad: {{ selectedScenario.capacidad }}</span>
+  @if (selectedScenario) {
+    <div class="mb-6">
+      <p-card class="border-l-4 border-l-usco-vino-600">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-lg font-semibold text-usco-gris-900 mb-1">
+              {{ selectedScenario.nombre }}
+            </h3>
+            <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 text-sm text-usco-gris-600">
+              <span><i class="pi pi-tag mr-1"></i>{{ selectedScenario.tipo }}</span>
+              <span><i class="pi pi-map-marker mr-1"></i>{{ selectedScenario.ubicacion }}</span>
+              <span><i class="pi pi-users mr-1"></i>Capacidad: {{ selectedScenario.capacidad }}</span>
+            </div>
           </div>
+          <p-chip
+            [label]="selectedScenario.disponible ? 'Disponible' : 'No Disponible'"
+            [class]="selectedScenario.disponible ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+          </p-chip>
         </div>
-        <p-chip
-          [label]="selectedScenario.disponible ? 'Disponible' : 'No Disponible'"
-          [class]="selectedScenario.disponible ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
-        </p-chip>
-      </div>
-    </p-card>
-  </div>
+      </p-card>
+    </div>
+  }
 
   <!-- Calendario -->
   <p-card class="shadow-usco border-0">
@@ -147,13 +151,13 @@
             type="button"
             icon="pi pi-chevron-left"
             (onClick)="previousMonth()"
-            styleClass="p-button-outlined p-button-sm">
+            class="p-button-outlined p-button-sm">
           </p-button>
           <p-button
             type="button"
             icon="pi pi-chevron-right"
             (onClick)="nextMonth()"
-            styleClass="p-button-outlined p-button-sm">
+            class="p-button-outlined p-button-sm">
           </p-button>
         </div>
       </div>
@@ -163,23 +167,24 @@
         label="Hoy"
         icon="pi pi-calendar"
         (onClick)="goToToday()"
-        styleClass="p-button-outlined p-button-secondary">
+        class="p-button-outlined p-button-secondary">
       </p-button>
     </div>
 
     <!-- Días de la semana -->
     <div [class]="'grid grid-cols-7 mb-2 transition-all duration-300 ' + (sidebarCollapsed ? 'gap-2' : 'gap-1')">
-      <div *ngFor="let dayName of ['DOM', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB']; let i = index"
-           [class]="'text-center font-semibold text-usco-gris-700 bg-usco-gris-50 rounded-lg transition-all duration-300 ' + (sidebarCollapsed ? 'p-4' : 'p-3')">
-        {{ dayName }}
-      </div>
+      @for (dayName of ['DOM', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB']; track $index) {
+        <div [class]="'text-center font-semibold text-usco-gris-700 bg-usco-gris-50 rounded-lg transition-all duration-300 ' + (sidebarCollapsed ? 'p-4' : 'p-3')">
+          {{ dayName }}
+        </div>
+      }
     </div>
 
     <!-- Días del calendario -->
     <div [class]="'grid grid-cols-7 transition-all duration-300 ' + (sidebarCollapsed ? 'gap-2' : 'gap-1')">
-      <div *ngFor="let day of calendarDays; let i = index"
-           (click)="onDayClick(day)"
-           [class]="getDayClasses(day) + ' border border-usco-gris-200 rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md ' + (sidebarCollapsed ? 'p-3 sm:p-4 min-h-[100px] sm:min-h-[120px]' : 'p-2 sm:p-3 min-h-[80px] sm:min-h-[100px]')">
+      @for (day of calendarDays; track $index) {
+        <div (click)="onDayClick(day)"
+             [class]="getDayClasses(day) + ' border border-usco-gris-200 rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md ' + (sidebarCollapsed ? 'p-3 sm:p-4 min-h-[100px] sm:min-h-[120px]' : 'p-2 sm:p-3 min-h-[80px] sm:min-h-[100px]')">
         
         <!-- Número del día -->
         <div class="text-sm font-medium mb-1"
@@ -188,31 +193,34 @@
         </div>
 
         <!-- Ocupaciones específicas cuando hay un escenario seleccionado -->
-        <div *ngIf="selectedScenario && day.ocupaciones && day.ocupaciones.length > 0 && day.isCurrentMonth && !day.isPast"
-             class="space-y-1">
-                    <div *ngFor="let ocupacion of day.ocupaciones"
-               class="text-xs font-medium px-1 py-0.5 rounded text-center bg-usco-vino-100 text-usco-vino-800 border-l-2 border-usco-vino-600 cursor-help hover:bg-usco-vino-200 transition-all duration-200"
-               [pTooltip]="getOccupationTooltip(ocupacion)"
-               tooltipPosition="top"
-               [escape]="false"
-               [showDelay]="500"
-               [hideDelay]="100"
-               tooltipStyleClass="custom-tooltip">
-            <i class="pi pi-calendar-clock mr-1"></i>
-            {{ getOccupationTimeRange(ocupacion) }}
+        @if (selectedScenario && day.ocupaciones && day.ocupaciones.length > 0 && day.isCurrentMonth && !day.isPast) {
+          <div class="space-y-1">
+            @for (ocupacion of day.ocupaciones; track $index) {
+              <div class="text-xs font-medium px-1 py-0.5 rounded text-center bg-usco-vino-100 text-usco-vino-800 border-l-2 border-usco-vino-600 cursor-help hover:bg-usco-vino-200 transition-all duration-200"
+                   [pTooltip]="getOccupationTooltip(ocupacion)"
+                   tooltipPosition="top"
+                   [escape]="false"
+                   [showDelay]="500"
+                   [hideDelay]="100"
+                   tooltipStyleClass="custom-tooltip">
+                <i class="pi pi-calendar-clock mr-1"></i>
+                {{ getOccupationTimeRange(ocupacion) }}
+              </div>
+            }
           </div>
-        </div>
+        }
 
         <!-- Estado de disponibilidad general (cuando no hay escenario específico) -->
-        <div *ngIf="!selectedScenario && day.availability !== 'UNKNOWN' && day.isCurrentMonth && !day.isPast"
-             class="text-xs font-medium px-2 py-1 rounded-full text-center"
-             [class]="getAvailabilityClass(day.availability)">
-          {{ getAvailabilityText(day.availability) }}
-        </div>
+        @if (!selectedScenario && day.availability !== 'UNKNOWN' && day.isCurrentMonth && !day.isPast) {
+          <div class="text-xs font-medium px-2 py-1 rounded-full text-center"
+               [class]="getAvailabilityClass(day.availability)">
+            {{ getAvailabilityText(day.availability) }}
+          </div>
+        }
 
         @if (selectedScenario && day.ocupaciones && day.ocupaciones.length === 0 && day.isCurrentMonth && !day.isPast) {
           <!-- Indicador de disponible cuando hay escenario seleccionado pero sin ocupaciones -->
-          <div [class]="'text-xs font-medium px-2 py-1 rounded-full text-center bg-green-100 border-green-300 ' + (sidebarCollapsed ? 'text-green-800' : 'text-transparent')">
+          <div [class]="'text-xs font-medium px-2 py-1 rounded-full text-center bg-green-100 border-green-300 '">
             Disponible
           </div>
         }
@@ -220,47 +228,56 @@
 
 
         <!-- Indicador de hoy -->
-        <div *ngIf="day.isToday"
-             class="w-2 h-2 bg-usco-vino-600 rounded-full mx-auto mt-1">
+        @if (day.isToday) {
+          <div class="w-2 h-2 bg-usco-vino-600 rounded-full mx-auto mt-1"></div>
+        }
         </div>
-      </div>
+      }
     </div>
   </p-card>
 
   <!-- Leyenda -->
   <div class="mt-6">
-    <p-card styleClass="bg-usco-gris-50">
+    <p-card class="bg-usco-gris-50">
       <h4 class="text-sm font-semibold text-usco-gris-900 mb-3">Leyenda</h4>
       <div class="flex flex-wrap gap-4">
         <div class="flex items-center gap-2">
           <div class="w-4 h-4 bg-green-100 border border-green-300 rounded"></div>
           <span class="text-sm text-usco-gris-700">Disponible</span>
         </div>
-        <div *ngIf="selectedScenario" class="flex items-center gap-2">
-          <div class="w-4 h-4 bg-usco-vino-100 border-l-2 border-usco-vino-600 rounded"></div>
-          <span class="text-sm text-usco-gris-700">Horarios ocupados</span>
-        </div>
-        <div *ngIf="!selectedScenario" class="flex items-center gap-2">
-          <div class="w-4 h-4 bg-red-100 border border-red-300 rounded"></div>
-          <span class="text-sm text-usco-gris-700">Reservado</span>
-        </div>
+        @if (selectedScenario) {
+          <div class="flex items-center gap-2">
+            <div class="w-4 h-4 bg-usco-vino-100 border-l-2 border-usco-vino-600 rounded"></div>
+            <span class="text-sm text-usco-gris-700">Horarios ocupados</span>
+          </div>
+        }
+        @if (!selectedScenario) {
+          <div class="flex items-center gap-2">
+            <div class="w-4 h-4 bg-red-100 border border-red-300 rounded"></div>
+            <span class="text-sm text-usco-gris-700">Reservado</span>
+          </div>
+        }
         <div class="flex items-center gap-2">
           <div class="w-4 h-4 bg-gray-100 border border-gray-300 rounded"></div>
           <span class="text-sm text-usco-gris-700">No Disponible</span>
         </div>
-        <div *ngIf="!selectedScenario" class="flex items-center gap-2">
-          <div class="w-4 h-4 bg-white border border-gray-200 rounded"></div>
-          <span class="text-sm text-usco-gris-700">Sin información</span>
-        </div>
+        @if (!selectedScenario) {
+          <div class="flex items-center gap-2">
+            <div class="w-4 h-4 bg-white border border-gray-200 rounded"></div>
+            <span class="text-sm text-usco-gris-700">Sin información</span>
+          </div>
+        }
       </div>
       
       <!-- Instrucción adicional cuando hay escenario seleccionado -->
-      <div *ngIf="selectedScenario" class="mt-3 p-3 bg-usco-vino-50 rounded-lg border border-usco-vino-200">
-        <p class="text-sm text-usco-vino-800">
-          <i class="pi pi-info-circle mr-2"></i>
-          Pase el cursor sobre los horarios ocupados para ver detalles de la reserva.
-        </p>
-      </div>
+      @if (selectedScenario) {
+        <div class="mt-3 p-3 bg-usco-vino-50 rounded-lg border border-usco-vino-200">
+          <p class="text-sm text-usco-vino-800">
+            <i class="pi pi-info-circle mr-2"></i>
+            Pase el cursor sobre los horarios ocupados para ver detalles de la reserva.
+          </p>
+        </div>
+      }
     </p-card>
   </div>
 </div> 

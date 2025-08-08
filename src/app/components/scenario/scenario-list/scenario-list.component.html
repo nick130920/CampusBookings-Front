@@ -43,7 +43,9 @@
           class="w-full p-3 border-2 border-usco-gris-200 rounded-lg focus:ring-2 focus:ring-usco-vino-500 focus:border-usco-vino-500 transition-colors bg-white text-usco-gris-800"
         >
           <option value="">Todos los tipos</option>
-          <option *ngFor="let tipo of tipos" [value]="tipo">{{ tipo }}</option>
+          @for (tipo of tipos; track tipo) {
+            <option [value]="tipo">{{ tipo }}</option>
+          }
         </select>
       </div>
       <div>
@@ -54,7 +56,9 @@
           class="w-full p-3 border-2 border-usco-gris-200 rounded-lg focus:ring-2 focus:ring-usco-vino-500 focus:border-usco-vino-500 transition-colors bg-white text-usco-gris-800"
         >
           <option value="">Todas las ubicaciones</option>
-          <option *ngFor="let ubicacion of ubicaciones" [value]="ubicacion">{{ ubicacion }}</option>
+          @for (ubicacion of ubicaciones; track ubicacion) {
+            <option [value]="ubicacion">{{ ubicacion }}</option>
+          }
         </select>
       </div>
       <div class="flex items-end">
@@ -89,31 +93,36 @@
     </div>
 
     <!-- Cargando -->
-    <div *ngIf="isLoading" class="p-12 text-center">
-      <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-usco-vino-500 border-t-transparent"></div>
-      <p class="mt-4 text-usco-gris-600 font-medium">Cargando escenarios...</p>
-    </div>
+    @if (isLoading) {
+      <div class="p-12 text-center">
+        <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-usco-vino-500 border-t-transparent"></div>
+        <p class="mt-4 text-usco-gris-600 font-medium">Cargando escenarios...</p>
+      </div>
+    }
 
     <!-- Sin resultados -->
-    <div *ngIf="!isLoading && filteredScenarios.length === 0" class="p-12 text-center">
-      <div class="mx-auto w-20 h-20 bg-usco-gris-100 rounded-full flex items-center justify-center mb-4">
-        <svg class="h-10 w-10 text-usco-gris-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
+    @if (!isLoading && filteredScenarios.length === 0) {
+      <div class="p-12 text-center">
+        <div class="mx-auto w-20 h-20 bg-usco-gris-100 rounded-full flex items-center justify-center mb-4">
+          <svg class="h-10 w-10 text-usco-gris-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-usco-gris-800 mb-2">No se encontraron escenarios</h3>
+        <p class="text-usco-gris-600 mb-4">Intenta ajustar los filtros de búsqueda.</p>
+        <button 
+          (click)="clearFilters()" 
+          class="text-usco-vino-500 hover:text-usco-vino-700 font-medium transition-colors"
+        >
+          Limpiar filtros y mostrar todos
+        </button>
       </div>
-      <h3 class="text-lg font-semibold text-usco-gris-800 mb-2">No se encontraron escenarios</h3>
-      <p class="text-usco-gris-600 mb-4">Intenta ajustar los filtros de búsqueda.</p>
-      <button 
-        (click)="clearFilters()" 
-        class="text-usco-vino-500 hover:text-usco-vino-700 font-medium transition-colors"
-      >
-        Limpiar filtros y mostrar todos
-      </button>
-    </div>
+    }
 
     <!-- Vista de tabla para desktop -->
     <div class="hidden xl:block divide-y divide-usco-gris-200">
-      <div *ngFor="let scenario of filteredScenarios" class="grid grid-cols-12 items-center p-6 hover:bg-usco-gris-50 transition-colors duration-200">
+      @for (scenario of filteredScenarios; track scenario.id) {
+        <div class="grid grid-cols-12 items-center p-6 hover:bg-usco-gris-50 transition-colors duration-200">
         <div class="col-span-4">
           <div class="flex items-center">
             <div class="shrink-0 h-12 w-12 rounded-xl bg-linear-to-br from-usco-ocre-200 to-usco-ocre-300 flex items-center justify-center text-usco-vino-700 font-bold text-lg shadow-sm">
@@ -169,33 +178,37 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
             </svg>
           </a>
-          <a 
-            *ngIf="isAdmin"
-            [routerLink]="['/dashboard/escenarios/editar', scenario.id]" 
-            class="p-2 text-usco-ocre-600 hover:text-usco-ocre-800 hover:bg-usco-ocre-50 rounded-lg transition-all duration-200"
-            title="Editar"
-          >
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-            </svg>
-          </a>
-          <button 
-            *ngIf="isAdmin"
-            (click)="onDelete(scenario.id!)" 
-            class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200"
-            title="Eliminar"
-          >
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-            </svg>
-          </button>
+          @if (isAdmin) {
+            <a 
+              [routerLink]="['/dashboard/escenarios/editar', scenario.id]" 
+              class="p-2 text-usco-ocre-600 hover:text-usco-ocre-800 hover:bg-usco-ocre-50 rounded-lg transition-all duration-200"
+              title="Editar"
+            >
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+              </svg>
+            </a>
+          }
+          @if (isAdmin) {
+            <button 
+              (click)="onDelete(scenario.id!)" 
+              class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200"
+              title="Eliminar"
+            >
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+              </svg>
+            </button>
+          }
         </div>
-      </div>
+        </div>
+      }
     </div>
 
     <!-- Vista de cards para móvil y tablet -->
     <div class="xl:hidden space-y-4">
-      <div *ngFor="let scenario of filteredScenarios" class="bg-white rounded-lg border border-usco-gris-200 p-4 shadow-sm">
+      @for (scenario of filteredScenarios; track scenario.id) {
+        <div class="bg-white rounded-lg border border-usco-gris-200 p-4 shadow-sm">
         <!-- Header con nombre y estado -->
         <div class="flex items-start justify-between mb-3">
           <div class="flex items-center flex-1">
@@ -259,28 +272,31 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
             </svg>
           </a>
-          <a 
-            *ngIf="isAdmin"
-            [routerLink]="['/dashboard/escenarios/editar', scenario.id]" 
-            class="p-2 text-usco-ocre-600 hover:text-usco-ocre-800 hover:bg-usco-ocre-50 rounded-lg transition-all duration-200"
-            title="Editar"
-          >
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-            </svg>
-          </a>
-          <button 
-            *ngIf="isAdmin"
-            (click)="onDelete(scenario.id!)" 
-            class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200"
-            title="Eliminar"
-          >
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-            </svg>
-          </button>
+          @if (isAdmin) {
+            <a 
+              [routerLink]="['/dashboard/escenarios/editar', scenario.id]" 
+              class="p-2 text-usco-ocre-600 hover:text-usco-ocre-800 hover:bg-usco-ocre-50 rounded-lg transition-all duration-200"
+              title="Editar"
+            >
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+              </svg>
+            </a>
+          }
+          @if (isAdmin) {
+            <button 
+              (click)="onDelete(scenario.id!)" 
+              class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200"
+              title="Eliminar"
+            >
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+              </svg>
+            </button>
+          }
         </div>
-      </div>
+        </div>
+      }
     </div>
   </div>
 </div>
