@@ -22,7 +22,7 @@ export interface UserPermissions {
   providedIn: 'root'
 })
 export class AuthorizationService {
-  private readonly apiUrl = `${environment.apiUrl}/api/user`;
+  private readonly apiUrl = `${environment.apiUrl}/user`;
   private userPermissions$ = new BehaviorSubject<UserPermissions | null>(null);
   private permissionsLoaded = false;
 
