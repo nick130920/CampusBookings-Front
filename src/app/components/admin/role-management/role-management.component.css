@@ -51,3 +51,24 @@
 .view-selector .p-selectbutton .p-button.p-highlight .flex {
   transform: scale(1.02);
 }
+
+/* Estilos para p-select dentro de dialog */
+::ng-deep .p-select-overlay {
+  z-index: 1200 !important; /* Mayor que el z-index del dialog (1100) */
+}
+
+/* Asegurar que el overlay del select aparezca correctamente */
+::ng-deep .p-dialog .p-select-overlay {
+  z-index: 1200 !important;
+}
+
+/* Estilo para mejorar el scroll del select */
+::ng-deep .p-select-items-wrapper {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Mejorar la interacción con el scroll */
+::ng-deep .p-select-items {
+  scroll-behavior: smooth;
+}

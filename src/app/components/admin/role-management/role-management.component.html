@@ -491,6 +491,8 @@
     [modal]="true" 
     [style]="{width: '500px'}"
     header="Cambiar Rol de Usuario"
+    [dismissableMask]="false"
+    [blockScroll]="false"
     class="p-fluid">
     
     @if (selectedUser) {
@@ -514,8 +516,10 @@
             [(ngModel)]="selectedRoleForUser"
             optionLabel="nombre"
             placeholder="Seleccionar rol"
+            [appendTo]="'body'"
+            [scrollHeight]="'200px'"
             class="w-full">
-            <ng-template pTemplate="selectedItem" let-selectedRole>
+            <ng-template #selectedItem let-selectedRole>
               @if (selectedRole) {
                 <div class="flex items-center gap-2">
                   <span>{{ selectedRole.nombre }}</span>
@@ -523,8 +527,8 @@
                 </div>
               }
             </ng-template>
-            <ng-template pTemplate="item" let-role>
-              <div class="flex items-center gap-2">
+            <ng-template let-role #item>
+              <div class="flex items-center gap-2 max-w-xs">
                 <span class="font-medium">{{ role.nombre }}</span>
                 <small style="color: var(--p-surface-800)">{{ role.descripcion }}</small>
               </div>
