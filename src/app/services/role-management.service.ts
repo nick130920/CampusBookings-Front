@@ -68,7 +68,6 @@ export interface UpdatePermissionRequest {
 })
 export class RoleManagementService {
   private readonly apiUrl = `${environment.apiUrl}/admin`;
-  private readonly devApiUrl = `${environment.apiUrl}/dev`; // Para desarrollo
 
   constructor(private http: HttpClient) {}
 
@@ -99,8 +98,7 @@ export class RoleManagementService {
    * Obtener todos los roles
    */
   getAllRoles(): Observable<RolResponse[]> {
-    // Usar endpoint de desarrollo temporalmente
-    return this.http.get<RolResponse[]>(`${this.devApiUrl}/roles`);
+    return this.http.get<RolResponse[]>(`${this.apiUrl}/roles`);
   }
 
   /**
@@ -173,8 +171,7 @@ export class RoleManagementService {
    * Obtener todos los permisos
    */
   getAllPermissions(): Observable<Permission[]> {
-    // Usar endpoint de desarrollo temporalmente
-    return this.http.get<Permission[]>(`${this.devApiUrl}/permissions`);
+    return this.http.get<Permission[]>(`${this.apiUrl}/permissions`);
   }
 
   /**
@@ -212,15 +209,13 @@ export class RoleManagementService {
    * Obtener recursos disponibles
    */
   getAvailableResources(): Observable<string[]> {
-    // Usar endpoint de desarrollo temporalmente
-    return this.http.get<string[]>(`${this.devApiUrl}/permissions/resources`);
+    return this.http.get<string[]>(`${this.apiUrl}/permissions/resources`);
   }
 
   /**
    * Obtener acciones disponibles
    */
   getAvailableActions(): Observable<string[]> {
-    // Usar endpoint de desarrollo temporalmente
-    return this.http.get<string[]>(`${this.devApiUrl}/permissions/actions`);
+    return this.http.get<string[]>(`${this.apiUrl}/permissions/actions`);
   }
 }
