@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { User } from '../../services/auth.service';
 import { NavigationComponent } from '../../shared/navigation/navigation.component';
 import { SidebarService } from '../../services/sidebar.service';
+import { HasPermissionDirective } from '../../directives/has-permission.directive';
 // PrimeNG imports
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
@@ -20,7 +21,8 @@ import { AvatarModule } from 'primeng/avatar';
     NavigationComponent,
     ButtonModule,
     MenuModule,
-    AvatarModule
+    AvatarModule,
+    HasPermissionDirective
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']

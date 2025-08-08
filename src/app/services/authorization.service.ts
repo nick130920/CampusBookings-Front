@@ -22,7 +22,7 @@ export interface UserPermissions {
   providedIn: 'root'
 })
 export class AuthorizationService {
-  private readonly apiUrl = `${environment.apiUrl}/api/user-management`;
+  private readonly apiUrl = `${environment.apiUrl}/api/user`;
   private userPermissions$ = new BehaviorSubject<UserPermissions | null>(null);
   private permissionsLoaded = false;
 
@@ -44,11 +44,23 @@ export class AuthorizationService {
    * Carga los permisos del usuario desde el backend
    */
   private loadUserPermissions(userId: number): void {
-    this.http.get<UserPermissions>(`${this.apiUrl}/users/${userId}/permissions`)
+    // Usar el nuevo endpoint que no requiere el userId en la URL
+    this.http.get<UserPermissions>(`${this.apiUrl}/my-permissions`)
       .pipe(
         catchError(error => {
           console.error('Error cargando permisos del usuario:', error);
-          return of(null);
+          // Si falla, crear permisos básicos de fallback
+          const fallbackPermissions: UserPermissions = {
+            userId: userId,
+            roleName: 'USER',
+            permissions: [
+              { id: 1, name: 'READ_SCENARIOS', description: 'Ver escenarios', resource: 'SCENARIOS', action: 'READ' },
+              { id: 2, name: 'READ_RESERVATIONS', description: 'Ver reservas', resource: 'RESERVATIONS', action: 'READ' },
+              { id: 3, name: 'CREATE_RESERVATIONS', description: 'Crear reservas', resource: 'RESERVATIONS', action: 'CREATE' }
+            ]
+          };
+          console.log('🔄 Usando permisos de fallback:', fallbackPermissions);
+          return of(fallbackPermissions);
         })
       )
       .subscribe(permissions => {
