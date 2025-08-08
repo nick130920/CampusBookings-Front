@@ -73,28 +73,38 @@
          class="text-usco-gris-700 hover:bg-usco-gris-100 block px-3 py-2 rounded-md text-base font-medium">
         Dashboard
       </a>
-      <a routerLink="/dashboard/reservas" 
+      <!-- Mis Reservas - Requiere permiso de lectura de reservas -->
+      <a *hasPermission="'RESERVATIONS:READ'" 
+         routerLink="/dashboard/reservas" 
          (click)="closeMobileMenu()"
          routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
          [routerLinkActiveOptions]="{ exact: true }"
          class="text-usco-gris-700 hover:bg-usco-gris-100 block px-3 py-2 rounded-md text-base font-medium">
         Mis Reservas
       </a>
-      <a routerLink="/dashboard/escenarios/disponibilidad" 
+      
+      <!-- Calendario - Requiere permiso de lectura de escenarios -->
+      <a *hasPermission="'SCENARIOS:READ'" 
+         routerLink="/dashboard/escenarios/disponibilidad" 
          (click)="closeMobileMenu()"
          routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
          [routerLinkActiveOptions]="{ exact: true }"
          class="text-usco-gris-700 hover:bg-usco-gris-100 block px-3 py-2 rounded-md text-base font-medium">
         Calendario de Disponibilidad
       </a>
-      <a routerLink="/dashboard/escenarios" 
+      
+      <!-- Escenarios - Requiere permiso de lectura de escenarios -->
+      <a *hasPermission="'SCENARIOS:READ'" 
+         routerLink="/dashboard/escenarios" 
          (click)="closeMobileMenu()"
          routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
          [routerLinkActiveOptions]="{ exact: true }"
          class="text-usco-gris-700 hover:bg-usco-gris-100 block px-3 py-2 rounded-md text-base font-medium">
         Escenarios
       </a>
-      <a *ngIf="isAdmin" 
+      
+      <!-- Administración - Requiere cualquier permiso administrativo -->
+      <a *hasPermission="{any: ['USERS:READ', 'SCENARIOS:MANAGE', 'SYSTEM_CONFIG:VIEW']}" 
          routerLink="/dashboard/admin" 
          (click)="closeMobileMenu()"
          routerLinkActive="bg-usco-ocre-100 text-usco-ocre-700"

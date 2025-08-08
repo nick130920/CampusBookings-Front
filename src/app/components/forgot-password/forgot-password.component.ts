@@ -8,6 +8,7 @@ import { take } from 'rxjs/operators';
 // PrimeNG Imports
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputOtpModule } from 'primeng/inputotp';
 import { PasswordModule } from 'primeng/password';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { MessageModule } from 'primeng/message';
@@ -25,6 +26,7 @@ import { ToastService } from '../../services/toast.service';
     RouterModule,
     ButtonModule,
     InputTextModule,
+    InputOtpModule,
     PasswordModule,
     FloatLabelModule,
     MessageModule

@@ -21,6 +21,9 @@ import { ChipModule } from 'primeng/chip';
 import { SelectModule } from 'primeng/select';
 import { SelectButtonModule } from 'primeng/selectbutton';
 
+// Directives
+import { HasPermissionDirective } from '../../../directives/has-permission.directive';
+
 
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
@@ -59,7 +62,10 @@ import { ToastService } from '../../../services/toast.service';
     PanelModule,
     ChipModule,
     SelectModule,
-    SelectButtonModule
+    SelectButtonModule,
+    
+    // Custom Directives
+    HasPermissionDirective
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './role-management.component.html',
