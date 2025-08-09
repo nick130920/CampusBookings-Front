@@ -84,8 +84,8 @@
           }
         </a>
         <!-- Mis Reservas - Requiere permiso de lectura de reservas -->
-        <a 
-          *hasPermission="'RESERVATIONS:READ'"
+        <a
+          *hasPermission="'RESERVAS:READ'" 
           routerLink="/dashboard/reservas" 
           routerLinkActive="bg-usco-ocre-200 text-usco-vino-700 border-r-2 border-usco-vino-500" 
           [routerLinkActiveOptions]="{ exact: true }"
@@ -102,7 +102,7 @@
         
         <!-- Calendario de Disponibilidad - Requiere permiso de lectura de escenarios -->
         <a 
-          *hasPermission="'SCENARIOS:READ'"
+          *hasPermission="'ESCENARIOS:READ'"
           routerLink="/dashboard/escenarios/disponibilidad" 
           routerLinkActive="bg-usco-ocre-200 text-usco-vino-700 border-r-2 border-usco-vino-500" 
           [routerLinkActiveOptions]="{ exact: true }"
@@ -119,7 +119,7 @@
         
         <!-- Escenarios - Requiere cualquier permiso relacionado con escenarios -->
         <a 
-          *hasPermission="{any: ['SCENARIOS:READ', 'SCENARIOS:CREATE', 'SCENARIOS:UPDATE', 'SCENARIOS:MANAGE']}"
+          *hasPermission="{any: ['ESCENARIOS:READ', 'ESCENARIOS:CREATE', 'ESCENARIOS:UPDATE', 'ESCENARIOS:MANAGE']}"
           routerLink="/dashboard/escenarios" 
           routerLinkActive="bg-usco-ocre-200 text-usco-vino-700 border-r-2 border-usco-vino-500" 
           [routerLinkActiveOptions]="{ exact: true }"
@@ -136,7 +136,7 @@
         
         <!-- Administración - Requiere cualquier permiso administrativo -->
         <a 
-          *hasPermission="{any: ['USERS:READ', 'SCENARIOS:MANAGE', 'SYSTEM_CONFIG:VIEW', 'REPORTS:VIEW']}"
+          *hasPermission="{any: ['USUARIOS:READ', 'ESCENARIOS:MANAGE', 'CONFIGURACION:READ', 'REPORTES:READ']}"
           routerLink="/dashboard/admin" 
           routerLinkActive="bg-usco-ocre-200 text-usco-vino-700 border-r-2 border-usco-vino-500" 
           [class]="'flex items-center text-sm font-medium text-usco-gris-700 rounded-l-md hover:bg-usco-ocre-100 hover:text-usco-vino-600 group transition-all duration-200 ' + (sidebarCollapsed ? 'px-3 py-3 justify-center' : 'px-4 py-3')"

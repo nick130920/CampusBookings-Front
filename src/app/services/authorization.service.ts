@@ -54,9 +54,9 @@ export class AuthorizationService {
             userId: userId,
             roleName: 'USER',
             permissions: [
-              { id: 1, name: 'READ_SCENARIOS', description: 'Ver escenarios', resource: 'SCENARIOS', action: 'READ' },
-              { id: 2, name: 'READ_RESERVATIONS', description: 'Ver reservas', resource: 'RESERVATIONS', action: 'READ' },
-              { id: 3, name: 'CREATE_RESERVATIONS', description: 'Crear reservas', resource: 'RESERVATIONS', action: 'CREATE' }
+              { id: 1, name: 'ESCENARIOS_READ', description: 'Ver escenarios', resource: 'ESCENARIOS', action: 'READ' },
+              { id: 2, name: 'RESERVAS_READ', description: 'Ver reservas', resource: 'RESERVAS', action: 'READ' },
+              { id: 3, name: 'RESERVAS_CREATE', description: 'Crear reservas', resource: 'RESERVAS', action: 'CREATE' }
             ]
           };
           console.log('🔄 Usando permisos de fallback:', fallbackPermissions);

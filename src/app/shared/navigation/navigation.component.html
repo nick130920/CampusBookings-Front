@@ -74,7 +74,7 @@
         Dashboard
       </a>
       <!-- Mis Reservas - Requiere permiso de lectura de reservas -->
-      <a *hasPermission="'RESERVATIONS:READ'" 
+      <a *hasPermission="'RESERVAS:READ'" 
          routerLink="/dashboard/reservas" 
          (click)="closeMobileMenu()"
          routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
@@ -84,7 +84,7 @@
       </a>
       
       <!-- Calendario - Requiere permiso de lectura de escenarios -->
-      <a *hasPermission="'SCENARIOS:READ'" 
+      <a *hasPermission="'ESCENARIOS:READ'" 
          routerLink="/dashboard/escenarios/disponibilidad" 
          (click)="closeMobileMenu()"
          routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
@@ -94,7 +94,7 @@
       </a>
       
       <!-- Escenarios - Requiere permiso de lectura de escenarios -->
-      <a *hasPermission="'SCENARIOS:READ'" 
+      <a *hasPermission="'ESCENARIOS:READ'" 
          routerLink="/dashboard/escenarios" 
          (click)="closeMobileMenu()"
          routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
@@ -104,7 +104,7 @@
       </a>
       
       <!-- Administración - Requiere cualquier permiso administrativo -->
-      <a *hasPermission="{any: ['USERS:READ', 'SCENARIOS:MANAGE', 'SYSTEM_CONFIG:VIEW']}" 
+      <a *hasPermission="{any: ['USUARIOS:READ', 'ESCENARIOS:MANAGE', 'CONFIGURACION:READ']}" 
          routerLink="/dashboard/admin" 
          (click)="closeMobileMenu()"
          routerLinkActive="bg-usco-ocre-100 text-usco-ocre-700"

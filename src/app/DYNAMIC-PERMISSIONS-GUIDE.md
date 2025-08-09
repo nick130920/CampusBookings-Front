@@ -140,11 +140,11 @@ ngOnInit() {
 ## 📋 Recursos y Acciones
 
 ### **Recursos:**
-- `USERS` - Gestión de usuarios y roles
-- `SCENARIOS` - Gestión de escenarios
-- `RESERVATIONS` - Gestión de reservas
-- `SYSTEM_CONFIG` - Configuración del sistema
-- `REPORTS` - Reportes y estadísticas
+- `USUARIOS` - Gestión de usuarios y roles
+- `ESCENARIOS` - Gestión de escenarios
+- `RESERVAS` - Gestión de reservas
+- `CONFIGURACION` - Configuración del sistema
+- `REPORTES` - Reportes y estadísticas
 
 ### **Acciones:**
 - `READ` / `VIEW` - Ver/Leer información
@@ -156,23 +156,23 @@ ngOnInit() {
 
 ### **Ejemplos de Permisos:**
 ```
-USERS:READ          - Ver lista de usuarios
-USERS:CREATE        - Crear nuevos usuarios
-USERS:MANAGE        - Gestión completa de usuarios
+USUARIOS:READ       - Ver lista de usuarios
+USUARIOS:CREATE     - Crear nuevos usuarios
+USUARIOS:MANAGE     - Gestión completa de usuarios
 
-SCENARIOS:READ      - Ver escenarios
-SCENARIOS:CREATE    - Crear nuevos escenarios
-SCENARIOS:UPDATE    - Editar escenarios
-SCENARIOS:MANAGE    - Gestión completa de escenarios
+ESCENARIOS:READ     - Ver escenarios
+ESCENARIOS:CREATE   - Crear nuevos escenarios
+ESCENARIOS:UPDATE   - Editar escenarios
+ESCENARIOS:MANAGE   - Gestión completa de escenarios
 
-RESERVATIONS:READ   - Ver reservas
-RESERVATIONS:CREATE - Crear reservas
-RESERVATIONS:CANCEL - Cancelar reservas
+RESERVAS:READ       - Ver reservas
+RESERVAS:CREATE     - Crear reservas
+RESERVAS:DELETE     - Cancelar reservas
 
-SYSTEM_CONFIG:VIEW  - Ver configuración del sistema
-SYSTEM_CONFIG:MANAGE - Gestionar configuración
+CONFIGURACION:READ  - Ver configuración del sistema
+CONFIGURACION:MANAGE - Gestionar configuración
 
-REPORTS:VIEW        - Ver reportes
+REPORTES:READ       - Ver reportes
 ```
 
 ---

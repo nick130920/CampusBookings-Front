@@ -49,6 +49,7 @@ export class HasPermissionDirective implements OnInit, OnDestroy {
   set hasPermission(value: string | PermissionConfig) {
     this.permissionConfig = this.parsePermissionInput(value);
     this.updateView();
+    console.log('hasPermission', value);
   }
 
   @Input() hasPermissionElse?: TemplateRef<any>;
