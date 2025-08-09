@@ -98,6 +98,10 @@ export class HasPermissionDirective implements OnInit, OnDestroy {
 
     // Verificar permiso específico
     if (config.resource && config.action) {
+      // 🚀 Si hay tipo especificado, verificar permiso por tipo
+      if (config.type) {
+        return this.authService.hasPermissionForType(config.resource, config.action, config.type);
+      }
       return this.authService.hasPermission(config.resource, config.action);
     }
 
@@ -133,6 +137,7 @@ export class HasPermissionDirective implements OnInit, OnDestroy {
 interface PermissionConfig {
   resource?: string;
   action?: string;
+  type?: string; // 🚀 Tipo de escenario para permisos específicos
   role?: string;
   roles?: string[];
   any?: string[]; // Cualquiera de estos permisos

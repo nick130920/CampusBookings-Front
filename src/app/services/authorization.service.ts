@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, map, catchError, of } from 'rxjs';
 import { AuthService, User } from './auth.service';
 import { environment } from '../../environments/environment';
+import { ScenarioTypePermissionService, ScenarioTypePermission } from './scenario-type-permission.service';
 
 export interface Permission {
   id: number;
@@ -27,6 +28,7 @@ export class AuthorizationService {
   // 🚀 Angular Signals - Estado reactivo moderno
   private userPermissionsSignal = signal<UserPermissions | null>(null);
   private permissionsLoadedSignal = signal<boolean>(false);
+  private typePermissionsSignal = signal<ScenarioTypePermission[]>([]);
   
   // Signals computados para facilitar el acceso
   public readonly userPermissions = this.userPermissionsSignal.asReadonly();
@@ -34,6 +36,7 @@ export class AuthorizationService {
   public readonly currentRole = computed(() => this.userPermissionsSignal()?.roleName || 'USER');
   public readonly permissions = computed(() => this.userPermissionsSignal()?.permissions || []);
   public readonly isAdmin = computed(() => this.currentRole() === 'ADMIN');
+  public readonly typePermissions = this.typePermissionsSignal.asReadonly();
   
   // Mantener compatibilidad con código existente (Observable)
   private userPermissions$ = new BehaviorSubject<UserPermissions | null>(null);
@@ -41,7 +44,8 @@ export class AuthorizationService {
 
   constructor(
     private http: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    private scenarioTypePermissionService: ScenarioTypePermissionService
   ) {
     // 🚀 Effect para sincronizar signals con observables (compatibilidad)
     effect(() => {
@@ -58,6 +62,7 @@ export class AuthorizationService {
     this.authService.getCurrentUser$().subscribe(user => {
       if (user) {
         this.loadUserPermissions(user.id);
+        this.loadTypePermissions(user.email);
       } else {
         this.clearPermissions();
       }
@@ -139,12 +144,30 @@ export class AuthorizationService {
   }
 
   /**
+   * Carga los permisos por tipo del usuario
+   */
+  private loadTypePermissions(userEmail: string): void {
+    this.scenarioTypePermissionService.getPermissionsForUser(userEmail)
+      .subscribe({
+        next: (typePermissions) => {
+          this.typePermissionsSignal.set(typePermissions);
+          console.log('📋 Permisos por tipo cargados:', typePermissions);
+        },
+        error: (error) => {
+          console.error('Error cargando permisos por tipo:', error);
+          this.typePermissionsSignal.set([]);
+        }
+      });
+  }
+
+  /**
    * Limpia los permisos del usuario
    */
   private clearPermissions(): void {
     // 🚀 Limpiar signals
     this.userPermissionsSignal.set(null);
     this.permissionsLoadedSignal.set(false);
+    this.typePermissionsSignal.set([]);
   }
 
   /**
@@ -166,6 +189,23 @@ export class AuthorizationService {
    */
   hasAnyPermissionSignal(permissionStrings: string[]): boolean {
     return permissionStrings.some(permission => this.hasPermissionSignal(permission));
+  }
+
+  /**
+   * 🚀 Verifica si el usuario tiene permiso para un tipo específico de escenario
+   */
+  hasPermissionForTypeSignal(resource: string, action: string, type: string): boolean {
+    // Verificar primero permisos generales
+    if (this.hasPermissionSignal(`${resource}:${action}`)) {
+      return true;
+    }
+
+    // Verificar permisos por tipo
+    const typePermissions = this.typePermissions();
+    return typePermissions.some(perm => 
+      perm.tipoEscenario.nombre.toLowerCase() === type.toLowerCase() && 
+      (perm.action === action || perm.action === 'MANAGE')
+    );
   }
 
   /**
@@ -320,6 +360,27 @@ export class AuthorizationService {
     if (currentUser) {
       this.loadUserPermissions(currentUser.id);
     }
+  }
+
+  /**
+   * 🚀 Verifica permiso por tipo (versión Observable para compatibilidad)
+   */
+  hasPermissionForType(resource: string, action: string, type: string): Observable<boolean> {
+    return this.userPermissions$.pipe(
+      map(permissions => {
+        if (!permissions) return false;
+        
+        // Verificar permisos generales primero
+        const hasGeneralPermission = permissions.permissions.some(permission => 
+          permission.resource === resource && permission.action === action
+        );
+        
+        if (hasGeneralPermission) return true;
+        
+        // Verificar permisos por tipo usando signals
+        return this.hasPermissionForTypeSignal(resource, action, type);
+      })
+    );
   }
 
   /**
