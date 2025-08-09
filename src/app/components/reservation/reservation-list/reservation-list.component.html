@@ -21,7 +21,7 @@
           <p-button
             icon="pi pi-refresh"
             [loading]="isRefreshing"
-            styleClass="p-button-outlined p-button-secondary"
+            class="p-button-outlined p-button-secondary"
             pTooltip="Actualizar lista"
             tooltipPosition="bottom"
             (onClick)="refreshReservations()">
@@ -71,7 +71,7 @@
             optionLabel="label"
             optionValue="value"
             placeholder="Todos los estados"
-            styleClass="w-full"
+            class="w-full"
             (onChange)="onFilterChange()">
           </p-select>
         </div>
@@ -87,7 +87,7 @@
             [(ngModel)]="filters.fechaDesde"
             dateFormat="dd/mm/yy"
             placeholder="Fecha desde"
-            styleClass="w-full"
+            class="w-full"
             (onSelect)="onFilterChange()">
           </p-datePicker>
         </div>
@@ -103,7 +103,7 @@
             [(ngModel)]="filters.fechaHasta"
             dateFormat="dd/mm/yy"
             placeholder="Fecha hasta"
-            styleClass="w-full"
+            class="w-full"
             (onSelect)="onFilterChange()">
           </p-datePicker>
         </div>
@@ -131,7 +131,7 @@
         <p-button
           label="Limpiar Filtros"
           icon="pi pi-times"
-          styleClass="p-button-text p-button-secondary"
+          class="p-button-text p-button-secondary"
           (onClick)="clearFilters()">
         </p-button>
       </div>
@@ -177,7 +177,7 @@
         <p-button
           label="Limpiar Filtros"
           icon="pi pi-times"
-          styleClass="p-button-outlined"
+          class="p-button-outlined"
           (onClick)="clearFilters()">
         </p-button>
       </div>
@@ -195,7 +195,7 @@
             [sortMode]="'single'"
             [defaultSortOrder]="1"
             sortField="fechaInicio"
-            styleClass="p-datatable-sm"
+            class="p-datatable-sm"
             responsiveLayout="scroll">
             
             <ng-template pTemplate="header">
@@ -258,7 +258,7 @@
                 <td>
                   <p-chip 
                     [label]="formatDuration(getDurationInMinutes(reservation.fechaInicio, reservation.fechaFin))"
-                    styleClass="text-xs bg-usco-gris-100 text-usco-gris-800">
+                    class="text-xs bg-usco-gris-100 text-usco-gris-800">
                   </p-chip>
                 </td>
                 
@@ -282,7 +282,7 @@
                     <!-- Botón Ver Detalle -->
                     <p-button
                       icon="pi pi-eye"
-                      styleClass="p-button-outlined p-button-info p-button-sm"
+                      class="p-button-outlined p-button-info p-button-sm"
                       pTooltip="Ver detalle"
                       tooltipPosition="top"
                       (onClick)="showReservationDetail(reservation)">
@@ -292,7 +292,7 @@
                     @if (canApprove(reservation)) {
                     <p-button
                       icon="pi pi-check"
-                      styleClass="p-button-outlined p-button-success p-button-sm"
+                      class="p-button-outlined p-button-success p-button-sm"
                       pTooltip="Aprobar reserva"
                       tooltipPosition="top"
                       (onClick)="approveReservation(reservation)">
@@ -302,7 +302,7 @@
                     @if (canReject(reservation)) {
                     <p-button
                       icon="pi pi-times"
-                      styleClass="p-button-outlined p-button-danger p-button-sm"
+                      class="p-button-outlined p-button-danger p-button-sm"
                       pTooltip="Rechazar reserva"
                       tooltipPosition="top"
                       (onClick)="rejectReservation(reservation)">
@@ -313,7 +313,7 @@
                     @if (canCancelReservation(reservation)) {
                     <p-button
                       icon="pi pi-ban"
-                      styleClass="p-button-outlined p-button-warning p-button-sm"
+                      class="p-button-outlined p-button-warning p-button-sm"
                       pTooltip="Cancelar reserva"
                       tooltipPosition="top"
                       (onClick)="onCancelReservation(reservation)">
@@ -393,7 +393,7 @@
               <p-button
                 label="Ver Detalle"
                 icon="pi pi-eye"
-                styleClass="p-button-outlined p-button-info p-button-sm"
+                class="p-button-outlined p-button-info p-button-sm"
                 (onClick)="showReservationDetail(reservation)">
               </p-button>
               
@@ -402,7 +402,7 @@
               <p-button
                 label="Aprobar"
                 icon="pi pi-check"
-                styleClass="p-button-outlined p-button-success p-button-sm"
+                class="p-button-outlined p-button-success p-button-sm"
                 (onClick)="approveReservation(reservation)">
               </p-button>
               }
@@ -411,7 +411,7 @@
               <p-button
                 label="Rechazar"
                 icon="pi pi-times"
-                styleClass="p-button-outlined p-button-danger p-button-sm"
+                class="p-button-outlined p-button-danger p-button-sm"
                 (onClick)="rejectReservation(reservation)">
               </p-button>
               }
@@ -421,7 +421,7 @@
               <p-button
                 label="Cancelar"
                 icon="pi pi-ban"
-                styleClass="p-button-outlined p-button-warning p-button-sm"
+                class="p-button-outlined p-button-warning p-button-sm"
                 (onClick)="onCancelReservation(reservation)">
               </p-button>
               }
@@ -531,13 +531,13 @@
       <p-button 
         label="Rechazar" 
         icon="pi pi-times" 
-        styleClass="p-button-outlined p-button-danger"
+        class="p-button-outlined p-button-danger"
         (onClick)="rejectReservation(selectedReservation); closeDetailDialog()">
       </p-button>
       <p-button 
         label="Aprobar" 
         icon="pi pi-check" 
-        styleClass="p-button-success"
+        class="p-button-success"
         (onClick)="approveReservation(selectedReservation); closeDetailDialog()">
       </p-button>
     </div>
@@ -549,7 +549,7 @@
     <p-button 
       label="Cerrar" 
       icon="pi pi-times" 
-      styleClass="p-button-text" 
+      class="p-button-text" 
       (onClick)="closeDetailDialog()">
     </p-button>
   </ng-template>
@@ -614,13 +614,13 @@
       <p-button 
         label="Cancelar" 
         icon="pi pi-times" 
-        styleClass="p-button-text p-button-secondary" 
+        class="p-button-text p-button-secondary" 
         (onClick)="closeRejectDialog()">
       </p-button>
       <p-button 
         label="Rechazar Reserva" 
         icon="pi pi-ban" 
-        styleClass="p-button-danger"
+        class="p-button-danger"
         [disabled]="!rejectionReason.trim()"
         (onClick)="confirmRejectReservation()">
       </p-button>

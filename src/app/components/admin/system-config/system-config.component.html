@@ -17,13 +17,13 @@
           label="Volver"
           icon="pi pi-arrow-left"
           (onClick)="goBack()"
-          styleClass="p-button-outlined p-button-secondary">
+          class="p-button-outlined p-button-secondary">
         </p-button>
       </div>
     </div>
 
     <!-- Configuración de Reservas -->
-    <p-card styleClass="shadow-usco border-0">
+    <p-card class="shadow-usco border-0">
       <ng-template pTemplate="header">
         <div class="flex items-center p-4 bg-usco-vino-50 border-b border-usco-gris-200">
           <div class="flex items-center justify-center w-12 h-12 bg-usco-vino-100 rounded-lg mr-4">
@@ -63,7 +63,7 @@
                 [max]="7"
                 suffix=" días"
                 placeholder="Ej: 2"
-                styleClass="w-full"
+                class="w-full"
                 [class.ng-invalid]="configForm.get('minDaysAdvance')?.invalid && configForm.get('minDaysAdvance')?.touched">
               </p-inputNumber>
               
@@ -75,7 +75,7 @@
                 *ngIf="minDaysError" 
                 severity="error" 
                 [text]="minDaysError"
-                styleClass="mt-2">
+                class="mt-2">
               </p-message>
             </div>
 
@@ -92,7 +92,7 @@
                 [max]="365"
                 suffix=" días"
                 placeholder="Ej: 90"
-                styleClass="w-full"
+                class="w-full"
                 [class.ng-invalid]="configForm.get('maxDaysAdvance')?.invalid && configForm.get('maxDaysAdvance')?.touched">
               </p-inputNumber>
               
@@ -104,7 +104,7 @@
                 *ngIf="maxDaysError" 
                 severity="error" 
                 [text]="maxDaysError"
-                styleClass="mt-2">
+                class="mt-2">
               </p-message>
             </div>
           </div>
@@ -114,7 +114,7 @@
             *ngIf="dateRangeError" 
             severity="error" 
             text="Los días máximos deben ser mayores que los días mínimos"
-            styleClass="mt-4">
+            class="mt-4">
           </p-message>
 
           <p-divider></p-divider>
@@ -172,7 +172,7 @@
               label="Cancelar"
               icon="pi pi-times"
               (onClick)="onCancel()"
-              styleClass="p-button-outlined">
+              class="p-button-outlined">
             </p-button>
             
             <p-button
@@ -181,7 +181,7 @@
               icon="pi pi-save"
               [loading]="isSaving"
               [disabled]="configForm.invalid"
-              styleClass="p-button-success">
+              class="p-button-success">
             </p-button>
           </div>
         </form>

@@ -3,6 +3,13 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { HasPermissionDirective } from '../../directives/has-permission.directive';
+import { PermissionHelperService } from '../services/permission-helper.service';
+import { 
+  PERMISSIONS, 
+  PERMISSION_GROUPS, 
+  PermissionHelper,
+  UI_PERMISSIONS 
+} from '../constants/permissions.constants';
 
 @Component({
   selector: 'app-navigation',
@@ -16,7 +23,16 @@ export class NavigationComponent implements OnInit {
   showUserMenu = false;
   isAdmin = false;
 
-  constructor(private authService: AuthService) {}
+  // Exponer constantes de permisos para usar en el template
+  readonly PERMISSIONS = PERMISSIONS;
+  readonly PERMISSION_GROUPS = PERMISSION_GROUPS;
+  readonly PermissionHelper = PermissionHelper;
+  readonly UI_PERMISSIONS = UI_PERMISSIONS;
+
+  constructor(
+    private authService: AuthService,
+    public permissionHelper: PermissionHelperService
+  ) {}
 
   ngOnInit(): void {
     this.isAdmin = this.authService.isAdmin();

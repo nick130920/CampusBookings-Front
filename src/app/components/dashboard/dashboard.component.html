@@ -85,7 +85,7 @@
         </a>
         <!-- Mis Reservas - Requiere permiso de lectura de reservas -->
         <a
-          *hasPermission="'RESERVAS:READ'" 
+          *hasPermission="getReservationsReadPermission()" 
           routerLink="/dashboard/reservas" 
           routerLinkActive="bg-usco-ocre-200 text-usco-vino-700 border-r-2 border-usco-vino-500" 
           [routerLinkActiveOptions]="{ exact: true }"
@@ -102,7 +102,7 @@
         
         <!-- Calendario de Disponibilidad - Requiere permiso de lectura de escenarios -->
         <a 
-          *hasPermission="'ESCENARIOS:READ'"
+          *hasPermission="getScenariosReadPermission()"
           routerLink="/dashboard/escenarios/disponibilidad" 
           routerLinkActive="bg-usco-ocre-200 text-usco-vino-700 border-r-2 border-usco-vino-500" 
           [routerLinkActiveOptions]="{ exact: true }"
@@ -119,7 +119,7 @@
         
         <!-- Escenarios - Requiere cualquier permiso relacionado con escenarios -->
         <a 
-          *hasPermission="{any: ['ESCENARIOS:READ', 'ESCENARIOS:CREATE', 'ESCENARIOS:UPDATE', 'ESCENARIOS:MANAGE']}"
+          *hasPermission="getScenariosAnyPermission()"
           routerLink="/dashboard/escenarios" 
           routerLinkActive="bg-usco-ocre-200 text-usco-vino-700 border-r-2 border-usco-vino-500" 
           [routerLinkActiveOptions]="{ exact: true }"
@@ -136,7 +136,7 @@
         
         <!-- Administración - Requiere cualquier permiso administrativo -->
         <a 
-          *hasPermission="{any: ['USUARIOS:READ', 'ESCENARIOS:MANAGE', 'CONFIGURACION:READ', 'REPORTES:READ']}"
+          *hasPermission="getAdminPermissions()"
           routerLink="/dashboard/admin" 
           routerLinkActive="bg-usco-ocre-200 text-usco-vino-700 border-r-2 border-usco-vino-500" 
           [class]="'flex items-center text-sm font-medium text-usco-gris-700 rounded-l-md hover:bg-usco-ocre-100 hover:text-usco-vino-600 group transition-all duration-200 ' + (sidebarCollapsed ? 'px-3 py-3 justify-center' : 'px-4 py-3')"
@@ -194,6 +194,7 @@
           </div>
           <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-usco-gris-800 mb-4 font-usco-condensed px-4 sm:px-0">Bienvenido a CampusBookings</h1>
           <p class="text-base sm:text-lg text-usco-gris-600 mb-8 max-w-2xl mx-auto px-4 sm:px-0">Sistema de Reservas de la Universidad Surcolombiana. Gestiona y reserva espacios académicos y deportivos de manera eficiente.</p>
+          
           
       
           

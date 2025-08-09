@@ -30,6 +30,15 @@ import { SidebarService } from '../../../services/sidebar.service';
 // Utils
 import { formatRelativeDate } from '../../../utils/date.utils';
 
+
+import { PermissionHelperService } from '../../../shared/services/permission-helper.service';
+import { AuthorizationService, Permission } from '../../../services/authorization.service';
+import { 
+  PERMISSIONS, 
+  PERMISSION_GROUPS, 
+  PermissionHelper 
+} from '../../../shared/constants/permissions.constants';
+
 interface ReservationFilter {
   estado?: string;
   fechaDesde?: Date;
@@ -151,10 +160,6 @@ export class ReservationListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
     this.isAdmin = this.authService.isAdmin();
-    
-    console.log('🔍 DEBUG: ngOnInit - currentUser:', this.currentUser);
-    console.log('🔍 DEBUG: ngOnInit - isAdmin:', this.isAdmin);
-    
     // Suscribirse al estado del sidebar
     this.sidebarSubscription = this.sidebarService.sidebarCollapsed$.subscribe(collapsed => {
       this.sidebarCollapsed = collapsed;
@@ -163,14 +168,11 @@ export class ReservationListComponent implements OnInit, OnDestroy {
     // Si es admin, iniciar en "Mis Reservas" por defecto
     if (this.isAdmin) {
       this._activeTabValue = 'my'; // 'my' = Mis Reservas, 'all' = Todas las Reservas
-      console.log('🔍 DEBUG: ngOnInit - activeTabValue inicial para admin:', this.activeTabValue);
     }
     
     this.loadReservations();
     this.checkForSuccessMessage();
-    
-    // Prueba temporal del cálculo de fechas
-    this.testDateCalculation();
+  
   }
 
   private checkForSuccessMessage(): void {
@@ -207,8 +209,6 @@ export class ReservationListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    console.log('🔍 DEBUG: Cargando reservas para admin con ID:', this.currentUser.id);
-
     // Cargar todas las reservas Y las reservas propias en paralelo
     const allReservations$ = this.reservationService.getAllReservations();
     const myReservations$ = this.reservationService.getUserReservations(this.currentUser.id);
@@ -216,9 +216,6 @@ export class ReservationListComponent implements OnInit, OnDestroy {
     // Usar forkJoin para cargar ambas listas al mismo tiempo
     forkJoin([allReservations$, myReservations$]).subscribe({
       next: ([allReservations, myReservations]) => {
-        console.log('🔍 DEBUG: Todas las reservas recibidas:', allReservations.length);
-        console.log('🔍 DEBUG: Mis reservas recibidas:', myReservations.length);
-        console.log('🔍 DEBUG: Tab activo:', this.activeTabValue);
         
         this.allReservations = allReservations;
         this.myReservations = myReservations;

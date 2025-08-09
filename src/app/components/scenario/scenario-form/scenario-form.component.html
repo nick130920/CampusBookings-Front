@@ -3,11 +3,11 @@
     <!-- Botón de regreso -->
     <p-button (onClick)="onCancel()" [text]="true" icon="pi pi-arrow-left"
       label="{{ isEditMode ? 'Volver al detalle' : 'Volver a la lista' }}"
-      styleClass="mb-4 sm:mb-6 text-usco-vino hover:text-usco-vino-600"></p-button>
+      class="mb-4 sm:mb-6 text-usco-vino hover:text-usco-vino-600"></p-button>
 
     <!-- Cargando -->
     <div *ngIf="isLoading" class="flex justify-center items-center h-64">
-      <p-progressSpinner styleClass="w-12 h-12"></p-progressSpinner>
+      <p-progressSpinner class="w-12 h-12"></p-progressSpinner>
     </div>
 
     <!-- Formulario -->
@@ -27,7 +27,7 @@
       </div>
 
       <!-- Sección de información básica -->
-      <p-card styleClass="mb-4 sm:mb-6">
+      <p-card class="mb-4 sm:mb-6">
         <ng-template pTemplate="header">
           <div class="flex items-center p-3 sm:p-4 border-surface-border">
             <i class="pi pi-info-circle text-lg sm:text-xl text-usco-vino-500 mr-2 sm:mr-3"></i>
@@ -57,7 +57,7 @@
           <div class="field">
             <p-floatlabel>
               <p-select id="tipo" formControlName="tipo" [options]="tiposEscenario" optionLabel="label"
-                optionValue="value" styleClass="w-full"
+                optionValue="value" class="w-full"
                 [class.ng-invalid]="scenarioForm.get('tipo')?.invalid && scenarioForm.get('tipo')?.touched"></p-select>
               <label for="tipo"><i class="pi pi-tag mr-2"></i> Tipo de escenario</label>
             </p-floatlabel>
@@ -71,7 +71,7 @@
           <div class="field">
             <p-floatlabel>
               <p-select id="ubicacion" formControlName="ubicacion" [options]="ubicaciones" optionLabel="label"
-                optionValue="value" styleClass="w-full"
+                optionValue="value" class="w-full"
                 [class.ng-invalid]="scenarioForm.get('ubicacion')?.invalid && scenarioForm.get('ubicacion')?.touched"></p-select>
               <label for="ubicacion"><i class="pi pi-map-marker mr-2"></i> Ubicación</label>
             </p-floatlabel>
@@ -84,7 +84,7 @@
           <!-- Capacidad -->
           <div class="field">
             <p-floatlabel>
-              <p-inputNumber id="capacidad" formControlName="capacidad" [min]="1" [max]="1000" styleClass="w-full"
+              <p-inputNumber id="capacidad" formControlName="capacidad" [min]="1" [max]="1000" class="w-full"
                 [class.ng-invalid]="scenarioForm.get('capacidad')?.invalid && scenarioForm.get('capacidad')?.touched"></p-inputNumber>
               <label for="capacidad"><i class="pi pi-users mr-2"></i> Capacidad (personas)</label>
             </p-floatlabel>
@@ -101,7 +101,7 @@
 
           <!-- Estado -->
           <div class="field flex items-center justify-start sm:justify-center">
-            <p-toggleSwitch formControlName="disponible" styleClass="mr-3"></p-toggleSwitch>
+            <p-toggleSwitch formControlName="disponible" class="mr-3"></p-toggleSwitch>
             <label class="text-surface-700 font-medium">
               {{ scenarioForm.get('disponible')?.value ? 'Disponible' : 'No disponible' }}
             </label>
@@ -110,7 +110,7 @@
       </p-card>
 
       <!-- Sección de descripción -->
-      <p-card styleClass="mb-4 sm:mb-6">
+      <p-card class="mb-4 sm:mb-6">
         <ng-template pTemplate="header">
           <div class="flex items-center p-3 sm:p-4 border-surface-border">
             <i class="pi pi-file-edit text-lg sm:text-xl text-usco-vino-500 mr-2 sm:mr-3"></i>
@@ -141,7 +141,7 @@
       </p-card>
 
       <!-- Sección de características -->
-      <p-card styleClass="mb-4 sm:mb-6">
+      <p-card class="mb-4 sm:mb-6">
         <ng-template pTemplate="header">
           <div class="flex items-center p-3 sm:p-4 border-surface-border">
             <i class="pi pi-list text-lg sm:text-xl text-usco-vino-500 mr-2 sm:mr-3"></i>
@@ -153,7 +153,7 @@
           <p-floatlabel>
             <p-autocomplete id="caracteristicas" formControlName="caracteristicas"
               [suggestions]="caracteristicasSugeridas" (completeMethod)="filterCaracteristicas($event)"
-              [multiple]="true" [typeahead]="true" styleClass="w-full" [forceSelection]="false"></p-autocomplete>
+              [multiple]="true" [typeahead]="true" class="w-full" [forceSelection]="false"></p-autocomplete>
             <label for="caracteristicas"><i class="pi pi-tags mr-2"></i> Agregar características</label>
           </p-floatlabel>
           <small class="text-muted-color block mt-2">
@@ -167,13 +167,13 @@
           <div class="flex flex-wrap gap-1 sm:gap-2">
             <p-button *ngFor="let caracteristica of caracteristicasDisponibles" type="button"
               (onClick)="addCaracteristica(caracteristica)" [text]="true" [outlined]="true" [label]="caracteristica"
-              size="small" styleClass="p-1 text-xs"></p-button>
+              size="small" class="p-1 text-xs"></p-button>
           </div>
         </div>
       </p-card>
 
       <!-- Sección de horario y costos -->
-      <p-card styleClass="mb-4 sm:mb-6">
+      <p-card class="mb-4 sm:mb-6">
         <ng-template pTemplate="header">
           <div class="flex items-center p-3 pb-0 sm:p-4 border-surface-border">
             <i class="pi pi-clock text-lg sm:text-xl text-usco-vino-500 mr-2 sm:mr-3"></i>
@@ -186,7 +186,7 @@
           <div class="field">
             <p-floatlabel>
               <p-datepicker id="horarioApertura" formControlName="horarioApertura" [timeOnly]="true" [hourFormat]="'24'"
-                styleClass="w-full" [showTime]="true" [showSeconds]="false"></p-datepicker>
+                class="w-full" [showTime]="true" [showSeconds]="false"></p-datepicker>
               <label for="horarioApertura"><i class="pi pi-clock mr-2"></i> Hora de apertura</label>
             </p-floatlabel>
           </div>
@@ -195,7 +195,7 @@
           <div class="field">
             <p-floatlabel>
               <p-datepicker id="horarioCierre" formControlName="horarioCierre" [timeOnly]="true" [hourFormat]="'24'"
-                styleClass="w-full" [showTime]="true" [showSeconds]="false"></p-datepicker>
+                class="w-full" [showTime]="true" [showSeconds]="false"></p-datepicker>
               <label for="horarioCierre"><i class="pi pi-clock mr-2"></i> Hora de cierre</label>
             </p-floatlabel>
           </div>
@@ -204,7 +204,7 @@
           <div class="field">
             <p-floatlabel>
               <p-inputNumber id="costoPorHora" formControlName="costoPorHora" [min]="0" [currency]="'COP'"
-                [prefix]="'$ '" [locale]="'es-CO'" styleClass="w-full"
+                [prefix]="'$ '" [locale]="'es-CO'" class="w-full"
                 [class.ng-invalid]="scenarioForm.get('costoPorHora')?.invalid && scenarioForm.get('costoPorHora')?.touched"></p-inputNumber>
               <label for="costoPorHora"><i class="pi pi-dollar mr-2"></i> Costo por hora (COP)</label>
             </p-floatlabel>
@@ -218,7 +218,7 @@
       </p-card>
 
       <!-- Sección de imágenes -->
-      <p-card styleClass="mb-4 sm:mb-6">
+      <p-card class="mb-4 sm:mb-6">
         <ng-template pTemplate="header">
           <div class="flex items-center p-3 sm:p-4 border-surface-border">
             <i class="pi pi-image text-lg sm:text-xl text-usco-vino-500 mr-2 sm:mr-3"></i>
@@ -328,7 +328,7 @@
 
           <!-- Indicador de progreso -->
           <div *ngIf="imageUploadInProgress" class="w-full bg-surface-300 rounded-full h-2">
-            <p-progressBar [value]="100" [showValue]="false" styleClass="h-2"></p-progressBar>
+            <p-progressBar [value]="100" [showValue]="false" class="h-2"></p-progressBar>
           </div>
         </div>
       </p-card>
@@ -337,12 +337,12 @@
       <div
         class="flex flex-col sm:flex-row justify-center sm:justify-end space-y-3 sm:space-y-0 sm:space-x-4 mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-surface-border">
                  <p-button type="button" (onClick)="onCancel()" label="Cancelar" icon="pi pi-times" [outlined]="true"
-           severity="secondary" styleClass="responsive-button px-4 sm:px-6 py-2 sm:py-3"></p-button>
+           severity="secondary" class="responsive-button px-4 sm:px-6 py-2 sm:py-3"></p-button>
  
          <p-button type="submit" [disabled]="scenarioForm.invalid || isSubmitting"
            [label]="isEditMode ? 'Actualizar Escenario' : 'Crear Escenario'"
            [icon]="isSubmitting ? 'pi pi-spin pi-spinner' : 'pi pi-check'" [loading]="isSubmitting" severity="primary"
-           styleClass="responsive-button px-4 sm:px-6 py-2 sm:py-3"></p-button>
+           class="responsive-button px-4 sm:px-6 py-2 sm:py-3"></p-button>
       </div>
     </form>
   </div>

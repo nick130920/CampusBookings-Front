@@ -9,34 +9,6 @@ import {
 import { Subscription } from 'rxjs';
 import { AuthorizationService } from '../services/authorization.service';
 
-/**
- * Directiva estructural para mostrar/ocultar elementos basado en permisos
- * 
- * Uso:
- * 
- * <!-- Mostrar si tiene permiso específico -->
- * <div *hasPermission="'USERS:READ'">Contenido solo para usuarios con permiso READ en USERS</div>
- * 
- * <!-- Mostrar si tiene recurso y acción separados -->
- * <div *hasPermission="{resource: 'USERS', action: 'CREATE'}">Crear usuario</div>
- * 
- * <!-- Mostrar si tiene cualquiera de los permisos -->
- * <div *hasPermission="{any: ['USERS:READ', 'USERS:MANAGE']}">Ver usuarios</div>
- * 
- * <!-- Mostrar si tiene todos los permisos -->
- * <div *hasPermission="{all: ['USERS:READ', 'SCENARIOS:READ']}">Dashboard completo</div>
- * 
- * <!-- Mostrar si tiene rol específico -->
- * <div *hasPermission="{role: 'ADMIN'}">Solo admin</div>
- * 
- * <!-- Template alternativo cuando no tiene permisos -->
- * <div *hasPermission="'USERS:CREATE'; else noPermission">
- *   <button>Crear Usuario</button>
- * </div>
- * <ng-template #noPermission>
- *   <p>No tienes permisos para crear usuarios</p>
- * </ng-template>
- */
 @Directive({
   selector: '[hasPermission]',
   standalone: true
@@ -49,7 +21,6 @@ export class HasPermissionDirective implements OnInit, OnDestroy {
   set hasPermission(value: string | PermissionConfig) {
     this.permissionConfig = this.parsePermissionInput(value);
     this.updateView();
-    console.log('hasPermission', value);
   }
 
   @Input() hasPermissionElse?: TemplateRef<any>;

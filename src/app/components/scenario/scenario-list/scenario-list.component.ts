@@ -18,6 +18,8 @@ import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { Scenario, ScenarioService } from '../../../services/scenario.service';
 import { SidebarService } from '../../../services/sidebar.service';
+import { HasPermissionDirective } from '../../../directives/has-permission.directive';
+import { PERMISSIONS } from '../../../shared/constants/permissions.constants';
 import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
@@ -37,7 +39,8 @@ import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-d
     SelectModule,
     TableModule,
     TagModule,
-    FormsModule
+    FormsModule,
+    HasPermissionDirective
   ]
 })
 export class ScenarioListComponent implements OnInit, OnDestroy {
@@ -45,6 +48,9 @@ export class ScenarioListComponent implements OnInit, OnDestroy {
   filteredScenarios: Scenario[] = [];
   isLoading = true;
   isAdmin = false;
+  
+  // 🚀 Exponer constantes para el template
+  readonly PERMISSIONS = PERMISSIONS;
   
   // Sidebar state
   sidebarCollapsed = false;

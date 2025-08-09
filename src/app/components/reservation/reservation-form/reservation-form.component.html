@@ -14,7 +14,7 @@
         [model]="steps" 
         [activeIndex]="currentStep"
         [readonly]="true"
-        styleClass="usco-steps">
+        class="usco-steps">
       </p-steps>
     </div>
 
@@ -52,7 +52,7 @@
                 optionLabel="nombre"
                 optionValue="id"
                 placeholder="Seleccione un escenario"
-                styleClass="w-full"
+                class="w-full"
                 (onChange)="onScenarioChange()"
                 [class.ng-invalid]="reservationForm.get('escenarioId')?.invalid && reservationForm.get('escenarioId')?.touched">
                 <ng-template pTemplate="selectedItem">
@@ -70,7 +70,7 @@
                       <div class="text-sm text-gray-500">{{ scenario.ubicacion }} • {{ scenario.tipo }}</div>
                       <p-chip 
                         [label]="scenario.capacidad + ' personas'" 
-                        styleClass="text-xs bg-usco-ocre-100 text-usco-ocre-800">
+                        class="text-xs bg-usco-ocre-100 text-usco-ocre-800">
                       </p-chip>
                     </div>
                   </div>
@@ -133,7 +133,7 @@
                 [maxDate]="maxDate"
                 dateFormat="dd/mm/yy"
                 placeholder="Seleccione una fecha"
-                styleClass="w-full"
+                class="w-full"
                 (onSelect)="onDateChange()"
                 [class.ng-invalid]="reservationForm.get('fechaSeleccionada')?.invalid && reservationForm.get('fechaSeleccionada')?.touched">
               </p-datePicker>
@@ -152,7 +152,7 @@
                 optionLabel="label"
                 optionValue="value"
                 placeholder="Seleccione duración"
-                styleClass="w-full"
+                class="w-full"
                 (onChange)="onDurationChange()">
               </p-select>
             </div>
@@ -222,7 +222,7 @@
             <p-message 
               severity="success"
               text="Horario seleccionado disponible para reserva"
-              styleClass="w-full">
+              class="w-full">
             </p-message>
           </div>
           }
@@ -324,7 +324,7 @@
               <p-message 
                 [severity]="availabilityResponse.disponible ? 'success' : 'error'"
                 [text]="availabilityResponse.mensaje"
-                styleClass="w-full">
+                class="w-full">
               </p-message>
             </div>
             }
@@ -344,7 +344,7 @@
               <p-button
                 label="Anterior"
                 icon="pi pi-chevron-left"
-                styleClass="p-button-outlined p-button-secondary responsive-button"
+                class="p-button-outlined p-button-secondary responsive-button"
                 (onClick)="previousStep()">
               </p-button>
               }
@@ -356,7 +356,7 @@
               <p-button
                 label="Cancelar"
                 icon="pi pi-times"
-                styleClass="p-button-outlined p-button-secondary responsive-button"
+                class="p-button-outlined p-button-secondary responsive-button"
                 (onClick)="onCancel()">
               </p-button>
 
@@ -365,7 +365,7 @@
               <p-button
                 label="Siguiente"
                 icon="pi pi-chevron-right"
-                styleClass="responsive-button"
+                class="responsive-button"
                 [disabled]="!isStepValid(currentStep)"
                 (onClick)="nextStep()">
               </p-button>
@@ -376,7 +376,7 @@
               <p-button
                 label="Confirmar Reserva"
                 icon="pi pi-check"
-                styleClass="responsive-button"
+                class="responsive-button"
                 [disabled]="!isFormValid"
                 [loading]="isSubmitting"
                 (onClick)="onSubmit()">

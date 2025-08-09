@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ToastService } from '../../../services/toast.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { DatePickerModule } from 'primeng/datepicker';
 
 interface ReporteReserva {
   escenarioId: number;
@@ -29,7 +30,8 @@ interface ReporteRequest {
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DatePickerModule
   ],
   templateUrl: './reports.component.html',
   styleUrls: ['./reports.component.css']
