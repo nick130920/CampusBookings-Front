@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, catchError, Observable, of, tap, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -40,7 +40,20 @@ interface AuthResponse {
 export class AuthService {
   private readonly apiUrl = `${environment.apiUrl}${environment.authEndpoint}`;
   private isAuthenticated = new BehaviorSubject<boolean>(false);
-  public currentUser = new BehaviorSubject<User | null>(null);
+  
+  // Signals para el estado del usuario
+  public currentUser = signal<User | null>(null);
+  public isLoggedIn = computed(() => this.currentUser() !== null);
+  public isAdmin = computed(() => {
+    const user = this.currentUser();
+    const role = user?.role?.toUpperCase();
+    return role === 'ADMIN' || role === 'ADMINISTRATOR';
+  });
+  public userRole = computed(() => this.currentUser()?.role || null);
+  
+  // Mantener BehaviorSubject para compatibilidad con código existente
+  public currentUser$ = new BehaviorSubject<User | null>(null);
+  
   private readonly TOKEN_KEY = 'auth_token';
   private tokenExpirationTimer: any;
 
@@ -65,10 +78,10 @@ export class AuthService {
   }
 
   /**
-   * Observable del usuario actual
+   * Observable del usuario actual (para compatibilidad)
    */
   getCurrentUser$(): Observable<User | null> {
-    return this.currentUser.asObservable();
+    return this.currentUser$.asObservable();
   }
 
   register(userData: RegisterRequest): Observable<AuthResponse> {
@@ -114,7 +127,9 @@ export class AuthService {
     localStorage.setItem(this.TOKEN_KEY, token);
     localStorage.setItem('user_data', JSON.stringify(user));
     
-    this.currentUser.next(user);
+    // Actualizar tanto el signal como el BehaviorSubject
+    this.currentUser.set(user);
+    this.currentUser$.next(user);
     this.isAuthenticated.next(true);
     const expirationTime = this.getTokenExpiration(token).getTime() - new Date().getTime();
     this.autoLogout(expirationTime);
@@ -138,7 +153,10 @@ export class AuthService {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem('user_data');
     this.isAuthenticated.next(false);
-    this.currentUser.next(null);
+    
+    // Limpiar tanto el signal como el BehaviorSubject
+    this.currentUser.set(null);
+    this.currentUser$.next(null);
     
     // Notificar que el usuario se ha desconectado
     this.notifyUserLoggedOut();
@@ -188,17 +206,24 @@ export class AuthService {
     }
   }
 
-  isLoggedIn(): boolean {
+  isLoggedInOld(): boolean {
     return !!this.getToken();
   }
 
-  isAdmin(): boolean {
-    const user = this.currentUser.value;
+  isAdminOld(): boolean {
+    const user = this.currentUser();
     const role = user?.role?.toUpperCase();
     return role === 'ADMIN' || role === 'ADMINISTRATOR';
   }
 
   getCurrentUser(): User | null {
+    // Primero intentar obtener del signal
+    const signalUser = this.currentUser();
+    if (signalUser) {
+      return signalUser;
+    }
+    
+    // Si no hay en el signal, intentar recuperar de localStorage
     const userData = localStorage.getItem('user_data');
     if (!userData) return null;
     
@@ -208,7 +233,13 @@ export class AuthService {
         return userData as User;
       }
       // Otherwise parse it as JSON string
-      return JSON.parse(userData) as User;
+      const user = JSON.parse(userData) as User;
+      
+      // Sincronizar con el signal si se recuperó de localStorage
+      this.currentUser.set(user);
+      this.currentUser$.next(user);
+      
+      return user;
     } catch (e) {
       console.error('Error parsing user data:', e, 'Raw data:', userData);
       // Clear invalid data to prevent future errors
@@ -219,10 +250,11 @@ export class AuthService {
 
   getIsAuthenticated(): Observable<boolean> {
     // If we have a token but not user data, try to restore session
-    if (this.getToken() && !this.currentUser.value) {
+    if (this.getToken() && !this.currentUser()) {
       const user = this.getCurrentUser();
       if (user) {
-        this.currentUser.next(user);
+        this.currentUser.set(user);
+        this.currentUser$.next(user);
         this.isAuthenticated.next(true);
       }
     }
@@ -230,7 +262,7 @@ export class AuthService {
   }
 
   getUserRole(): string | null {
-    return this.currentUser.value?.role || null;
+    return this.currentUser()?.role || null;
   }
 
   private checkAuthStatus(): void {
@@ -260,7 +292,8 @@ export class AuthService {
         
         // Actualizar localStorage con los datos del token
         localStorage.setItem('user_data', JSON.stringify(user));
-        this.currentUser.next(user);
+        this.currentUser.set(user);
+        this.currentUser$.next(user);
       } catch (error) {
         console.error('Error decodificando el token:', error);
         this.clearAuthData();
@@ -285,26 +318,38 @@ export class AuthService {
    * Actualizar rol del usuario actual (llamado desde WebSocket)
    */
   updateUserRole(newRole: string): void {
-    const currentUser = this.currentUser.value;
-    if (currentUser) {
-      const updatedUser = { ...currentUser, role: newRole };
+    const currentUserData = this.currentUser();
+    if (currentUserData) {
+      // Verificar si el rol realmente cambió para evitar loops
+      if (currentUserData.role === newRole) {
+        console.log(`ℹ️ El rol ${newRole} ya está asignado al usuario ${currentUserData.email}, no es necesario actualizar`);
+        return;
+      }
       
-      // Actualizar en memoria
-      this.currentUser.next(updatedUser);
+      const oldRole = currentUserData.role;
+      const updatedUser = { ...currentUserData, role: newRole };
+      
+      console.log(`🔄 Actualizando rol de ${oldRole} a ${newRole} para usuario ${currentUserData.email}`);
+      
+      // Actualizar tanto el signal como el BehaviorSubject para compatibilidad
+      this.currentUser.set(updatedUser);
+      this.currentUser$.next(updatedUser);
       
       // Actualizar en localStorage
       localStorage.setItem('user_data', JSON.stringify(updatedUser));
       
-      console.log(`🔄 Rol actualizado de ${currentUser.role} a ${newRole} para usuario ${currentUser.email}`);
+      console.log(`✅ Rol actualizado exitosamente para usuario ${currentUserData.email}`);
       
       // Emitir evento personalizado para que otros componentes puedan reaccionar
       window.dispatchEvent(new CustomEvent('user-role-updated', { 
         detail: { 
-          oldRole: currentUser.role, 
+          oldRole: oldRole, 
           newRole: newRole,
           user: updatedUser
         } 
       }));
+    } else {
+      console.warn('⚠️ No hay usuario actual para actualizar el rol');
     }
   }
 
@@ -312,12 +357,13 @@ export class AuthService {
    * Actualizar datos completos del usuario (en caso de cambios múltiples)
    */
   updateUserData(userData: Partial<User>): void {
-    const currentUser = this.currentUser.value;
-    if (currentUser) {
-      const updatedUser = { ...currentUser, ...userData };
+    const currentUserData = this.currentUser();
+    if (currentUserData) {
+      const updatedUser = { ...currentUserData, ...userData };
       
-      // Actualizar en memoria
-      this.currentUser.next(updatedUser);
+      // Actualizar tanto el signal como el BehaviorSubject
+      this.currentUser.set(updatedUser);
+      this.currentUser$.next(updatedUser);
       
       // Actualizar en localStorage
       localStorage.setItem('user_data', JSON.stringify(updatedUser));

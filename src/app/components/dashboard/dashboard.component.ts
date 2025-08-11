@@ -36,17 +36,29 @@ import { AvatarModule } from 'primeng/avatar';
 })
 export class DashboardComponent implements OnInit {
   userEmail = '';
-  currentUser: User | null = null;
   public currentRoute = ''; // Update this line to make currentRoute public
   
   // Sidebar state
   sidebarCollapsed = false;
 
-  // 🚀 Angular Signals para estado reactivo
+  // 🚀 Angular Signals para estado reactivo del usuario
+  currentUser = this.authService.currentUser;
   userRole = computed(() => this.authorizationService.currentRole());
   userPermissions = computed(() => this.authorizationService.permissions());
   isAdmin = computed(() => this.authorizationService.isAdmin());
   permissionsLoaded = computed(() => this.authorizationService.permissionsLoaded());
+  
+  // Computed para datos derivados del usuario
+  userInitials = computed(() => {
+    const user = this.currentUser();
+    const userFullName = user?.nombre || 'Usuario';
+    return userFullName.charAt(0).toUpperCase();
+  });
+  
+  userDisplayEmail = computed(() => {
+    const user = this.currentUser();
+    return user ? user.email : 'Usuario';
+  });
 
   // Exponer constantes de permisos para usar en el template
   readonly PERMISSIONS = PERMISSIONS;
@@ -66,15 +78,24 @@ export class DashboardComponent implements OnInit {
       const permissions = this.userPermissions();
       const isAdmin = this.isAdmin();
       
-      console.log('🔄 [SIGNALS] Estado actualizado:');
+      console.log('🔄 [DASHBOARD SIGNALS] Estado actualizado:');
       console.log('👤 Rol del usuario:', role);
       console.log('🔑 Es admin:', isAdmin);
       console.log('📊 Cantidad permisos:', permissions.length);
       console.log('📋 Permisos:', permissions.map((p: Permission) => `${p.resource}:${p.action}`));
     });
-    
-    this.authService.currentUser.subscribe(user => {
-      this.currentUser = user;
+
+    // 🚀 Effect para reaccionar a cambios del usuario
+    effect(() => {
+      const user = this.currentUser();
+      console.log('🔄 [DASHBOARD] Usuario actualizado:', {
+        email: user?.email,
+        role: user?.role,
+        nombre: user?.nombre
+      });
+      
+      // Actualizar userEmail para compatibilidad
+      this.userEmail = user ? user.email : 'Usuario';
     });
     
     // Sincronizar el estado del sidebar con el servicio
@@ -84,8 +105,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const user = this.authService.getCurrentUser();
-    this.userEmail = user ? user.email : 'Usuario';
+    // Ya no necesitamos obtener el usuario manualmente porque usamos signals
     
     // Suscribirse a los cambios de ruta para actualizar currentRoute
     this.router.events.pipe(
@@ -104,8 +124,8 @@ export class DashboardComponent implements OnInit {
   }
 
   getInitials(name?: string): string {
-    const userFullName = this.currentUser?.nombre || name || 'Usuario';
-    return userFullName.charAt(0).toUpperCase();
+    // Usar el computed signal para obtener las iniciales
+    return this.userInitials();
   }
 
   toggleSidebar(): void {

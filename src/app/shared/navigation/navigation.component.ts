@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -21,29 +21,16 @@ import {
 export class NavigationComponent implements OnInit {
   showMobileMenu = false;
   showUserMenu = false;
-  isAdmin = false;
 
-  // Exponer constantes de permisos para usar en el template
-  readonly PERMISSIONS = PERMISSIONS;
-  readonly PERMISSION_GROUPS = PERMISSION_GROUPS;
-  readonly PermissionHelper = PermissionHelper;
-  readonly UI_PERMISSIONS = UI_PERMISSIONS;
+  // Signals reactivos del estado del usuario
+  currentUser = this.authService.currentUser;
+  isLoggedIn = this.authService.isLoggedIn;
+  isAdmin = this.authService.isAdmin;
+  userRole = this.authService.userRole;
 
-  constructor(
-    private authService: AuthService,
-    public permissionHelper: PermissionHelperService
-  ) {}
-
-  ngOnInit(): void {
-    this.isAdmin = this.authService.isAdmin();
-  }
-
-  getCurrentUser() {
-    return this.authService.getCurrentUser();
-  }
-
-  getUserInitials(): string {
-    const user = this.getCurrentUser();
+  // Computed para obtener iniciales del usuario
+  userInitials = computed(() => {
+    const user = this.currentUser();
     if (user?.nombre) {
       const nombres = user.nombre.split(' ');
       const apellidos = user.apellido?.split(' ') || [];
@@ -55,6 +42,40 @@ export class NavigationComponent implements OnInit {
       }
     }
     return user?.email?.charAt(0).toUpperCase() || 'U';
+  });
+
+  // Exponer constantes de permisos para usar en el template
+  readonly PERMISSIONS = PERMISSIONS;
+  readonly PERMISSION_GROUPS = PERMISSION_GROUPS;
+  readonly PermissionHelper = PermissionHelper;
+  readonly UI_PERMISSIONS = UI_PERMISSIONS;
+
+  constructor(
+    private authService: AuthService,
+    public permissionHelper: PermissionHelperService
+  ) {
+    // Effect para reaccionar a cambios de rol
+    effect(() => {
+      const user = this.currentUser();
+      const admin = this.isAdmin();
+      console.log('🔄 NavigationComponent detectó cambio de usuario/rol:', {
+        user: user?.email,
+        role: user?.role,
+        isAdmin: admin
+      });
+    });
+  }
+
+  ngOnInit(): void {
+    // Ya no necesitamos esto porque usamos signals reactivos
+  }
+
+  getCurrentUser() {
+    return this.currentUser();
+  }
+
+  getUserInitials(): string {
+    return this.userInitials();
   }
 
   toggleMobileMenu(): void {

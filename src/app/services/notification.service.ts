@@ -10,24 +10,46 @@ import { Subscription } from 'rxjs';
 export class NotificationService {
   private notificationSubscription: Subscription | null = null;
   private connectionSubscription: Subscription | null = null;
+  private processedNotifications = new Set<string>(); // Para evitar notificaciones duplicadas
+  private isInitialized = false; // Para evitar múltiples inicializaciones
 
   constructor(
     private messageService: MessageService,
     private webSocketService: WebSocketService,
     private authService: AuthService
   ) {
-    this.initializeNotifications();
+    if (!this.isInitialized) {
+      this.initializeNotifications();
+      this.isInitialized = true;
+    }
   }
 
   /**
    * Inicializar el sistema de notificaciones
    */
   private initializeNotifications(): void {
+    // Variable para evitar reconexiones innecesarias
+    let currentUserId: number | null = null;
+    let currentIsAdmin: boolean = false;
+
     // Escuchar cambios en el estado de autenticación
     this.authService.getCurrentUser$().subscribe(user => {
       if (user) {
-        this.connectWebSocket(user.id, user.role === 'ADMIN');
+        const isAdmin = user.role === 'ADMIN';
+        
+        // Solo reconectar si cambió el usuario o el estado de admin
+        // No reconectar para cambios de rol que no afecten admin status
+        if (currentUserId !== user.id || currentIsAdmin !== isAdmin) {
+          console.log('🔄 Reconectando WebSocket - Usuario cambió o status admin cambió');
+          currentUserId = user.id;
+          currentIsAdmin = isAdmin;
+          this.connectWebSocket(user.id, isAdmin);
+        } else {
+          console.log('👤 Rol actualizado pero sin necesidad de reconectar WebSocket');
+        }
       } else {
+        currentUserId = null;
+        currentIsAdmin = false;
         this.disconnectWebSocket();
       }
     });
@@ -49,6 +71,24 @@ export class NotificationService {
     this.notificationSubscription = this.webSocketService.getNotifications().subscribe(
       notification => {
         if (notification) {
+          // Crear un ID único para la notificación
+          const notificationId = `${notification.tipo}_${notification.usuarioId}_${notification.timestamp}`;
+          
+          // Verificar si ya fue procesada para evitar duplicados
+          if (this.processedNotifications.has(notificationId)) {
+            console.log('⚠️ Notificación ya procesada, ignorando:', notificationId);
+            return;
+          }
+          
+          // Marcar como procesada
+          this.processedNotifications.add(notificationId);
+          
+          // Limpiar notificaciones antigas (mantener solo las últimas 50)
+          if (this.processedNotifications.size > 50) {
+            const entries = Array.from(this.processedNotifications);
+            entries.slice(0, 25).forEach(id => this.processedNotifications.delete(id));
+          }
+          
           this.showNotification(notification);
           
           // Manejar actualización de rol específicamente
@@ -86,6 +126,9 @@ export class NotificationService {
       this.connectionSubscription = null;
     }
 
+    // Limpiar notificaciones procesadas al desconectar
+    this.processedNotifications.clear();
+
     this.webSocketService.disconnect();
   }
 
@@ -93,6 +136,12 @@ export class NotificationService {
    * Mostrar notificación en pantalla
    */
   private showNotification(notification: ReservaNotification): void {
+    // Solo mostrar el toast para USER_ROLE_UPDATED en handleRoleUpdate
+    if (notification.tipo === 'USER_ROLE_UPDATED') {
+      console.log('📢 Role update notification received, will be handled separately');
+      return;
+    }
+
     const severity = this.webSocketService.getNotificationSeverity(notification.tipo);
     const icon = this.webSocketService.getNotificationIcon(notification.tipo);
     
@@ -211,6 +260,20 @@ export class NotificationService {
    */
   private handleRoleUpdate(notification: ReservaNotification): void {
     try {
+      const currentUser = this.authService.getCurrentUser();
+      
+      // Verificar que la notificación es para el usuario actual
+      if (!currentUser || currentUser.id !== notification.usuarioId) {
+        console.warn('⚠️ Notificación de rol no es para el usuario actual, ignorando');
+        return;
+      }
+      
+      // Verificar que el rol realmente cambió
+      if (currentUser.role === notification.estadoNuevo) {
+        console.log('ℹ️ El rol ya está actualizado, no es necesario procesar');
+        return;
+      }
+      
       // Actualizar rol en el AuthService
       this.authService.updateUserRole(notification.estadoNuevo);
       
@@ -220,13 +283,13 @@ export class NotificationService {
         rolNuevo: notification.estadoNuevo
       });
       
-      // Mostrar toast específico para cambio de rol
+      // Mostrar toast específico para cambio de rol (solo una vez)
       this.messageService.add({
         severity: 'warn',
         summary: '👤 Rol Actualizado',
         detail: `Tu rol ha sido cambiado de ${notification.estadoAnterior} a ${notification.estadoNuevo}. Los permisos se han actualizado automáticamente.`,
-        life: 10000, // 10 segundos para que el usuario pueda leer
-        sticky: true
+        life: 8000, // 8 segundos
+        sticky: false // No sticky para evitar acumulación
       });
       
     } catch (error) {
@@ -258,5 +321,6 @@ export class NotificationService {
    */
   destroy(): void {
     this.disconnectWebSocket();
+    this.isInitialized = false;
   }
 }

@@ -48,10 +48,10 @@
             </div>
             <div class="ml-3">
               <p class="text-sm font-medium text-usco-gris-800">
-                {{ currentUser?.nombre || 'Usuario' }}
+                {{ currentUser()?.nombre || 'Usuario' }}
               </p>
               <p class="text-xs font-medium text-usco-gris-500">
-                {{ currentUser?.email || '' }}
+                {{ currentUser()?.email || '' }}
               </p>
             </div>
           </div>

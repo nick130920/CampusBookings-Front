@@ -58,8 +58,21 @@ export class AuthorizationService {
       this.permissionsLoadedLegacy = loaded;
     });
 
-    // Cargar permisos cuando el usuario cambie
+    // Cargar permisos cuando el usuario cambie (usando observables para compatibilidad)
     this.authService.getCurrentUser$().subscribe(user => {
+      if (user) {
+        this.loadUserPermissions(user.id);
+        this.loadTypePermissions(user.email);
+      } else {
+        this.clearPermissions();
+      }
+    });
+
+    // 🚀 Effect para reaccionar a cambios en el signal del usuario actual
+    effect(() => {
+      const user = this.authService.currentUser();
+      console.log('🔄 AuthorizationService detectó cambio de usuario via signal:', user?.email, 'Rol:', user?.role);
+      
       if (user) {
         this.loadUserPermissions(user.id);
         this.loadTypePermissions(user.email);
