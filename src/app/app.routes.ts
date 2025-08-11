@@ -85,6 +85,11 @@ export const routes: Routes = [
     loadComponent: () => import('./components/google-calendar-callback/google-calendar-callback.component').then(m => m.GoogleCalendarCallbackComponent),
     data: { auth: false }
   },
+  {
+    path: 'privacy-policy',
+    loadComponent: () => import('./components/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent),
+    data: { auth: false }
+  },
   { 
     path: '', 
     redirectTo: '/dashboard', 
