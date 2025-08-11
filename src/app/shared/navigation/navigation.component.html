@@ -36,17 +36,22 @@
           </button>
           
           <!-- Dropdown de usuario -->
-          <div *ngIf="showUserMenu" 
+           @if (showUserMenu) {
+          <div  
                class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
             <div class="py-1">
               <a routerLink="/profile" class="block px-4 py-2 text-sm text-usco-gris-700 hover:bg-usco-gris-100">
                 Mi Perfil
+              </a>
+              <a routerLink="/dashboard/google-calendar/config" class="block px-4 py-2 text-sm text-usco-gris-700 hover:bg-usco-gris-100">
+                Google Calendar
               </a>
               <button (click)="logout()" class="block w-full text-left px-4 py-2 text-sm text-usco-gris-700 hover:bg-usco-gris-100">
                 Cerrar Sesión
               </button>
             </div>
           </div>
+          }
         </div>
       </div>
 
@@ -55,8 +60,11 @@
         <button (click)="toggleMobileMenu()" 
                 class="text-usco-gris-700 hover:text-usco-gris-900 hover:bg-usco-gris-100 p-2 rounded-md">
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path *ngIf="!showMobileMenu" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-            <path *ngIf="showMobileMenu" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            @if (!showMobileMenu) {
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            } @else {
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            }
           </svg>
         </button>
       </div>
@@ -64,7 +72,8 @@
   </div>
 
   <!-- Menú móvil -->
-  <div *ngIf="showMobileMenu" class="md:hidden bg-white border-t border-usco-gris-200">
+  @if (showMobileMenu) {
+  <div class="md:hidden bg-white border-t border-usco-gris-200">
     <div class="px-2 pt-2 pb-3 space-y-1">
       <a routerLink="/dashboard" 
          (click)="closeMobileMenu()"
@@ -141,6 +150,11 @@
            class="block px-3 py-2 rounded-md text-base font-medium text-usco-gris-700 hover:bg-usco-gris-100">
           Mi Perfil
         </a>
+        <a routerLink="/dashboard/google-calendar/config" 
+           (click)="closeMobileMenu()"
+           class="block px-3 py-2 rounded-md text-base font-medium text-usco-gris-700 hover:bg-usco-gris-100">
+          Google Calendar
+        </a>
         <button (click)="logout()" 
                 class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-usco-gris-700 hover:bg-usco-gris-100">
           Cerrar Sesión
@@ -148,4 +162,5 @@
       </div>
     </div>
   </div>
+  }
 </nav>

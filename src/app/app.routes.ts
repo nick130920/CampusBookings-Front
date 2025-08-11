@@ -66,6 +66,12 @@ export const routes: Routes = [
           { path: 'alertas', loadComponent: () => import('./components/admin/alerts-management/alerts-management.component').then(m => m.AlertsManagementComponent) }
         ]
       },
+      {
+        path: 'google-calendar',
+        children: [
+          { path: 'config', loadComponent: () => import('./components/google-calendar-config/google-calendar-config.component').then(m => m.GoogleCalendarConfigComponent) }
+        ]
+      },
       // Redirecciones para compatibilidad
       {
         path: 'reservations',
@@ -73,6 +79,11 @@ export const routes: Routes = [
         pathMatch: 'full'
       }
     ]
+  },
+  {
+    path: 'google-calendar/callback',
+    loadComponent: () => import('./components/google-calendar-callback/google-calendar-callback.component').then(m => m.GoogleCalendarCallbackComponent),
+    data: { auth: false }
   },
   { 
     path: '', 
