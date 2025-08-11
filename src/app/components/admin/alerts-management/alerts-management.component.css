@@ -1,0 +1,330 @@
+/* Estilos específicos para la gestión de alertas */
+
+/* Contenedor principal */
+.alerts-container {
+  min-height: 100vh;
+  background-color: var(--surface-ground);
+}
+
+/* Header personalizado */
+.alerts-header {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-400) 100%);
+  color: white;
+}
+
+/* Tarjetas de estadísticas */
+.stats-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid var(--surface-border);
+}
+
+.stats-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.stats-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Barra de progreso personalizada */
+.progress-container {
+  background-color: var(--surface-100);
+  border-radius: 10px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+.progress-success {
+  background: linear-gradient(90deg, var(--green-400) 0%, var(--green-500) 100%);
+}
+
+.progress-warning {
+  background: linear-gradient(90deg, var(--orange-400) 0%, var(--orange-500) 100%);
+}
+
+.progress-danger {
+  background: linear-gradient(90deg, var(--red-400) 0%, var(--red-500) 100%);
+}
+
+/* Tabla personalizada */
+.alerts-table {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.alerts-table .p-datatable-header {
+  background: var(--surface-50);
+  border-bottom: 1px solid var(--surface-200);
+  padding: 1.5rem;
+}
+
+.alerts-table .p-datatable-thead > tr > th {
+  background: var(--surface-50);
+  color: var(--text-color-secondary);
+  font-weight: 600;
+  border-bottom: 1px solid var(--surface-200);
+  padding: 1rem;
+}
+
+.alerts-table .p-datatable-tbody > tr {
+  transition: background-color 0.2s ease;
+}
+
+.alerts-table .p-datatable-tbody > tr:hover {
+  background-color: var(--surface-50);
+}
+
+.alerts-table .p-datatable-tbody > tr > td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--surface-100);
+}
+
+/* Estados de alerta con colores personalizados */
+.estado-pendiente {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  color: #856404;
+  border: 1px solid #ffd700;
+}
+
+.estado-enviado {
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  color: #155724;
+  border: 1px solid #28a745;
+}
+
+.estado-fallido {
+  background: linear-gradient(135deg, #f8d7da 0%, #f1aeb5 100%);
+  color: #721c24;
+  border: 1px solid #dc3545;
+}
+
+.estado-cancelado {
+  background: linear-gradient(135deg, #e2e3e5 0%, #d1d3d4 100%);
+  color: #383d41;
+  border: 1px solid #6c757d;
+}
+
+.estado-programado {
+  background: linear-gradient(135deg, #cce5ff 0%, #99d6ff 100%);
+  color: #004085;
+  border: 1px solid #007bff;
+}
+
+/* Chips de tipo de alerta */
+.tipo-chip {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tipo-recordatorio-24h {
+  background: linear-gradient(135deg, #8F141B 0%, #B91C26 100%);
+  color: white;
+}
+
+.tipo-recordatorio-2h {
+  background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+  color: white;
+}
+
+.tipo-recordatorio-30min {
+  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+  color: white;
+}
+
+.tipo-confirmacion {
+  background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+  color: white;
+}
+
+.tipo-expiracion {
+  background: linear-gradient(135deg, #757575 0%, #424242 100%);
+  color: white;
+}
+
+.tipo-cambio {
+  background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+  color: white;
+}
+
+.tipo-cancelacion {
+  background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+  color: white;
+}
+
+/* Botones de acción */
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.action-button {
+  transition: all 0.2s ease;
+}
+
+.action-button:hover {
+  transform: scale(1.1);
+}
+
+/* Toolbar personalizada */
+.alerts-toolbar {
+  background: white;
+  border: 1px solid var(--surface-200);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Panel de configuración */
+.config-panel .p-panel-content {
+  padding: 2rem;
+}
+
+.config-section {
+  margin-bottom: 2rem;
+}
+
+.config-section h3 {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Animaciones */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-in-up {
+  animation: slideInUp 0.3s ease;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+/* Estados críticos */
+.critical-alert {
+  animation: pulse 2s infinite;
+  border: 2px solid #f44336 !important;
+  box-shadow: 0 0 10px rgba(244, 67, 54, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .alerts-table .p-datatable-tbody > tr > td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .stats-card {
+    margin-bottom: 1rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .config-panel .p-panel-content {
+    padding: 1rem;
+  }
+}
+
+/* Modo oscuro */
+@media (prefers-color-scheme: dark) {
+  .alerts-table {
+    background: var(--surface-900);
+  }
+  
+  .stats-card {
+    background: var(--surface-800);
+    border-color: var(--surface-700);
+  }
+  
+  .alerts-toolbar {
+    background: var(--surface-800);
+    border-color: var(--surface-700);
+  }
+}
+
+/* Estados de carga */
+.loading-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  background: var(--surface-50);
+  border-radius: 8px;
+}
+
+/* Mensajes vacíos */
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-color-secondary);
+}
+
+.empty-state i {
+  font-size: 3rem;
+  color: var(--surface-400);
+  margin-bottom: 1rem;
+}
+
+/* Filtros */
+.filter-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--surface-50);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.filter-label {
+  font-weight: 600;
+  color: var(--text-color-secondary);
+}
+
+/* Badges y chips personalizados */
+.custom-chip {
+  background: var(--primary-color);
+  color: white;
+  border-radius: 20px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}

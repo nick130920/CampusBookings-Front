@@ -62,7 +62,8 @@ export const routes: Routes = [
           { path: 'reportes', component: ReportsComponent },
           { path: 'configuracion', loadComponent: () => import('./components/admin/system-config/system-config.component').then(m => m.SystemConfigComponent) },
           { path: 'roles', loadComponent: () => import('./components/admin/role-management/role-management.component').then(m => m.RoleManagementComponent) },
-          { path: 'permisos-tipo', loadComponent: () => import('./components/admin/scenario-type-permissions/scenario-type-permissions.component').then(m => m.ScenarioTypePermissionsComponent) }
+          { path: 'permisos-tipo', loadComponent: () => import('./components/admin/scenario-type-permissions/scenario-type-permissions.component').then(m => m.ScenarioTypePermissionsComponent) },
+          { path: 'alertas', loadComponent: () => import('./components/admin/alerts-management/alerts-management.component').then(m => m.AlertsManagementComponent) }
         ]
       },
       // Redirecciones para compatibilidad

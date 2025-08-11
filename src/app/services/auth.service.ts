@@ -280,4 +280,49 @@ export class AuthService {
   resetPassword(token: string, newPassword: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/forgot-password/reset`, { token, newPassword });
   }
+
+  /**
+   * Actualizar rol del usuario actual (llamado desde WebSocket)
+   */
+  updateUserRole(newRole: string): void {
+    const currentUser = this.currentUser.value;
+    if (currentUser) {
+      const updatedUser = { ...currentUser, role: newRole };
+      
+      // Actualizar en memoria
+      this.currentUser.next(updatedUser);
+      
+      // Actualizar en localStorage
+      localStorage.setItem('user_data', JSON.stringify(updatedUser));
+      
+      console.log(`🔄 Rol actualizado de ${currentUser.role} a ${newRole} para usuario ${currentUser.email}`);
+      
+      // Emitir evento personalizado para que otros componentes puedan reaccionar
+      window.dispatchEvent(new CustomEvent('user-role-updated', { 
+        detail: { 
+          oldRole: currentUser.role, 
+          newRole: newRole,
+          user: updatedUser
+        } 
+      }));
+    }
+  }
+
+  /**
+   * Actualizar datos completos del usuario (en caso de cambios múltiples)
+   */
+  updateUserData(userData: Partial<User>): void {
+    const currentUser = this.currentUser.value;
+    if (currentUser) {
+      const updatedUser = { ...currentUser, ...userData };
+      
+      // Actualizar en memoria
+      this.currentUser.next(updatedUser);
+      
+      // Actualizar en localStorage
+      localStorage.setItem('user_data', JSON.stringify(updatedUser));
+      
+      console.log('👤 Datos del usuario actualizados:', updatedUser);
+    }
+  }
 }

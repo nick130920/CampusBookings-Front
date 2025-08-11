@@ -56,7 +56,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     public authService: AuthService,
     private router: Router,
-    private sidebarService: SidebarService,
+    public sidebarService: SidebarService,
     public permissionHelper: PermissionHelperService,
     private authorizationService: AuthorizationService
   ) {

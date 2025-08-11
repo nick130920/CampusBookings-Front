@@ -282,7 +282,7 @@
                     <!-- Botón Ver Detalle -->
                     <p-button
                       icon="pi pi-eye"
-                      class="p-button-outlined p-button-info p-button-sm"
+                      class="p-button-sm"
                       pTooltip="Ver detalle"
                       tooltipPosition="top"
                       (onClick)="showReservationDetail(reservation)">
@@ -292,7 +292,7 @@
                     @if (canApprove(reservation)) {
                     <p-button
                       icon="pi pi-check"
-                      class="p-button-outlined p-button-success p-button-sm"
+                      class="p-button-sm"
                       pTooltip="Aprobar reserva"
                       tooltipPosition="top"
                       (onClick)="approveReservation(reservation)">
@@ -302,7 +302,7 @@
                     @if (canReject(reservation)) {
                     <p-button
                       icon="pi pi-times"
-                      class="p-button-outlined p-button-danger p-button-sm"
+                      class="p-button-sm"
                       pTooltip="Rechazar reserva"
                       tooltipPosition="top"
                       (onClick)="rejectReservation(reservation)">
@@ -313,7 +313,7 @@
                     @if (canCancelReservation(reservation)) {
                     <p-button
                       icon="pi pi-ban"
-                      class="p-button-outlined p-button-warning p-button-sm"
+                      class="p-button-sm"
                       pTooltip="Cancelar reserva"
                       tooltipPosition="top"
                       (onClick)="onCancelReservation(reservation)">

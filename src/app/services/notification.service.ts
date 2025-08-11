@@ -50,6 +50,11 @@ export class NotificationService {
       notification => {
         if (notification) {
           this.showNotification(notification);
+          
+          // Manejar actualización de rol específicamente
+          if (notification.tipo === 'USER_ROLE_UPDATED') {
+            this.handleRoleUpdate(notification);
+          }
         }
       }
     );
@@ -139,6 +144,8 @@ export class NotificationService {
         return '🚫 Reserva Cancelada';
       case 'NUEVA_RESERVA_ADMIN':
         return '🔔 Nueva Reserva Pendiente';
+      case 'USER_ROLE_UPDATED':
+        return '👤 Rol Actualizado';
       default:
         return '📢 Notificación';
     }
@@ -162,7 +169,7 @@ export class NotificationService {
   private playNotificationSound(tipo: string): void {
     try {
       // Solo reproducir sonido para notificaciones importantes
-      if (tipo === 'RESERVA_APROBADA' || tipo === 'RESERVA_RECHAZADA' || tipo === 'NUEVA_RESERVA_ADMIN') {
+      if (tipo === 'RESERVA_APROBADA' || tipo === 'RESERVA_RECHAZADA' || tipo === 'NUEVA_RESERVA_ADMIN' || tipo === 'USER_ROLE_UPDATED') {
         // Crear un audio context para reproducir un beep simple
         const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
         const oscillator = audioContext.createOscillator();
@@ -179,6 +186,9 @@ export class NotificationService {
           case 'RESERVA_RECHAZADA':
             oscillator.frequency.setValueAtTime(400, audioContext.currentTime); // Tono bajo
             break;
+          case 'USER_ROLE_UPDATED':
+            oscillator.frequency.setValueAtTime(700, audioContext.currentTime); // Tono medio-alto
+            break;
           default:
             oscillator.frequency.setValueAtTime(600, audioContext.currentTime); // Tono medio
         }
@@ -193,6 +203,34 @@ export class NotificationService {
     } catch (error) {
       // Silenciar errores de audio
       console.debug('Audio notification not available:', error);
+    }
+  }
+
+  /**
+   * Manejar actualización de rol del usuario
+   */
+  private handleRoleUpdate(notification: ReservaNotification): void {
+    try {
+      // Actualizar rol en el AuthService
+      this.authService.updateUserRole(notification.estadoNuevo);
+      
+      console.log('🔄 Rol actualizado en tiempo real:', {
+        usuarioId: notification.usuarioId,
+        rolAnterior: notification.estadoAnterior,
+        rolNuevo: notification.estadoNuevo
+      });
+      
+      // Mostrar toast específico para cambio de rol
+      this.messageService.add({
+        severity: 'warn',
+        summary: '👤 Rol Actualizado',
+        detail: `Tu rol ha sido cambiado de ${notification.estadoAnterior} a ${notification.estadoNuevo}. Los permisos se han actualizado automáticamente.`,
+        life: 10000, // 10 segundos para que el usuario pueda leer
+        sticky: true
+      });
+      
+    } catch (error) {
+      console.error('Error manejando actualización de rol:', error);
     }
   }
 

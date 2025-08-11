@@ -14,7 +14,7 @@ export interface ReservaNotification {
   fechaInicio: string;
   fechaFin: string;
   timestamp: string;
-  tipo: 'RESERVA_APROBADA' | 'RESERVA_RECHAZADA' | 'RESERVA_CANCELADA' | 'RESERVA_AUTO_RECHAZADA' | 'NUEVA_RESERVA_ADMIN';
+  tipo: 'RESERVA_APROBADA' | 'RESERVA_RECHAZADA' | 'RESERVA_CANCELADA' | 'RESERVA_AUTO_RECHAZADA' | 'NUEVA_RESERVA_ADMIN' | 'USER_ROLE_UPDATED';
 }
 
 @Injectable({
@@ -222,6 +222,8 @@ export class WebSocketService {
         return 'pi pi-ban';
       case 'NUEVA_RESERVA_ADMIN':
         return 'pi pi-bell';
+      case 'USER_ROLE_UPDATED':
+        return 'pi pi-user-edit';
       default:
         return 'pi pi-info-circle';
     }
@@ -241,6 +243,8 @@ export class WebSocketService {
         return 'warn';
       case 'NUEVA_RESERVA_ADMIN':
         return 'info';
+      case 'USER_ROLE_UPDATED':
+        return 'warn';
       default:
         return 'info';
     }

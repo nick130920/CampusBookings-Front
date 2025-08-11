@@ -1,3 +1,4 @@
+<div [class]="sidebarService.containerClasses()">
 <!-- Encabezado -->
 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
   <div>
@@ -7,11 +8,14 @@
 </div>
 
 <!-- Spinner de carga -->
-<div *ngIf="isLoading" class="flex justify-center items-center py-8">
+ @if(isLoading) {
+<div class="flex justify-center items-center py-8">
   <p-progressSpinner class="w-12 h-12"></p-progressSpinner>
 </div>
+}
 
-<div *ngIf="!isLoading">
+@if(!isLoading) {
+<div>
   <!-- Formulario para asignar permisos -->
   <p-card class="mb-6">
     <div class="text-lg font-semibold text-usco-gris-800 mb-4">Asignar Nuevo Permiso</div>
@@ -79,8 +83,7 @@
             label="Asignar Permiso"
             icon="pi pi-plus"
             [loading]="isAssigning"
-            [disabled]="assignForm.invalid"
-            class="bg-usco-vino-500 hover:bg-usco-vino-600 text-white w-full">
+            [disabled]="assignForm.invalid">
           </p-button>
         </div>
       </div>
@@ -139,7 +142,6 @@
           <td>
             <p-button
               icon="pi pi-trash"
-              class="p-button-outlined p-button-danger p-button-sm"
               (click)="onRevokePermission(permission)"
               pTooltip="Revocar permiso">
             </p-button>
@@ -160,7 +162,8 @@
     </p-table>
   </p-card>
 </div>
-
+}
+</div>
 <!-- Diálogo de confirmación -->
 <p-confirmDialog></p-confirmDialog>
 

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ScenarioTypePermissionService, ScenarioTypePermission, AssignPermissionRequest } from '../../../services/scenario-type-permission.service';
 import { ToastService } from '../../../services/toast.service';
+import { SidebarService } from '../../../services/sidebar.service';
 
 // PrimeNG imports
 import { ButtonModule } from 'primeng/button';
@@ -14,6 +15,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-scenario-type-permissions',
@@ -28,7 +31,8 @@ import { ConfirmationService } from 'primeng/api';
     ToastModule,
     ProgressSpinnerModule,
     TagModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    TooltipModule
   ],
   providers: [ConfirmationService],
   templateUrl: './scenario-type-permissions.component.html',
@@ -53,7 +57,8 @@ export class ScenarioTypePermissionsComponent implements OnInit {
     private fb: FormBuilder,
     private scenarioTypePermissionService: ScenarioTypePermissionService,
     private toastService: ToastService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    public sidebarService: SidebarService
   ) {
     this.assignForm = this.fb.group({
       userEmail: ['', Validators.required],

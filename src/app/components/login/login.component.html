@@ -24,13 +24,13 @@
       </div>
 
       <!-- Success Message -->
-      <p-message 
-        *ngIf="showSuccessMessage" 
-        severity="success" 
-        text="¡Registro exitoso! Por favor inicia sesión con tus credenciales."
-        class="mb-6">
-      </p-message>
-
+       @if(showSuccessMessage) {
+        <p-message 
+          severity="success"
+          class="mb-6">
+          ¡Registro exitoso! Por favor inicia sesión con tus credenciales.
+        </p-message>
+      }
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
         <!-- Email Input -->
         <div class="field">
@@ -48,12 +48,16 @@
               Correo electrónico
             </label>
           </p-floatlabel>
-          <small 
-            *ngIf="email?.invalid && email?.touched" 
-            class="p-error block mt-2">
-            <span *ngIf="email?.hasError('required')">El correo electrónico es requerido</span>
-            <span *ngIf="email?.hasError('email')">Por favor ingresa un correo electrónico válido</span>
-          </small>
+          @if(email?.invalid && email?.touched) {
+            <small class="p-error block mt-2">
+              @if(email?.hasError('required')) {
+                El correo electrónico es requerido
+              }
+              @if(email?.hasError('email')) {
+                Por favor ingresa un correo electrónico válido
+              }
+            </small>
+          }
         </div>
 
         <!-- Password Input -->
@@ -73,11 +77,13 @@
               Contraseña
             </label>
           </p-floatlabel>
-          <small 
-            *ngIf="password?.invalid && password?.touched" 
-            class="p-error block mt-2">
-            <span *ngIf="password?.hasError('required')">La contraseña es requerida</span>
-          </small>
+          @if(password?.invalid && password?.touched) {
+            <small class="p-error block mt-2">
+              @if(password?.hasError('required')) {
+                La contraseña es requerida
+              }
+            </small>
+          }
         </div>
 
         <!-- Remember Me & Forgot Password -->
@@ -99,25 +105,26 @@
         </div>
 
         <!-- Error Message -->
-        <p-message 
-          *ngIf="errorMessage" 
-          severity="error" 
-          [text]="errorMessage"
-          class="mb-4">
-        </p-message>
+        @if(errorMessage) {
+          <p-message 
+            severity="error" 
+            class="mb-4">
+            {{ errorMessage }}
+          </p-message>
+        }
 
-        <!-- Submit Button -->
-        <p-button
-          type="submit"
-          [disabled]="loginForm.invalid || isLoading"
-          [loading]="isLoading"
-          label="Iniciar Sesión"
-          icon="pi pi-sign-in"
-          class="w-full justify-center"
-          class="w-full"
-          [text]="false"
-          [raised]="true">
-        </p-button>
+        <div class="w-full flex justify-center">
+          <!-- Submit Button -->
+          <p-button
+            type="submit"
+            [disabled]="loginForm.invalid || isLoading"
+            [loading]="isLoading"
+            label="Iniciar Sesión"
+            icon="pi pi-sign-in"
+            [text]="false"
+              [raised]="true">
+            </p-button>
+        </div>
       </form>
 
       <div class="mt-8 text-center">
