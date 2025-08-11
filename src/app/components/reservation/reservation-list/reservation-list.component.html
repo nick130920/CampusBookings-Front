@@ -21,7 +21,7 @@
           <p-button
             icon="pi pi-refresh"
             [loading]="isRefreshing"
-            class="p-button-outlined p-button-secondary"
+            class="p-button-secondary"
             pTooltip="Actualizar lista"
             tooltipPosition="bottom"
             (onClick)="refreshReservations()">
@@ -393,7 +393,7 @@
               <p-button
                 label="Ver Detalle"
                 icon="pi pi-eye"
-                class="p-button-outlined p-button-info p-button-sm"
+                class="p-button-sm"
                 (onClick)="showReservationDetail(reservation)">
               </p-button>
               
@@ -402,7 +402,7 @@
               <p-button
                 label="Aprobar"
                 icon="pi pi-check"
-                class="p-button-outlined p-button-success p-button-sm"
+                class="p-button-success p-button-sm"
                 (onClick)="approveReservation(reservation)">
               </p-button>
               }
@@ -411,7 +411,7 @@
               <p-button
                 label="Rechazar"
                 icon="pi pi-times"
-                class="p-button-outlined p-button-danger p-button-sm"
+                class="p-button-danger p-button-sm"
                 (onClick)="rejectReservation(reservation)">
               </p-button>
               }
@@ -421,7 +421,7 @@
               <p-button
                 label="Cancelar"
                 icon="pi pi-ban"
-                class="p-button-outlined p-button-warning p-button-sm"
+                class="p-button-warning p-button-sm"
                 (onClick)="onCancelReservation(reservation)">
               </p-button>
               }
@@ -531,7 +531,7 @@
       <p-button 
         label="Rechazar" 
         icon="pi pi-times" 
-        class="p-button-outlined p-button-danger"
+        class="p-button-danger"
         (onClick)="rejectReservation(selectedReservation); closeDetailDialog()">
       </p-button>
       <p-button 

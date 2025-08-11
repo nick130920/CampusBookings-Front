@@ -29,7 +29,7 @@ export interface AssignPermissionRequest {
   providedIn: 'root'
 })
 export class ScenarioTypePermissionService {
-  private readonly apiUrl = `${environment.apiUrl}/admin/scenario-type-permissions`;
+  private readonly apiUrl = `${environment.apiUrl}/v1/scenario-type-permissions`;
 
   constructor(private http: HttpClient) {}
 

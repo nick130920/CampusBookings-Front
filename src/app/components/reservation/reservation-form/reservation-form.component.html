@@ -221,8 +221,7 @@
           <div class="mt-6">
             <p-message 
               severity="success"
-              text="Horario seleccionado disponible para reserva"
-              class="w-full">
+              class="w-full">Horario seleccionado disponible para reserva
             </p-message>
           </div>
           }
@@ -339,24 +338,22 @@
           <!-- Layout responsivo unificado -->
           <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
             <!-- Botón anterior (solo si existe) -->
-            <div class="flex flex-col sm:flex-row sm:justify-start">
+            <div class="flex flex-col sm:flex-row sm:justify-start mx-auto">
               @if (currentStep > 0) {
               <p-button
                 label="Anterior"
                 icon="pi pi-chevron-left"
-                class="p-button-outlined p-button-secondary responsive-button"
                 (onClick)="previousStep()">
               </p-button>
               }
             </div>
 
             <!-- Botones principales -->
-            <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+            <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3 mx-auto">
               <!-- Botón cancelar -->
               <p-button
                 label="Cancelar"
                 icon="pi pi-times"
-                class="p-button-outlined p-button-secondary responsive-button"
                 (onClick)="onCancel()">
               </p-button>
 
@@ -365,7 +362,6 @@
               <p-button
                 label="Siguiente"
                 icon="pi pi-chevron-right"
-                class="responsive-button"
                 [disabled]="!isStepValid(currentStep)"
                 (onClick)="nextStep()">
               </p-button>
@@ -376,7 +372,6 @@
               <p-button
                 label="Confirmar Reserva"
                 icon="pi pi-check"
-                class="responsive-button"
                 [disabled]="!isFormValid"
                 [loading]="isSubmitting"
                 (onClick)="onSubmit()">
