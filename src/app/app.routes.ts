@@ -13,6 +13,10 @@ import { ReportsComponent } from './components/admin/reports/reports.component';
 import { AdminDashboardComponent } from './components/admin/dashboard/admin-dashboard.component';
 
 export const routes: Routes = [
+  {
+    path: 'privacy-policy',
+    loadComponent: () => import('./components/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent)
+  },
   { 
     path: 'login', 
     component: LoginComponent,
@@ -83,11 +87,6 @@ export const routes: Routes = [
   {
     path: 'google-calendar/callback',
     loadComponent: () => import('./components/google-calendar-callback/google-calendar-callback.component').then(m => m.GoogleCalendarCallbackComponent),
-    data: { auth: false }
-  },
-  {
-    path: 'privacy-policy',
-    loadComponent: () => import('./components/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent),
     data: { auth: false }
   },
   { 
