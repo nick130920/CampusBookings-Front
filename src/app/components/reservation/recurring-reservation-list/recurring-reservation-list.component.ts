@@ -18,8 +18,8 @@ import {
   RecurringReservationService, 
   RecurringReservationResponse,
   PATRON_RECURRENCIA_LABELS 
-} from '@/services/recurring-reservation.service';
-import { AuthService } from '@/services/auth.service';
+} from '../../../services/recurring-reservation.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-recurring-reservation-list',
@@ -289,11 +289,11 @@ export class RecurringReservationListComponent implements OnInit {
     }
 
     this.recurringService.getUserRecurringReservations(currentUser.id).subscribe({
-      next: (reservations) => {
+      next: (reservations: RecurringReservationResponse[]) => {
         this.reservations.set(reservations);
         this.loading.set(false);
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error loading recurring reservations:', error);
         this.messageService.add({
           severity: 'error',
@@ -366,7 +366,7 @@ export class RecurringReservationListComponent implements OnInit {
       rejectLabel: 'Cancelar',
       accept: () => {
         this.recurringService.deactivateRecurringReservation(reservation.id).subscribe({
-          next: (updated) => {
+          next: (updated: RecurringReservationResponse) => {
             this.messageService.add({
               severity: 'success',
               summary: 'Éxito',
@@ -374,7 +374,7 @@ export class RecurringReservationListComponent implements OnInit {
             });
             this.updateReservationInList(updated);
           },
-          error: (error) => {
+          error: (error: any) => {
             console.error('Error deactivating reservation:', error);
             this.messageService.add({
               severity: 'error',
@@ -396,7 +396,7 @@ export class RecurringReservationListComponent implements OnInit {
       rejectLabel: 'Cancelar',
       accept: () => {
         this.recurringService.activateRecurringReservation(reservation.id).subscribe({
-          next: (updated) => {
+          next: (updated: RecurringReservationResponse) => {
             this.messageService.add({
               severity: 'success',
               summary: 'Éxito',
@@ -404,7 +404,7 @@ export class RecurringReservationListComponent implements OnInit {
             });
             this.updateReservationInList(updated);
           },
-          error: (error) => {
+          error: (error: any) => {
             console.error('Error activating reservation:', error);
             this.messageService.add({
               severity: 'error',
@@ -435,7 +435,7 @@ export class RecurringReservationListComponent implements OnInit {
             });
             this.removeReservationFromList(reservation.id);
           },
-          error: (error) => {
+          error: (error: any) => {
             console.error('Error deleting reservation:', error);
             this.messageService.add({
               severity: 'error',

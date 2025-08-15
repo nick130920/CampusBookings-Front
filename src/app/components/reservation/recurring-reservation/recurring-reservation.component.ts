@@ -5,10 +5,10 @@ import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
-import { DropdownModule } from 'primeng/dropdown';
-import { CalendarModule } from 'primeng/calendar';
+import { SelectModule } from 'primeng/select';
+import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
+import { TextareaModule } from 'primeng/textarea';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ToastModule } from 'primeng/toast';
@@ -27,18 +27,9 @@ import {
   PatronRecurrencia,
   PATRON_RECURRENCIA_LABELS,
   DIAS_SEMANA 
-} from '@/services/recurring-reservation.service';
-import { ScenarioService } from '@/services/scenario.service';
-import { AuthService } from '@/services/auth.service';
-
-interface Scenario {
-  id: number;
-  nombre: string;
-  tipoEscenarioNombre: string;
-  ubicacionNombre: string;
-  capacidad: number;
-  disponible: boolean;
-}
+} from '../../../services/recurring-reservation.service';
+import { ScenarioService, Scenario } from '../../../services/scenario.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-recurring-reservation',
@@ -49,10 +40,10 @@ interface Scenario {
     FormsModule,
     ButtonModule,
     CardModule,
-    DropdownModule,
-    CalendarModule,
+    SelectModule,
+    DatePickerModule,
     InputTextModule,
-    InputTextareaModule,
+    TextareaModule,
     InputNumberModule,
     CheckboxModule,
     ToastModule,
@@ -86,7 +77,7 @@ interface Scenario {
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                   Escenario <span class="text-red-500">*</span>
                 </label>
-                <p-dropdown 
+                <p-select 
                   formControlName="escenarioId"
                   [options]="scenarios()"
                   optionLabel="nombre"
@@ -99,22 +90,22 @@ interface Scenario {
                   <ng-template pTemplate="selectedItem" let-selectedOption>
                     <div class="flex items-center gap-2" *ngIf="selectedOption">
                       <span class="font-medium">{{ selectedOption.nombre }}</span>
-                      <span class="text-xs text-gray-500">{{ selectedOption.tipoEscenarioNombre }}</span>
+                      <span class="text-xs text-gray-500">{{ selectedOption.tipo }}</span>
                     </div>
                   </ng-template>
                   <ng-template pTemplate="item" let-scenario>
                     <div class="flex flex-col gap-1 p-2">
                       <span class="font-medium">{{ scenario.nombre }}</span>
                       <div class="flex gap-2 text-xs text-gray-500">
-                        <span>{{ scenario.tipoEscenarioNombre }}</span>
+                        <span>{{ scenario.tipo }}</span>
                         <span>•</span>
-                        <span>{{ scenario.ubicacionNombre }}</span>
+                        <span>{{ scenario.ubicacion }}</span>
                         <span>•</span>
                         <span>Capacidad: {{ scenario.capacidad }}</span>
                       </div>
                     </div>
                   </ng-template>
-                </p-dropdown>
+                </p-select>
               </div>
 
               <!-- Patrón de Recurrencia -->
@@ -122,7 +113,7 @@ interface Scenario {
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                   Patrón de Recurrencia <span class="text-red-500">*</span>
                 </label>
-                <p-dropdown 
+                <p-select 
                   formControlName="patron"
                   [options]="patronOptions"
                   optionLabel="label"
@@ -131,7 +122,7 @@ interface Scenario {
                   class="w-full"
                   [style]="{'width': '100%'}"
                   appendTo="body">
-                </p-dropdown>
+                </p-select>
               </div>
 
               <!-- Configuración específica del patrón -->
@@ -197,7 +188,7 @@ interface Scenario {
                   <label class="block text-sm font-medium text-gray-700 mb-2">
                     Fecha de Inicio <span class="text-red-500">*</span>
                   </label>
-                  <p-calendar 
+                  <p-datepicker 
                     formControlName="fechaInicio"
                     [minDate]="minDate"
                     [maxDate]="maxDate"
@@ -207,14 +198,14 @@ interface Scenario {
                     inputId="fechaInicio"
                     class="w-full"
                     appendTo="body">
-                  </p-calendar>
+                  </p-datepicker>
                 </div>
                 
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">
                     Fecha de Fin <span class="text-red-500">*</span>
                   </label>
-                  <p-calendar 
+                  <p-datepicker 
                     formControlName="fechaFin"
                     [minDate]="minDateFin()"
                     [maxDate]="maxDate"
@@ -224,7 +215,7 @@ interface Scenario {
                     inputId="fechaFin"
                     class="w-full"
                     appendTo="body">
-                  </p-calendar>
+                  </p-datepicker>
                 </div>
               </div>
 
@@ -234,7 +225,7 @@ interface Scenario {
                   <label class="block text-sm font-medium text-gray-700 mb-2">
                     Hora de Inicio <span class="text-red-500">*</span>
                   </label>
-                  <p-calendar 
+                  <p-datepicker 
                     formControlName="horaInicio"
                     [timeOnly]="true"
                     placeholder="HH:MM"
@@ -242,14 +233,14 @@ interface Scenario {
                     inputId="horaInicio"
                     class="w-full"
                     appendTo="body">
-                  </p-calendar>
+                  </p-datepicker>
                 </div>
                 
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">
                     Hora de Fin <span class="text-red-500">*</span>
                   </label>
-                  <p-calendar 
+                  <p-datepicker 
                     formControlName="horaFin"
                     [timeOnly]="true"
                     placeholder="HH:MM"
@@ -257,7 +248,7 @@ interface Scenario {
                     inputId="horaFin"
                     class="w-full"
                     appendTo="body">
-                  </p-calendar>
+                  </p-datepicker>
                 </div>
               </div>
 
@@ -283,12 +274,12 @@ interface Scenario {
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                   Observaciones
                 </label>
-                <p-inputTextarea 
+                <p-textarea 
                   formControlName="observaciones"
                   placeholder="Observaciones adicionales..."
-                  [rows]="3"
+                  rows="3"
                   class="w-full">
-                </p-inputTextarea>
+                </p-textarea>
               </div>
 
               <!-- Botones -->
@@ -533,12 +524,12 @@ export class RecurringReservationComponent implements OnInit {
 
   private loadScenarios() {
     this.loadingScenarios.set(true);
-    this.scenarioService.getAllScenarios().subscribe({
-      next: (scenarios) => {
-        this.scenarios.set(scenarios.filter(s => s.disponible));
+    this.scenarioService.getScenarios().subscribe({
+      next: (scenarios: Scenario[]) => {
+        this.scenarios.set(scenarios.filter((s: Scenario) => s.disponible));
         this.loadingScenarios.set(false);
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error loading scenarios:', error);
         this.messageService.add({
           severity: 'error',
@@ -572,10 +563,10 @@ export class RecurringReservationComponent implements OnInit {
   onPreview() {
     if (this.reservaForm.valid) {
       const request = this.buildRequest();
-      const validationErrors = this.recurringService.validateRecurringReservation(request);
+      const validationErrors: string[] = this.recurringService.validateRecurringReservation(request);
       
       if (validationErrors.length > 0) {
-        validationErrors.forEach(error => {
+        validationErrors.forEach((error: string) => {
           this.messageService.add({
             severity: 'error',
             summary: 'Error de Validación',
@@ -587,7 +578,7 @@ export class RecurringReservationComponent implements OnInit {
 
       this.loadingPreview.set(true);
       this.recurringService.previewRecurringReservation(request).subscribe({
-        next: (preview) => {
+        next: (preview: RecurringReservationPreview) => {
           this.preview.set(preview);
           this.loadingPreview.set(false);
           this.messageService.add({
@@ -596,7 +587,7 @@ export class RecurringReservationComponent implements OnInit {
             detail: `Se generarán ${preview.totalReservasAGenerar} reservas`
           });
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Error in preview:', error);
           this.messageService.add({
             severity: 'error',
@@ -640,7 +631,7 @@ export class RecurringReservationComponent implements OnInit {
     
     this.creating.set(true);
     this.recurringService.createRecurringReservation(request).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         this.messageService.add({
           severity: 'success',
           summary: 'Éxito',
@@ -653,7 +644,7 @@ export class RecurringReservationComponent implements OnInit {
           this.router.navigate(['/dashboard']);
         }, 2000);
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error creating recurring reservation:', error);
         this.messageService.add({
           severity: 'error',
