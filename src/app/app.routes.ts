@@ -56,7 +56,9 @@ export const routes: Routes = [
         path: 'reservas',
         children: [
           { path: '', component: ReservationListComponent },
-          { path: 'nueva', component: ReservationFormComponent }
+          { path: 'nueva', component: ReservationFormComponent },
+          { path: 'recurrente', loadComponent: () => import('./components/reservation/recurring-reservation/recurring-reservation.component').then(m => m.RecurringReservationComponent) },
+          { path: 'recurrentes', loadComponent: () => import('./components/reservation/recurring-reservation-list/recurring-reservation-list.component').then(m => m.RecurringReservationListComponent) }
         ]
       },
       {

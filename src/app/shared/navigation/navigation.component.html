@@ -92,6 +92,15 @@
         Mis Reservas
       </a>
       
+      <!-- Reservas Recurrentes - Requiere permiso de creación de reservas -->
+      <a *hasPermission="PERMISSIONS.RESERVATIONS.CREATE.toString()" 
+         routerLink="/dashboard/reservas/recurrentes" 
+         (click)="closeMobileMenu()"
+         routerLinkActive="bg-usco-vino-100 text-usco-vino-700"
+         class="text-usco-gris-700 hover:bg-usco-gris-100 block px-3 py-2 rounded-md text-base font-medium">
+        Reservas Recurrentes
+      </a>
+      
       <!-- Calendario - Requiere permiso de lectura de escenarios -->
       <a *hasPermission="PERMISSIONS.SCENARIOS.READ.toString()" 
          routerLink="/dashboard/escenarios/disponibilidad" 

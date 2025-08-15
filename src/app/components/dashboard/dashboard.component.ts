@@ -137,6 +137,10 @@ export class DashboardComponent implements OnInit {
     return this.PERMISSIONS.RESERVATIONS.READ.toString();
   }
 
+  getReservationsCreatePermission(): string {
+    return this.PERMISSIONS.RESERVATIONS.CREATE.toString();
+  }
+
   getScenariosReadPermission(): string {
     return this.PERMISSIONS.SCENARIOS.READ.toString();
   }
