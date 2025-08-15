@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormControl, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { FeedbackService, FeedbackResponse, FeedbackRequest, FeedbackUpdateRequest, EstadisticasFeedback, PageResponse } from '../../services/feedback.service';
 import { ToastService } from '../../services/toast.service';
+import { firstValueFrom } from 'rxjs';
 
 // PrimeNG Imports
 import { ButtonModule } from 'primeng/button';
@@ -126,7 +127,7 @@ export class FeedbackComponent implements OnInit {
    */
   async cargarMiFeedback() {
     try {
-      this.miFeedback = await this.feedbackService.obtenerMiFeedbackParaEscenario(this.escenarioId).toPromise() || null;
+      this.miFeedback = await firstValueFrom(this.feedbackService.obtenerMiFeedbackParaEscenario(this.escenarioId)) || null;
       
       if (this.miFeedback) {
         // Si ya existe feedback, llenar el formulario con los datos actuales
@@ -147,7 +148,7 @@ export class FeedbackComponent implements OnInit {
     if (!this.mostrarEstadisticas) return;
     
     try {
-      this.estadisticas = await this.feedbackService.obtenerEstadisticasFeedback(this.escenarioId).toPromise() || null;
+      this.estadisticas = await firstValueFrom(this.feedbackService.obtenerEstadisticasFeedback(this.escenarioId)) || null;
     } catch (error) {
       console.error('Error cargando estadísticas:', error);
     }
@@ -160,11 +161,11 @@ export class FeedbackComponent implements OnInit {
     if (!this.mostrarListaFeedbacks) return;
     
     try {
-      const response = await this.feedbackService.obtenerFeedbacksPorEscenario(
+      const response = await firstValueFrom(this.feedbackService.obtenerFeedbacksPorEscenario(
         this.escenarioId, 
         this.currentPage, 
         this.pageSize
-      ).toPromise();
+      ));
 
       if (response) {
         this.feedbacks = response.content;
@@ -221,7 +222,7 @@ export class FeedbackComponent implements OnInit {
           comentario: formValue.comentario || undefined
         };
         
-        const updated = await this.feedbackService.actualizarFeedback(this.miFeedback.id, request).toPromise();
+        const updated = await firstValueFrom(this.feedbackService.actualizarFeedback(this.miFeedback.id, request));
         if (updated) {
           this.miFeedback = updated;
           this.toastService.showSuccess('Feedback actualizado exitosamente');
@@ -235,7 +236,7 @@ export class FeedbackComponent implements OnInit {
           comentario: formValue.comentario || undefined
         };
         
-        const created = await this.feedbackService.crearFeedback(request).toPromise();
+        const created = await firstValueFrom(this.feedbackService.crearFeedback(request));
         if (created) {
           this.miFeedback = created;
           this.toastService.showSuccess('Feedback creado exitosamente');
@@ -272,7 +273,7 @@ export class FeedbackComponent implements OnInit {
         if (!this.miFeedback) return;
         
         try {
-          await this.feedbackService.eliminarFeedback(this.miFeedback.id).toPromise();
+          await firstValueFrom(this.feedbackService.eliminarFeedback(this.miFeedback.id));
           this.miFeedback = null;
           this.feedbackForm.reset();
           this.toastService.showSuccess('Feedback eliminado exitosamente');

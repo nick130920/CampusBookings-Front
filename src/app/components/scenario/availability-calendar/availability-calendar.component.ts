@@ -6,10 +6,7 @@ import { switchMap, catchError, of, Subscription } from 'rxjs';
 
 // PrimeNG Imports
 import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
-import { MessageModule } from 'primeng/message';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CardModule } from 'primeng/card';
 import { ChipModule } from 'primeng/chip';
@@ -36,13 +33,7 @@ interface CalendarDay {
   ocupaciones?: BloqueOcupado[]; // Nueva propiedad para mostrar rangos específicos
 }
 
-interface AvailabilityRequest {
-  fechaInicio: string;
-  fechaFin: string;
-  tipo?: string;
-  ubicacion?: string;
-  nombre?: string;
-}
+
 
 @Component({
   selector: 'app-availability-calendar',
@@ -53,10 +44,7 @@ interface AvailabilityRequest {
     RouterModule,
     // PrimeNG Components
     ButtonModule,
-    InputTextModule,
-    DatePickerModule,
     SelectModule,
-    MessageModule,
     ProgressSpinnerModule,
     CardModule,
     ChipModule,
@@ -78,21 +66,12 @@ export class AvailabilityCalendarComponent implements OnInit, OnDestroy {
   // Data del escenario
   selectedScenario: (Scenario & { id: number }) | null = null;
   scenarios: Scenario[] = [];
-  scenarioTypes: string[] = [];
-  locations: string[] = [];
   
   // Calendario
   currentDate = new Date();
   currentMonth = this.currentDate.getMonth();
   currentYear = this.currentDate.getFullYear();
   calendarDays: CalendarDay[] = [];
-  
-  // Disponibilidad
-  availabilityData: any[] = [];
-  
-  // Configuración
-  minDate = new Date();
-  maxDate = new Date();
   
   private fb = inject(FormBuilder);
   private router = inject(Router);
@@ -106,7 +85,6 @@ export class AvailabilityCalendarComponent implements OnInit, OnDestroy {
 
   constructor() {
     this.initForm();
-    this.setDateLimits();
   }
 
   ngOnInit(): void {
@@ -122,24 +100,7 @@ export class AvailabilityCalendarComponent implements OnInit, OnDestroy {
 
   private initForm(): void {
     this.searchForm = this.fb.group({
-      scenarioId: [null],
-      scenarioName: [''],
-      scenarioType: [''],
-      location: [''],
-      dateRange: [null, Validators.required]
-    });
-  }
-
-  private setDateLimits(): void {
-    // Usar configuración dinámica del sistema
-    this.minDate = this.systemConfigService.getMinAllowedDate();
-    this.maxDate = this.systemConfigService.getMaxAllowedDate();
-    
-    // Suscribirse a cambios en la configuración
-    this.systemConfigService.config$.subscribe(config => {
-      this.minDate = this.systemConfigService.getMinAllowedDate();
-      this.maxDate = this.systemConfigService.getMaxAllowedDate();
-      this.generateCalendar(); // Regenerar calendario con nuevos límites
+      scenarioId: [null, Validators.required]
     });
   }
 
@@ -148,20 +109,13 @@ export class AvailabilityCalendarComponent implements OnInit, OnDestroy {
     
     // Cargar escenarios
     this.scenarioService.getScenarios().pipe(
-      switchMap(scenarios => {
-        this.scenarios = scenarios;
-        return this.scenarioService.getTiposEscenario();
-      }),
-      switchMap(tipos => {
-        this.scenarioTypes = tipos;
-        return this.scenarioService.getUbicaciones();
-      }),
       catchError(error => {
-        console.error('Error loading initial data:', error);
-        this.toastService.showError('Error al cargar los datos iniciales');
-        return of(null);
+        console.error('Error loading scenarios:', error);
+        this.toastService.showError('Error al cargar los escenarios');
+        return of([]);
       })
-    ).subscribe(() => {
+    ).subscribe(scenarios => {
+      this.scenarios = scenarios;
       this.isLoading = false;
     });
   }
@@ -181,12 +135,7 @@ export class AvailabilityCalendarComponent implements OnInit, OnDestroy {
       const scenario = this.scenarios.find(s => s.id === scenarioId);
       if (scenario && scenario.id) {
         this.selectedScenario = scenario as (Scenario & { id: number });
-        this.searchForm.patchValue({
-          scenarioName: this.selectedScenario.nombre,
-          scenarioType: this.selectedScenario.tipo,
-          location: this.selectedScenario.ubicacion
-        });
-        // Cargar ocupaciones para el mes actual cuando se selecciona un escenario
+        // Cargar ocupaciones para el mes actual automáticamente
         this.loadOccupationsForCurrentMonth();
       }
     } else {
@@ -196,76 +145,13 @@ export class AvailabilityCalendarComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSearch(): void {
-    if (this.searchForm.invalid) {
-      this.toastService.showError('Por favor complete todos los campos requeridos');
-      return;
-    }
 
-    const formValue = this.searchForm.value;
-    const dateRange = formValue.dateRange;
-    
-    if (!dateRange || !dateRange[0] || !dateRange[1]) {
-      this.toastService.showError('Por favor seleccione un rango de fechas');
-      return;
-    }
 
-    this.checkAvailability({
-      fechaInicio: this.formatDateForAPI(dateRange[0]),
-      fechaFin: this.formatDateForAPI(dateRange[1]),
-      tipo: formValue.scenarioType || undefined,
-      ubicacion: formValue.location || undefined,
-      nombre: formValue.scenarioName || undefined
-    });
-  }
 
-  private checkAvailability(request: AvailabilityRequest): void {
-    this.isCheckingAvailability = true;
-    this.availabilityData = [];
 
-    // Llamar al servicio de disponibilidad
-    this.scenarioService.checkAvailability(request).pipe(
-      catchError(error => {
-        console.error('Error checking availability:', error);
-        this.toastService.showError('Error al verificar disponibilidad');
-        return of([]);
-      })
-    ).subscribe(data => {
-      this.availabilityData = data;
-      this.updateCalendarAvailability();
-      this.isCheckingAvailability = false;
-    });
-  }
 
-  private updateCalendarAvailability(): void {
-    // Actualizar el estado de disponibilidad en el calendario
-    this.calendarDays = this.calendarDays.map(day => {
-      const dayAvailability = this.getDayAvailability(day.date);
-      return {
-        ...day,
-        availability: dayAvailability
-      };
-    });
-  }
 
-  private getDayAvailability(date: Date): 'DISPONIBLE' | 'RESERVADO' | 'NO_DISPONIBLE' | 'UNKNOWN' {
-    // Verificar si está dentro del rango permitido usando la configuración dinámica
-    if (!this.systemConfigService.isDateAllowed(date)) {
-      return 'NO_DISPONIBLE';
-    }
 
-    const dateStr = this.formatDateForAPI(date);
-    const dayData = this.availabilityData.find(item => 
-      item.fecha === dateStr || 
-      (new Date(item.fechaInicio) <= date && new Date(item.fechaFin) >= date)
-    );
-
-    if (!dayData) {
-      return 'UNKNOWN';
-    }
-
-    return dayData.disponible ? 'DISPONIBLE' : 'RESERVADO';
-  }
 
   private generateCalendar(): void {
     const firstDay = new Date(this.currentYear, this.currentMonth, 1);
@@ -570,12 +456,10 @@ export class AvailabilityCalendarComponent implements OnInit, OnDestroy {
     return iconos[estado] || 'pi pi-info-circle';
   }
 
-  clearFilters(): void {
+  clearScenario(): void {
     this.searchForm.reset();
     this.selectedScenario = null;
-    this.availabilityData = [];
     this.clearOccupations();
-    this.updateCalendarAvailability();
   }
 
   ngOnDestroy(): void {

@@ -14,6 +14,15 @@ export interface GoogleCalendarAuthRequest {
   authorizationCode: string;
 }
 
+export interface GoogleCalendarSyncResponse {
+  success: boolean;
+  message: string;
+  totalReservas: number;
+  reservasSincronizadas: number;
+  errores: number;
+  connected: boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -81,8 +90,8 @@ export class GoogleCalendarService {
   /**
    * Sincroniza todas las reservas con Google Calendar
    */
-  syncAllReservations(): Observable<void> {
-    return this.http.post<void>(`${this.baseUrl}/sync-all`, {});
+  syncAllReservations(): Observable<GoogleCalendarSyncResponse> {
+    return this.http.post<GoogleCalendarSyncResponse>(`${this.baseUrl}/sync-all`, {});
   }
 
   /**

@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractContro
 import { Router, RouterModule } from '@angular/router';
 import { interval, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 
 // PrimeNG Imports
 import { ButtonModule } from 'primeng/button';
@@ -123,7 +124,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
       const email = this.emailControl?.value;
       
       // Llamar al servicio para enviar el código
-      await this.authService.sendPasswordResetCode(email).toPromise();
+      await firstValueFrom(this.authService.sendPasswordResetCode(email));
       
       // Enmascarar el email para mostrar
       this.maskedEmail = this.maskEmail(email);
@@ -152,7 +153,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
       const code = this.codeControl?.value;
       
       // Llamar al servicio para verificar el código
-      const response = await this.authService.verifyPasswordResetCode(email, code).toPromise();
+      const response = await firstValueFrom(this.authService.verifyPasswordResetCode(email, code));
       
       this.verificationToken = response.token;
       this.step = 3;
@@ -176,7 +177,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
       const newPassword = this.newPasswordControl?.value;
       
       // Llamar al servicio para cambiar la contraseña
-      await this.authService.resetPassword(this.verificationToken, newPassword).toPromise();
+      await firstValueFrom(this.authService.resetPassword(this.verificationToken, newPassword));
       
       this.step = 4;
       this.toastService.showSuccess('¡Contraseña restablecida exitosamente!');
@@ -197,7 +198,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
     
     try {
       const email = this.emailControl?.value;
-      await this.authService.sendPasswordResetCode(email).toPromise();
+      await firstValueFrom(this.authService.sendPasswordResetCode(email));
       
       this.successMessage = 'Código reenviado exitosamente.';
       this.startCountdown();
