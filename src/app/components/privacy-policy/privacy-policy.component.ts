@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -228,7 +228,7 @@ import { Router } from '@angular/router';
   `]
 })
 export class PrivacyPolicyComponent {
-  constructor(private router: Router) {}
+  private router = inject(Router);
 
   goBack() {
     // Intentar volver al dashboard si está logueado, sino al login

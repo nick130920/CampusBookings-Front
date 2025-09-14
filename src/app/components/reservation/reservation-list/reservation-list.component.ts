@@ -1,43 +1,35 @@
-import { Component, OnInit, inject, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Subscription } from 'rxjs';
 
 // PrimeNG Imports
+import { ConfirmationService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { ChipModule } from 'primeng/chip';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DatePickerModule } from 'primeng/datepicker';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { SelectModule } from 'primeng/select';
+import { SelectButtonModule } from 'primeng/selectbutton';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { SelectModule } from 'primeng/select';
-import { DatePickerModule } from 'primeng/datepicker';
-import { InputTextModule } from 'primeng/inputtext';
-import { SelectButtonModule } from 'primeng/selectbutton';
-import { TabsModule } from 'primeng/tabs';
-import { DialogModule } from 'primeng/dialog';
-import { ConfirmationService } from 'primeng/api';
 
 // Services
-import { ReservationService, Reservation } from '../../../services/reservation.service';
 import { AuthService, User } from '../../../services/auth.service';
-import { ToastService } from '../../../services/toast.service';
+import { Reservation, ReservationService } from '../../../services/reservation.service';
 import { SidebarService } from '../../../services/sidebar.service';
+import { ToastService } from '../../../services/toast.service';
 
 // Utils
 import { formatRelativeDate } from '../../../utils/date.utils';
 
 
-import { PermissionHelperService } from '../../../shared/services/permission-helper.service';
-import { AuthorizationService, Permission } from '../../../services/authorization.service';
-import { 
-  PERMISSIONS, 
-  PERMISSION_GROUPS, 
-  PermissionHelper 
-} from '../../../shared/constants/permissions.constants';
 
 interface ReservationFilter {
   estado?: string;
@@ -52,7 +44,6 @@ interface ReservationFilter {
   imports: [
     CommonModule,
     FormsModule,
-    RouterModule,
     // PrimeNG Components
     ButtonModule,
     CardModule,
