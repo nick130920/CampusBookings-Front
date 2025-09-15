@@ -216,12 +216,13 @@
             <label class="block text-sm font-medium text-surface-700 mb-2">
               Observaciones
             </label>
-            <p-textarea 
+            <textarea 
+              pTextarea
               formControlName="observaciones"
               placeholder="Observaciones adicionales..."
               rows="3"
               class="w-full">
-            </p-textarea>
+            </textarea>
           </div>
 
           <!-- Botones -->
@@ -241,8 +242,7 @@
               icon="pi pi-plus"
               [loading]="creating()"
               [disabled]="!preview() || !reservaForm.valid"
-              (onClick)="onCreate()"
-              severity="success">
+              (onClick)="onCreate()">
             </p-button>
           </div>
         </form>

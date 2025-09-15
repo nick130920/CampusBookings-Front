@@ -103,7 +103,6 @@ import { ToastService } from '../../services/toast.service';
             <p-button 
               label="Actualizar Estado"
               icon="pi pi-sync"
-              severity="help"
               [loading]="isLoading()"
               (onClick)="checkConnectionStatus()">
             </p-button>

@@ -1,5 +1,5 @@
 <!-- Header Principal -->
-<div class="surface-0 p-4 mb-4 border-round shadow-2">
+<div class="surface-0 p-4 m-8 border-round shadow-2">
   <div class="flex justify-content-between align-items-center">
     <div>
       <h1 class="text-4xl font-bold text-primary mb-2">
@@ -30,9 +30,8 @@
 
 <!-- Panel de Estadísticas -->
 @if (showStatsPanel()) {
-  <div class="grid mb-4">
-    <div class="col-12">
-      <p-panel>
+  <div class="m-8">
+        <p-panel>
         <ng-template pTemplate="header">
           <div class="flex align-items-center gap-2">
             <i class="pi pi-chart-bar text-primary"></i>
@@ -48,81 +47,68 @@
         </ng-template>
         
         @if (estadisticas(); as stats) {
-          <div class="grid">
+          <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 p-4">
             <!-- Total de Alertas -->
-            <div class="col-12 md:col-6 lg:col-2">
-              <p-card styleClass="h-full">
-                <div class="text-center">
-                  <i class="pi pi-bell text-4xl text-primary mb-3"></i>
-                  <div class="text-2xl font-bold text-900">{{ stats.totalAlertas }}</div>
-                  <div class="text-600">Total Alertas</div>
-                </div>
-              </p-card>
-            </div>
+            <p-card class="h-full stats-card">
+              <div class="text-center p-3">
+                <i class="pi pi-bell text-3xl text-primary mb-2 block"></i>
+                <div class="text-2xl font-bold text-900 mb-1">{{ stats.totalAlertas }}</div>
+                <div class="text-600 text-sm font-medium">Total Alertas</div>
+              </div>
+            </p-card>
 
             <!-- Alertas Pendientes -->
-            <div class="col-12 md:col-6 lg:col-2">
-              <p-card styleClass="h-full">
-                <div class="text-center">
-                  <i class="pi pi-clock text-4xl text-orange-500 mb-3"></i>
-                  <div class="text-2xl font-bold text-900">{{ stats.alertasPendientes }}</div>
-                  <div class="text-600">Pendientes</div>
-                </div>
-              </p-card>
-            </div>
+            <p-card class="h-full stats-card">
+              <div class="text-center p-3">
+                <i class="pi pi-clock text-3xl text-orange-500 mb-2 block"></i>
+                <div class="text-2xl font-bold text-900 mb-1">{{ stats.alertasPendientes }}</div>
+                <div class="text-600 text-sm font-medium">Pendientes</div>
+              </div>
+            </p-card>
 
             <!-- Alertas Enviadas -->
-            <div class="col-12 md:col-6 lg:col-2">
-              <p-card styleClass="h-full">
-                <div class="text-center">
-                  <i class="pi pi-check-circle text-4xl text-green-500 mb-3"></i>
-                  <div class="text-2xl font-bold text-900">{{ stats.alertasEnviadas }}</div>
-                  <div class="text-600">Enviadas</div>
-                </div>
-              </p-card>
-            </div>
+            <p-card class="h-full stats-card">
+              <div class="text-center p-3">
+                <i class="pi pi-check-circle text-3xl text-green-500 mb-2 block"></i>
+                <div class="text-2xl font-bold text-900 mb-1">{{ stats.alertasEnviadas }}</div>
+                <div class="text-600 text-sm font-medium">Enviadas</div>
+              </div>
+            </p-card>
 
             <!-- Alertas Fallidas -->
-            <div class="col-12 md:col-6 lg:col-2">
-              <p-card styleClass="h-full">
-                <div class="text-center">
-                  <i class="pi pi-times-circle text-4xl text-red-500 mb-3"></i>
-                  <div class="text-2xl font-bold text-900">{{ stats.alertasFallidas }}</div>
-                  <div class="text-600">Fallidas</div>
-                </div>
-              </p-card>
-            </div>
+            <p-card class="h-full stats-card">
+              <div class="text-center p-3">
+                <i class="pi pi-times-circle text-3xl text-red-500 mb-2 block"></i>
+                <div class="text-2xl font-bold text-900 mb-1">{{ stats.alertasFallidas }}</div>
+                <div class="text-600 text-sm font-medium">Fallidas</div>
+              </div>
+            </p-card>
 
             <!-- Alertas Canceladas -->
-            <div class="col-12 md:col-6 lg:col-2">
-              <p-card styleClass="h-full">
-                <div class="text-center">
-                  <i class="pi pi-ban text-4xl text-gray-500 mb-3"></i>
-                  <div class="text-2xl font-bold text-900">{{ stats.alertasCanceladas }}</div>
-                  <div class="text-600">Canceladas</div>
-                </div>
-              </p-card>
-            </div>
+            <p-card class="h-full stats-card">
+              <div class="text-center p-3">
+                <i class="pi pi-ban text-3xl text-gray-500 mb-2 block"></i>
+                <div class="text-2xl font-bold text-900 mb-1">{{ stats.alertasCanceladas }}</div>
+                <div class="text-600 text-sm font-medium">Canceladas</div>
+              </div>
+            </p-card>
 
             <!-- Tasa de Éxito -->
-            <div class="col-12 md:col-6 lg:col-2">
-              <p-card styleClass="h-full">
-                <div class="text-center">
-                  <i class="pi pi-chart-line text-4xl text-blue-500 mb-3"></i>
-                  <div class="text-2xl font-bold text-900">{{ tasaExito() }}%</div>
-                  <div class="text-600">Tasa de Éxito</div>
-                  <p-progressBar 
-                    [value]="tasaExito()" 
-                    [showValue]="false"
-                    styleClass="mt-2">
-                  </p-progressBar>
-                </div>
-              </p-card>
-            </div>
+            <p-card class="h-full stats-card">
+              <div class="text-center p-3">
+                <i class="pi pi-chart-line text-3xl text-blue-500 mb-2 block"></i>
+                <div class="text-2xl font-bold text-900 mb-1">{{ tasaExito() }}%</div>
+                <div class="text-600 text-sm font-medium mb-2">Tasa de Éxito</div>
+                <p-progressBar 
+                  [value]="tasaExito()" 
+                  [showValue]="false"
+                  class="mt-1">
+                </p-progressBar>
+              </div>
+            </p-card>
           </div>
         }
-      </p-panel>
-    </div>
+        </p-panel>
   </div>
 } @else {
   <div class="flex justify-content-end mb-4">
@@ -137,13 +123,12 @@
 }
 
 <!-- Barra de Herramientas -->
-<p-toolbar styleClass="mb-4">
+<p-toolbar class="m-8">
   <ng-template pTemplate="start">
     <div class="flex gap-2">
       <p-button 
         label="Procesar Pendientes" 
         icon="pi pi-cog" 
-        severity="info"
         (click)="procesarAlertasPendientes()">
       </p-button>
       <p-button 
@@ -174,14 +159,14 @@
 </p-toolbar>
 
 <!-- Tabla de Alertas -->
-<p-card>
+<p-card class="m-8">
   <ng-template pTemplate="header">
     <div class="flex align-items-center gap-2">
       <i class="pi pi-list text-primary"></i>
       <span class="font-semibold">Lista de Alertas</span>
       <p-chip 
         [label]="alertasFiltradas().length.toString()" 
-        styleClass="ml-2">
+        class="ml-2">
       </p-chip>
     </div>
   </ng-template>
@@ -200,7 +185,7 @@
       [rowsPerPageOptions]="[10, 25, 50]"
       [sortField]="'fechaEnvio'"
       [sortOrder]="-1"
-      styleClass="p-datatable-gridlines">
+      class="p-datatable-gridlines">
       
       <ng-template pTemplate="header">
         <tr>
@@ -316,9 +301,21 @@
       
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="7" class="text-center p-4">
-            <i class="pi pi-search text-4xl text-400 mb-3"></i>
-            <div class="text-600">No se encontraron alertas</div>
+          <td colspan="7" class="text-center p-6">
+            <div class="empty-state">
+              <i class="pi pi-bell-slash text-6xl text-400 mb-4 block"></i>
+              <div class="text-xl text-700 font-medium mb-2">No hay alertas disponibles</div>
+              <div class="text-600">Las alertas aparecerán aquí cuando se generen automáticamente o se configuren manualmente.</div>
+              <p-button 
+                label="Configurar Alertas" 
+                icon="pi pi-cog" 
+                severity="secondary"
+                [outlined]="true"
+                size="small"
+                class="mt-3"
+                (click)="mostrarConfiguracion()">
+              </p-button>
+            </div>
           </td>
         </tr>
       </ng-template>
@@ -348,7 +345,7 @@
           optionLabel="label"
           optionValue="value"
           placeholder="Seleccione tipos de alerta"
-          styleClass="w-full">
+          class="w-full">
         </p-multiSelect>
       </div>
 
@@ -364,7 +361,7 @@
           optionLabel="label"
           optionValue="value"
           placeholder="Seleccione canales"
-          styleClass="w-full">
+          class="w-full">
         </p-multiSelect>
       </div>
 
@@ -400,7 +397,7 @@
           [min]="1"
           [max]="48"
           suffix=" horas"
-          styleClass="w-full">
+          class="w-full">
         </p-inputNumber>
       </div>
 
@@ -412,7 +409,7 @@
           [min]="1"
           [max]="12"
           suffix=" horas"
-          styleClass="w-full">
+          class="w-full">
         </p-inputNumber>
       </div>
 
@@ -424,7 +421,7 @@
           [min]="5"
           [max]="120"
           suffix=" min"
-          styleClass="w-full">
+          class="w-full">
         </p-inputNumber>
       </div>
 

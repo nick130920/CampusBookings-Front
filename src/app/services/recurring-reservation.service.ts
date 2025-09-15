@@ -17,6 +17,12 @@ export interface RecurringReservationRequest {
   maxReservas?: number; // Límite máximo de reservas a generar
 }
 
+export interface RecurringReservationUpdateRequest {
+  fechaFin: string; // YYYY-MM-DD format
+  maxReservas?: number; // Límite máximo de reservas a generar
+  observaciones?: string;
+}
+
 export interface RecurringReservationResponse {
   id: number;
   usuarioId: number;
@@ -131,10 +137,10 @@ export class RecurringReservationService {
   }
 
   /**
-   * Actualiza una reserva recurrente existente
+   * Actualiza una reserva recurrente existente (actualización parcial)
    */
-  updateRecurringReservation(id: number, request: RecurringReservationRequest): Observable<RecurringReservationResponse> {
-    return this.http.put<RecurringReservationResponse>(`${this.apiUrl}/${id}`, request);
+  updateRecurringReservation(id: number, request: RecurringReservationUpdateRequest): Observable<RecurringReservationResponse> {
+    return this.http.patch<RecurringReservationResponse>(`${this.apiUrl}/${id}`, request);
   }
 
   /**
