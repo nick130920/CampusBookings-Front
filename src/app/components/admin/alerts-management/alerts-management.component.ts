@@ -33,6 +33,7 @@ import {
   EstadisticasAlertas 
 } from '../../../services/alert-management.service';
 import { ToastService } from '../../../services/toast.service';
+import { AuthService } from '../../../services/auth.service';
 
 // PrimeNG Services
 import { MessageService, ConfirmationService } from 'primeng/api';
@@ -74,6 +75,7 @@ export class AlertsManagementComponent implements OnInit {
   private readonly messageService = inject(MessageService);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly fb = inject(FormBuilder);
+  private readonly authService = inject(AuthService);
 
   // Signals para estado del componente
   readonly alertas = signal<AlertaReserva[]>([]);
@@ -97,6 +99,13 @@ export class AlertsManagementComponent implements OnInit {
 
   // Estado del filtro
   readonly filtroEstado = signal<EstadoAlerta | null>(null);
+
+  // Permisos del usuario
+  readonly canManageAlerts = computed(() => {
+    const user = this.authService.currentUser();
+    const role = user?.role?.toUpperCase();
+    return role === 'ADMIN' || role === 'COORDINATOR';
+  });
 
   // Formulario de configuración
   configForm: FormGroup;
@@ -177,6 +186,11 @@ export class AlertsManagementComponent implements OnInit {
 
   // Acciones de alertas
   enviarAlerta(alerta: AlertaReserva): void {
+    if (!this.canManageAlerts()) {
+      this.toastService.showError('No tienes permisos para enviar alertas. Contacta al administrador.');
+      return;
+    }
+
     this.confirmationService.confirm({
       message: `¿Está seguro de enviar manualmente la alerta "${alerta.tipoDescripcion}"?`,
       header: 'Confirmar Envío',
@@ -190,7 +204,11 @@ export class AlertsManagementComponent implements OnInit {
             this.cargarDatos();
           },
           error: (error) => {
-            this.toastService.showError('Error al enviar alerta');
+            if (error.status === 403) {
+              this.toastService.showError('No tienes permisos para enviar alertas. Necesitas rol COORDINATOR o ADMIN.');
+            } else {
+              this.toastService.showError('Error al enviar alerta');
+            }
             console.error('Error enviando alerta:', error);
           }
         });

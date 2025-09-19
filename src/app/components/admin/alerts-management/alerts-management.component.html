@@ -30,17 +30,18 @@
 
 <!-- Panel de Estadísticas -->
 @if (showStatsPanel()) {
-  <div class="m-8">
+  <div class="mx-8 my-4">
         <p-panel>
         <ng-template pTemplate="header">
-          <div class="flex align-items-center gap-2">
-            <i class="pi pi-chart-bar text-primary"></i>
-            <span class="font-semibold">Estadísticas del Sistema de Alertas</span>
+          <div class="flex align-items-center gap-2 items-stretch mx-8">
+            <i class="pi pi-chart-bar text-primary self-center"></i>
+            <span class="font-semibold self-center">Estadísticas del Sistema de Alertas</span>
             <p-button 
               icon="pi pi-minus" 
               severity="secondary" 
               [text]="true"
               size="small"
+              class="self-center"
               (click)="toggleStatsPanel()">
             </p-button>
           </div>
@@ -123,27 +124,36 @@
 }
 
 <!-- Barra de Herramientas -->
-<p-toolbar class="m-8">
+<p-toolbar class="mx-8">
   <ng-template pTemplate="start">
     <div class="flex gap-2">
-      <p-button 
-        label="Procesar Pendientes" 
-        icon="pi pi-cog" 
-        (click)="procesarAlertasPendientes()">
-      </p-button>
-      <p-button 
-        label="Limpiar Vencidas" 
-        icon="pi pi-trash" 
-        severity="danger"
-        [outlined]="true"
-        (click)="limpiarAlertasVencidas()">
-      </p-button>
+      @if (canManageAlerts()) {
+        <p-button 
+          label="Procesar Pendientes" 
+          icon="pi pi-cog" 
+          (click)="procesarAlertasPendientes()">
+        </p-button>
+        <p-button 
+          label="Limpiar Vencidas" 
+          icon="pi pi-trash" 
+          severity="danger"
+          [outlined]="true"
+          (click)="limpiarAlertasVencidas()">
+        </p-button>
+      } @else {
+        <div class="surface-100 p-3 border-round">
+          <small class="text-600 font-italic">
+            <i class="pi pi-lock mr-2"></i>
+            Solo usuarios COORDINATOR o ADMIN pueden gestionar alertas
+          </small>
+        </div>
+      }
     </div>
   </ng-template>
   
   <ng-template pTemplate="end">
-    <div class="flex align-items-center gap-2">
-      <label for="filtroEstado" class="font-semibold">Filtrar por estado:</label>
+    <div class="flex align-items-center gap-2 items-stretch">
+      <label for="filtroEstado" class="font-semibold self-center">Filtrar por estado:</label>
       <p-select 
         id="filtroEstado"
         [options]="estadoOptions"
@@ -152,22 +162,21 @@
         placeholder="Todos los estados"
         ngModel="filtroEstado()"
         (onChange)="onFiltroEstadoChange($event.value)"
-        class="w-10rem">
+        class="w-10rem self-center">
       </p-select>
     </div>
   </ng-template>
 </p-toolbar>
 
 <!-- Tabla de Alertas -->
-<p-card class="m-8">
+<p-card class="mx-8 mt-2">
   <ng-template pTemplate="header">
-    <div class="flex align-items-center gap-2">
-      <i class="pi pi-list text-primary"></i>
-      <span class="font-semibold">Lista de Alertas</span>
-      <p-chip 
-        [label]="alertasFiltradas().length.toString()" 
-        class="ml-2">
-      </p-chip>
+    <div class="flex align-items-center justify-content-between px-8 pt-8 space-x-3 items-stretch" style="min-height: 3rem;">
+        <i class="pi pi-list text-primary text-xl self-center"></i>
+        <span class="font-semibold text-lg self-center">Lista de Alertas</span>
+        <p-chip 
+          [label]="alertasFiltradas().length.toString()">
+        </p-chip>
     </div>
   </ng-template>
 
@@ -262,7 +271,7 @@
           <!-- Acciones -->
           <td>
             <div class="flex gap-1">
-              @if (puedeEnviar(alerta)) {
+              @if (canManageAlerts() && puedeEnviar(alerta)) {
                 <p-button 
                   icon="pi pi-send" 
                   severity="success"
@@ -273,18 +282,18 @@
                 </p-button>
               }
               
-              @if (puedeCancelar(alerta)) {
+              @if (canManageAlerts() && puedeCancelar(alerta)) {
                 <p-button 
                   icon="pi pi-times" 
                   severity="danger"
                   size="small"
-                  [text]="true"
+                  [text]="true" 
                   pTooltip="Cancelar alerta"
                   (click)="cancelarAlerta(alerta)">
                 </p-button>
               }
               
-              @if (puedeReenviar(alerta)) {
+              @if (canManageAlerts() && puedeReenviar(alerta)) {
                 <p-button 
                   icon="pi pi-refresh" 
                   severity="info"
@@ -293,6 +302,10 @@
                   pTooltip="Reenviar alerta"
                   (click)="reenviarAlerta(alerta)">
                 </p-button>
+              }
+              
+              @if (!canManageAlerts()) {
+                <small class="text-600 font-italic">Sin permisos</small>
               }
             </div>
           </td>
@@ -329,141 +342,188 @@
   [modal]="true"
   [visible]="showConfigDialog()"
   (visibleChange)="showConfigDialog.set($event)"
-  [style]="{ width: '700px' }">
+  [style]="{ width: '800px' }"
+  [draggable]="false"
+  [resizable]="false">
   
   <form [formGroup]="configForm" (ngSubmit)="guardarConfiguracion()">
-    <div class="grid">
-      <!-- Tipos de Alerta -->
-      <div class="col-12">
-        <label for="tiposAlerta" class="block font-medium mb-2">
-          Tipos de Alerta <span class="text-red-500">*</span>
-        </label>
-        <p-multiSelect 
-          id="tiposAlerta"
-          formControlName="tiposAlerta"
-          [options]="tipoAlertaOptions"
-          optionLabel="label"
-          optionValue="value"
-          placeholder="Seleccione tipos de alerta"
-          class="w-full">
-        </p-multiSelect>
-      </div>
+    <div class="p-6 space-y-6">
+      <!-- Sección Principal -->
+      <div>
+        <h3 class="text-xl font-semibold text-900 mb-4 flex items-center gap-2">
+          <i class="pi pi-bell text-primary"></i>
+          Configuración Básica
+        </h3>
+        
+        <div class="space-y-4">
+          <!-- Tipos de Alerta -->
+          <div>
+            <label for="tiposAlerta" class="block font-semibold mb-3 text-900">
+              Tipos de Alerta <span class="text-red-500">*</span>
+            </label>
+            <p-multiSelect 
+              id="tiposAlerta"
+              formControlName="tiposAlerta"
+              [options]="tipoAlertaOptions"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Seleccione tipos de alerta"
+              class="w-full"
+              [showToggleAll]="true"
+              [filter]="true">
+            </p-multiSelect>
+          </div>
 
-      <!-- Canales de Envío -->
-      <div class="col-12 md:col-6">
-        <label for="canalesEnvio" class="block font-medium mb-2">
-          Canales de Envío <span class="text-red-500">*</span>
-        </label>
-        <p-multiSelect 
-          id="canalesEnvio"
-          formControlName="canalesEnvio"
-          [options]="canalEnvioOptions"
-          optionLabel="label"
-          optionValue="value"
-          placeholder="Seleccione canales"
-          class="w-full">
-        </p-multiSelect>
-      </div>
-
-      <!-- Habilitar Recordatorios -->
-      <div class="col-12 md:col-6">
-        <div class="field-checkbox mt-4">
-          <p-checkbox 
-            id="habilitarRecordatorios"
-            formControlName="habilitarRecordatorios"
-            binary="true">
-          </p-checkbox>
-          <label for="habilitarRecordatorios" class="ml-2">
-            Habilitar recordatorios automáticos
-          </label>
+          <!-- Canales de Envío y Recordatorios -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="md:col-span-2">
+              <label for="canalesEnvio" class="block font-semibold mb-3 text-900">
+                Canales de Envío <span class="text-red-500">*</span>
+              </label>
+              <p-multiSelect 
+                id="canalesEnvio"
+                formControlName="canalesEnvio"
+                [options]="canalEnvioOptions"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Seleccione canales"
+                class="w-full">
+              </p-multiSelect>
+            </div>
+            
+            <div class="flex items-end">
+              <div class="surface-100 p-4 border-round w-full">
+                <div class="flex items-center">
+                  <p-checkbox 
+                    id="habilitarRecordatorios"
+                    formControlName="habilitarRecordatorios"
+                    binary="true">
+                  </p-checkbox>
+                  <label for="habilitarRecordatorios" class="ml-2 font-medium text-sm">
+                    Habilitar recordatorios automáticos
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Configuración de Tiempos -->
-      <div class="col-12">
-        <p-divider align="left">
-          <div class="inline-flex align-items-center">
-            <i class="pi pi-clock mr-2"></i>
-            <b>Configuración de Tiempos</b>
+      <div>
+        <h3 class="text-xl font-semibold text-900 mb-4 flex items-center gap-2">
+          <i class="pi pi-clock text-primary"></i>
+          Configuración de Tiempos
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label for="horas24" class="block font-semibold mb-2 text-900">
+              Recordatorio 24 horas
+            </label>
+            <p-inputNumber 
+              id="horas24"
+              formControlName="horasAnticipacion24h"
+              [min]="1"
+              [max]="48"
+              suffix=" horas"
+              class="w-full">
+            </p-inputNumber>
+            <small class="text-600">Alertar 24 horas antes</small>
           </div>
-        </p-divider>
+
+          <div>
+            <label for="horas2" class="block font-semibold mb-2 text-900">
+              Recordatorio 2 horas
+            </label>
+            <p-inputNumber 
+              id="horas2"
+              formControlName="horasAnticipacion2h"
+              [min]="1"
+              [max]="12"
+              suffix=" horas"
+              class="w-full">
+            </p-inputNumber>
+            <small class="text-600">Alertar 2 horas antes</small>
+          </div>
+
+          <div>
+            <label for="minutos30" class="block font-semibold mb-2 text-900">
+              Recordatorio 30 minutos
+            </label>
+            <p-inputNumber 
+              id="minutos30"
+              formControlName="minutosAnticipacion30min"
+              [min]="5"
+              [max]="120"
+              suffix=" minutos"
+              class="w-full">
+            </p-inputNumber>
+            <small class="text-600">Alertar 30 minutos antes</small>
+          </div>
+        </div>
       </div>
 
-      <div class="col-12 md:col-4">
-        <label for="horas24" class="block font-medium mb-2">Horas 24h</label>
-        <p-inputNumber 
-          id="horas24"
-          formControlName="horasAnticipacion24h"
-          [min]="1"
-          [max]="48"
-          suffix=" horas"
-          class="w-full">
-        </p-inputNumber>
-      </div>
+      <!-- Configuración Avanzada -->
+      <div>
+        <h3 class="text-xl font-semibold text-900 mb-4 flex items-center gap-2">
+          <i class="pi pi-cog text-primary"></i>
+          Configuración Avanzada
+        </h3>
+        
+        <div class="space-y-4">
+          <!-- Mensaje Personalizado -->
+          <div>
+            <label for="mensaje" class="block font-semibold mb-2 text-900">
+              Mensaje Personalizado
+            </label>
+            <input 
+              id="mensaje"
+              type="text" 
+              pInputText 
+              formControlName="mensajePersonalizado"
+              placeholder="Mensaje personalizado opcional para las alertas"
+              class="w-full">
+            <small class="text-600">Este mensaje se incluirá en todas las alertas</small>
+          </div>
 
-      <div class="col-12 md:col-4">
-        <label for="horas2" class="block font-medium mb-2">Horas 2h</label>
-        <p-inputNumber 
-          id="horas2"
-          formControlName="horasAnticipacion2h"
-          [min]="1"
-          [max]="12"
-          suffix=" horas"
-          class="w-full">
-        </p-inputNumber>
-      </div>
-
-      <div class="col-12 md:col-4">
-        <label for="minutos30" class="block font-medium mb-2">Minutos 30min</label>
-        <p-inputNumber 
-          id="minutos30"
-          formControlName="minutosAnticipacion30min"
-          [min]="5"
-          [max]="120"
-          suffix=" min"
-          class="w-full">
-        </p-inputNumber>
-      </div>
-
-      <!-- Mensaje Personalizado -->
-      <div class="col-12">
-        <label for="mensaje" class="block font-medium mb-2">Mensaje Personalizado</label>
-        <input 
-          id="mensaje"
-          type="text" 
-          pInputText 
-          formControlName="mensajePersonalizado"
-          placeholder="Mensaje personalizado opcional"
-          class="w-full">
-      </div>
-
-      <!-- Aplicar a todos los escenarios -->
-      <div class="col-12">
-        <div class="field-checkbox">
-          <p-checkbox 
-            id="aplicarTodos"
-            formControlName="aplicarATodosLosEscenarios"
-            binary="true">
-          </p-checkbox>
-          <label for="aplicarTodos" class="ml-2">
-            Aplicar configuración a todos los tipos de escenarios
-          </label>
+          <!-- Aplicar a todos los escenarios -->
+          <div>
+            <div class="surface-100 p-4 border-round">
+              <div class="flex items-center">
+                <p-checkbox 
+                  id="aplicarTodos"
+                  formControlName="aplicarATodosLosEscenarios"
+                  binary="true">
+                </p-checkbox>
+                <div class="ml-3">
+                  <label for="aplicarTodos" class="font-semibold text-900 block">
+                    Aplicar configuración a todos los tipos de escenarios
+                  </label>
+                  <small class="text-600">
+                    Esta configuración se aplicará a todos los escenarios del sistema
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </form>
 
   <ng-template pTemplate="footer">
-    <div class="flex gap-2 justify-content-end">
+    <div class="flex gap-3 justify-content-end p-4 surface-50">
       <p-button 
         label="Cancelar" 
+        icon="pi pi-times"
         severity="secondary"
         [outlined]="true"
         (click)="showConfigDialog.set(false)">
       </p-button>
       <p-button 
         label="Guardar Configuración" 
-        icon="pi pi-save"
+        icon="pi pi-check"
         (click)="guardarConfiguracion()"
         [disabled]="configForm.invalid">
       </p-button>
