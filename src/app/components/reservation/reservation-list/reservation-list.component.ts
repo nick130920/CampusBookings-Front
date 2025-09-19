@@ -597,7 +597,7 @@ export class ReservationListComponent implements OnInit, OnDestroy {
    * Verificar si una reserva puede ser aprobada
    */
   canApprove(reservation: Reservation): boolean {
-    return this.isAdmin && reservation.estadoNombre === 'PENDIENTE';
+    return this.isAdmin && reservation.estadoNombre === 'PENDIENTE' && new Date(reservation.fechaInicio) > new Date();
   }
 
   /**
