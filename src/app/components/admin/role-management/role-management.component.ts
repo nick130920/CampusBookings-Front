@@ -513,12 +513,12 @@ export class RoleManagementComponent implements OnInit {
     return user.rol ? user.rol.nombre : 'Sin Rol';
   }
 
-  getUserRoleColor(user: UsuarioDetail): string {
+  getUserRoleColor(user: UsuarioDetail): 'success' | 'info' | 'warn' | 'secondary' | 'danger' {
     if (!user.rol) return 'secondary';
     
     switch (user.rol.nombre) {
       case 'ADMIN': return 'danger';
-      case 'COORDINATOR': return 'warning';
+      case 'COORDINATOR': return 'warn';
       case 'USER': return 'info';
       default: return 'secondary';
     }

@@ -382,7 +382,7 @@ export class ReservationListComponent implements OnInit, OnDestroy {
     this.router.navigate(['/dashboard/reservas/nueva']);
   }
 
-  getStatusSeverity(status: string): 'success' | 'info' | 'warning' | 'danger' {
+  getStatusSeverity(status: string): 'success' | 'info' | 'warn' | 'danger' {
     switch (status?.toUpperCase()) {
       case 'APROBADA':
         return 'success';
@@ -391,7 +391,7 @@ export class ReservationListComponent implements OnInit, OnDestroy {
       case 'RECHAZADA':
         return 'danger';
       case 'CANCELADA':
-        return 'warning';
+        return 'warn';
       default:
         return 'info';
     }

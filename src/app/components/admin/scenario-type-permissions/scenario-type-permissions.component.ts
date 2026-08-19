@@ -170,12 +170,12 @@ export class ScenarioTypePermissionsComponent implements OnInit {
     });
   }
 
-  getActionSeverity(action: string): string {
+  getActionSeverity(action: string): 'success' | 'info' | 'warn' | 'secondary' | 'danger' {
     switch (action) {
       case 'CREATE': return 'success';
       case 'UPDATE': return 'info';
       case 'DELETE': return 'danger';
-      case 'MANAGE': return 'warning';
+      case 'MANAGE': return 'warn';
       default: return 'secondary';
     }
   }

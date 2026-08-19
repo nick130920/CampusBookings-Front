@@ -1,10 +1,13 @@
 import { TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { App } from './app';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
+      providers: [MessageService, ConfirmationService, provideHttpClient()],
     }).compileComponents();
   });
 
@@ -14,10 +17,11 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render title', () => {
+  it('should render global notification components', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, CampusBookings');
+    expect(compiled.querySelector('p-toast')).toBeTruthy();
+    expect(compiled.querySelector('p-confirmdialog')).toBeTruthy();
   });
 });

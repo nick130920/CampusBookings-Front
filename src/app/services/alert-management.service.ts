@@ -233,9 +233,9 @@ export class AlertManagementService {
   /**
    * Mapea estado de alerta a severity de PrimeNG
    */
-  getEstadoSeverity(estado: EstadoAlerta): string {
-    const severityMap = {
-      [EstadoAlerta.PENDIENTE]: 'warning',
+  getEstadoSeverity(estado: EstadoAlerta): 'success' | 'info' | 'warn' | 'secondary' | 'danger' {
+    const severityMap: Record<EstadoAlerta, 'success' | 'info' | 'warn' | 'secondary' | 'danger'> = {
+      [EstadoAlerta.PENDIENTE]: 'warn',
       [EstadoAlerta.ENVIADO]: 'success',
       [EstadoAlerta.FALLIDO]: 'danger',
       [EstadoAlerta.CANCELADO]: 'secondary',

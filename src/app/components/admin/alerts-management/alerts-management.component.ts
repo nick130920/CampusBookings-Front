@@ -347,7 +347,7 @@ export class AlertsManagementComponent implements OnInit {
     return this.alertService.getAlertIcon(tipo);
   }
 
-  getEstadoSeverity(estado: EstadoAlerta): string {
+  getEstadoSeverity(estado: EstadoAlerta): 'success' | 'info' | 'warn' | 'secondary' | 'danger' {
     return this.alertService.getEstadoSeverity(estado);
   }
 
