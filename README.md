@@ -4,6 +4,8 @@ CampusBookings Frontend is the Angular web client for the USCO campus-space book
 
 ## Quick Start
 
+**Continuation guide:** read [`HANDOFF.md`](HANDOFF.md) before changing code or environment configuration. It records the verified delivery state, frontend/backend contract gaps, and the safest next work units.
+
 Requirements: Node.js and npm compatible with Angular CLI 20, plus a browser supported by Karma for the test runner. The repository does not declare an exact Node.js version; use the version required by the installed Angular 20 toolchain in your delivery environment.
 
 ```bash
